@@ -19,7 +19,7 @@ header h1 {
     color: #f1600d;
 }
 
-.logo {
+header .logo {
     max-width: 100%; /* Set a maximum width */
     height: auto; /* Allow height to adjust automatically */
 }
@@ -91,25 +91,7 @@ h2 {
     color: #f1600d;
     padding-left: 8px;
   }
-  .footer-col .social-links a {
-    display: inline-block;
-    height: 40px;
-    width: 40px;
-    background-color: #333; /* Placeholder background color */
-    background-size: cover;
-    background-position: center;
-    margin: 0 10px 10px 0;
-    text-align: center;
-    line-height: 40px;
-    border-radius: 50%;
-    color: #ffffff;
-    transition: all 0.5s ease;
-}
 
-.footer-col .social-links a:hover {
-    color: #24262b;
-    background-color: #ffffff;
-}
   
   /*responsive*/
   @media(max-width: 767px){
@@ -125,14 +107,40 @@ h2 {
   }
 
 .raphaelschopfergithub{
-    background-image: url('/PortfolioProject/images/kangaroo.png');
+  background-image: url('lol.jpeg');
+  background-size: auto;
+  width: 50px;
+  height: 50px;;
+  border-radius: 50%;
+  display: inline-block;
+  margin: 5px;
 }
 .raphaelschopferlinkedin{
-    background-image: url('/PortfolioProject/images/kangaroo.png');
+  background-image: url('lol.jpeg');
+  background-size: auto;
+  width: 50px;
+  height: 50px;;
+  border-radius: 50%;
+  display: inline-block;
+  margin: 5px;
 }
 .benjaminmarchalgithub{
-    background-image: url('/PortfolioProject/images/kangaroo.png');
+  background-image: url('lol.jpeg');
+  background-size: auto;
+  width: 50px;
+  height: 50px;;
+  border-radius: 50%;
+  display: inline-block;
+  margin: 5px;
 }
-.benjaminmarchallinkedin {
-    background-image: url('PortfolioProject/lol.jpeg');
+.benjaminmarchallinkedin{
+  background-image: url('lol.jpeg');
+  background-size: auto;
+  width: 50px;
+  height: 50px;;
+  border-radius: 50%;
+  display: inline-block;
+  align-items: center;
+  justify-content: center;
+  margin: 5px;
 }
