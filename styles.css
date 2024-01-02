@@ -125,14 +125,26 @@ h2 {
   }
 
 .raphaelschopfergithub{
-    background-image: url('/PortfolioProject/images/kangaroo.png');
+    background-image: url("images/lol.jpeg");
 }
 .raphaelschopferlinkedin{
-    background-image: url('/PortfolioProject/images/kangaroo.png');
+    background-image: url("images/kangaroo.png");
 }
 .benjaminmarchalgithub{
-    background-image: url('/PortfolioProject/images/kangaroo.png');
+    background-image: url("images/lol.jpeg");
 }
 .benjaminmarchallinkedin {
-    background-image: url('PortfolioProject/lol.jpeg');
+    background-image: url('images/lol.jpeg');
+}
+
+
+img {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 5px;
+  width: 150px;
+}
+
+img:hover {
+  box-shadow: 0 0 2px 1px rgba(0, 140, 186, 0.5);
 }
