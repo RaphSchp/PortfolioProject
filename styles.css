@@ -58,7 +58,7 @@ h2 {
   }
   .footer-col h4{
     font-size: 18px;
-    color: #ffffff;
+    color: #fef6ed;
     text-transform: capitalize;
     margin-bottom: 35px;
     font-weight: 500;
@@ -80,7 +80,7 @@ h2 {
   .footer-col ul li a{
     font-size: 16px;
     text-transform: capitalize;
-    color: #ffffff;
+    color: #fef6ed;
     text-decoration: none;
     font-weight: 300;
     color: #bbbbbb;
@@ -107,40 +107,81 @@ h2 {
   }
 
 .raphaelschopfergithub{
-  background-image: url('lol.jpeg');
-  background-size: auto;
+  background-image: url('images/github.png');
+  background-size: cover;
   width: 50px;
   height: 50px;;
   border-radius: 50%;
   display: inline-block;
   margin: 5px;
+  transition: transform 0.3s ease, filter 0.3s ease;
 }
 .raphaelschopferlinkedin{
-  background-image: url('lol.jpeg');
-  background-size: auto;
+  background-image: url('images/linkedin.png');
+  background-size: cover;
   width: 50px;
   height: 50px;;
   border-radius: 50%;
   display: inline-block;
   margin: 5px;
+  transition: transform 0.3s ease, filter 0.3s ease;
 }
 .benjaminmarchalgithub{
-  background-image: url('lol.jpeg');
-  background-size: auto;
+  margin-top: 10px;
+  background-image: url('images/github.png');
+  background-size: cover;
   width: 50px;
   height: 50px;;
   border-radius: 50%;
   display: inline-block;
   margin: 5px;
+  transition: transform 0.3s ease, filter 0.3s ease;
 }
 .benjaminmarchallinkedin{
-  background-image: url('lol.jpeg');
-  background-size: auto;
+  background-image: url('images/linkedin.png');
+  background-size: cover;
   width: 50px;
   height: 50px;;
   border-radius: 50%;
   display: inline-block;
-  align-items: center;
-  justify-content: center;
   margin: 5px;
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
+.raphaelschopfergithub:hover{
+  background-image: url('images/github-hover.png');
+  transform: scale(1.2);
+}
+.raphaelschopferlinkedin:hover{
+  background-image: url('images/linkedin-hover.png');
+  transform: scale(1.2);
+}
+.benjaminmarchalgithub:hover{
+  background-image: url('images/github-hover.png');
+  transform: scale(1.2);
+}
+.benjaminmarchallinkedin:hover{
+  background-image: url('images/linkedin-hover.png');
+  transform: scale(1.2);
+}
+.social-links{
+  font-size: 16px;
+  text-transform: capitalize;
+  color: #fef6ed;
+  text-decoration: none;
+  font-weight: 300;
+  color: #bbbbbb;
+  display: block;
+  margin-bottom: 10px;
+
+}
+.raphael,
+.benjamin {
+  margin-bottom: 10px;
+}
+
+.raphael p,
+.benjamin p {
+  margin-bottom: 10px;
+  font-size: 16px; 
+
 }
