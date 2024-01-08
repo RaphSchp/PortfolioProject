@@ -24,7 +24,7 @@ html {
   main {
     display: grid;
     grid-gap: 1rem;
-    max-width: 1600px; /* Adjust to your preference */
+    max-width: 1600px;
     margin: 2rem auto;
 }
 figure {
@@ -43,6 +43,10 @@ img {
     text-align: center;
     background-color: #f1600d;
   }
+  .doc {
+    padding: 0.5rem;
+    font-size: 0.9rem;
+}
   footer {
     background-color: #1a265a;
     color: #fef6ed;

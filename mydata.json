@@ -1,9 +1,34 @@
-{ 
-  "items":[
-    {"name": "Archer", "id":1, "img":"testimage/badminton.jpg"},
-    {"name": "Lana", "id":2, "img":"testimage/boxe.jpg"},
-    {"name": "Kreiger", "id":3, "img":"testimage/climb.jpg"},
-    {"name": "Cyril", "id":4, "img":"testimage/foot.jpg"},
-    {"name": "Bob", "id":5, "img":"testimage/marathon.jpg"}
+{
+  "items": [
+    {
+      "name": "Archer",
+      "id": 1,
+      "img": "testimage/badminton.jpg",
+      "doc": "A skilled archer practicing precision in badminton."
+    },
+    {
+      "name": "Lana",
+      "id": 2,
+      "img": "testimage/boxe.jpg",
+      "doc": "Lana engaged in intense boxing training."
+    },
+    {
+      "name": "Krieger",
+      "id": 3,
+      "img": "testimage/climb.jpg",
+      "doc": "Krieger scaling new heights in climbing adventures."
+    },
+    {
+      "name": "Cyril",
+      "id": 4,
+      "img": "testimage/foot.jpg",
+      "doc": "Cyril showcasing his skills in football."
+    },
+    {
+      "name": "Bob",
+      "id": 5,
+      "img": "testimage/marathon.jpg",
+      "doc": "Bob participating in a challenging marathon."
+    }
   ]
 }

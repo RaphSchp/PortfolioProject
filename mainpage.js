@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
   };
   const observer = new IntersectionObserver(handleIntersect, options);
   observer.observe(document.querySelector("footer"));
-  getData(); // Initial load of some data
+  getData();
 });
 
 function handleIntersect(entries) {
@@ -19,7 +19,6 @@ function handleIntersect(entries) {
 }
 
 function getData() {
-  // Access URL globally
   fetch(URL)
     .then(response => response.json())
     .then(mydata => {
@@ -29,16 +28,20 @@ function getData() {
       mydata.items.forEach(item => {
         let figure = document.createElement("figure");
         let img = document.createElement("img");
+        let doc = document.createElement("p");
         let figcaption = document.createElement("figcaption");
-
+    
         img.src = item.img;
         img.alt = item.name;
+        doc.textContent = item.doc;
+        doc.classList.add("doc");
         figcaption.textContent = item.name;
-
+    
         figure.appendChild(img);
+        figure.appendChild(doc);
         figure.appendChild(figcaption);
         main.appendChild(figure);
-      });
+    });
     })
     .catch(error => console.error("Error fetching data:", error));
 }
