@@ -119,15 +119,15 @@ body {
     border: none;
     border-radius: 10px;
     background: #50a5b1;
-    color: #fff;
+    color: #fef6ed;
     box-shadow: 0px 4px 20px rgba(62, 9, 9, 0.144);
     cursor: pointer;
-    transition: .4s;
+    transition: .3s;
 }
 
 .input-submit:hover {
     background:  #f1600d;
-    box-shadow: 0px 4px 20px rgba(62, 9, 9, 0.32);
+    box-shadow: 0px 4px 20px rgba(62, 9, 9, 0.144);
 }
 
 .forgot {
@@ -142,6 +142,11 @@ body {
     color: #000;
 }
 
+.box-login,
+.box-register {
+    transition: left 0.5s ease-in-out, right 0.5s ease-in-out;
+}
+
 .switch {
     display: flex;
     flex-direction: column;
@@ -151,6 +156,17 @@ body {
     width: 85%;
     padding-top: 10px;
     text-align: center;
+    transition: left 0.5s ease-in-out;
+}
+
+.login-active p.login-text,
+.register-active p.register-text {
+    display: block;
+}
+
+.login-active p.register-text,
+.register-active p.login-text {
+    display: none;
 }
 
 .switch p {
@@ -162,18 +178,6 @@ body {
 }
 
 #register-text {
-    display: none;
-}
-
-#btn {
-    display: none;
-}
-
-.switch.register-active #register-text {
-    display: block;
-}
-
-.switch.login-active #login-text {
     display: block;
 }
 
@@ -207,10 +211,5 @@ i {
 @media only screen and (max-width: 576px) {
     .box {
         margin: 0 5px;
-    }
-
-    #btn {
-        position: absolute;
-        width: 153px;
     }
 }
