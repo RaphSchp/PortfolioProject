@@ -201,10 +201,17 @@ i {
     opacity: 1;
 }
 
+#eye, #eye-3 {
+    opacity: 1;
+}
+
 #eye-slash, #eye-slash-2 {
     opacity: 0;
 }
 
+#eye-slash, #eye-slash-3 {
+    opacity: 0;
+}
 @media only screen and (max-width: 576px) {
     .box {
         margin: 0 5px;

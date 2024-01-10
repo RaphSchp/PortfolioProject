@@ -56,3 +56,19 @@ function switchTo(section) {
        c.style.opacity = "0";
     }
    }
+   function myRegPasswordConfirmation(){
+
+      var d = document.getElementById("regPasswordConfirmation");
+      var b = document.getElementById("eye-3");
+      var c = document.getElementById("eye-slash-3");
+  
+      if(d.type === "password"){
+         d.type = "text";
+         b.style.opacity = "0";
+         c.style.opacity = "1";
+      }else{
+         d.type = "password";
+         b.style.opacity = "1";
+         c.style.opacity = "0";
+      }
+     }
