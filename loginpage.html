@@ -18,7 +18,7 @@
             <div class="box-login" id="login">
                 <div class="top-header">
                     <h1>Kangaroo</h1>
-                    <small>We are happy to have you back.</small>
+                    <p>Login</p>
                 </div>
                 <div class="input-group">
                     <div class="input-field">
@@ -45,6 +45,12 @@
                     <div class="forgot">
                         <a href="#">Forgot password?</a>
                     </div>
+                    <div class="switch">
+                        <p class="login-text" id="login-text">
+                            Don't have an account yet?<br>
+                            <a href="#register" onclick="switchTo('register')">Register here</a>
+                        </p>
+                    </div>
                 </div>
             </div>
 
@@ -52,7 +58,7 @@
             <div class="box-register" id="register">
                 <div class="top-header">
                     <h1>Kangaroo</h1>
-                    <h6>Find workout partners near you!</h6>
+                    <p>Find workout partners near you!</p>
                 </div>
                 <div class="input-group">
                     <div class="input-field">
@@ -73,6 +79,16 @@
                             </div>
                         </div>
                     </div>
+                    <div class="input-field">
+                        <input type="password" class="input-box" id="regPassword" required>
+                        <label for="regPassword">Password confirmation</label>
+                        <div class="eye-area">
+                            <div class="eye-box" onclick="myRegPassword()">
+                                <i class="fa-regular fa-eye" id="eye-2"></i>
+                                <i class="fa-regular fa-eye-slash" id="eye-slash-2"></i>
+                            </div>
+                        </div>
+                    </div>
                     <div class="remember">
                         <input type="checkbox" id="formCheck2" class="check">
                         <label for="formCheck2">Remember Me</label>
@@ -80,20 +96,17 @@
                     <div class="input-field">
                         <input type="submit" class="input-submit" value="Sign Up" required>
                     </div>
+                    <div class="switch">
+                        <p class="register-text" id="register-text">
+                            Already have an account?<br>
+                            <a href="#login" onclick="switchTo('login')">Login here</a>
+                        </p>
+                    </div>
                 </div>
             </div>
             
             <!-- Text Links for Switching -->
-            <div class="switch">
-                <p class="login-text" id="login-text">
-                    Don't have an account yet?<br>
-                    <a href="#register" onclick="switchTo('register')">Register here</a>
-                </p>
-                <p class="register-text" id="register-text">
-                    Already have an account? 
-                    <a href="#login" onclick="switchTo('login')">Login here</a>
-                </p>
-            </div>
+
         </div>
     </div>
 </body>

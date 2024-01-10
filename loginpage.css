@@ -26,7 +26,7 @@ body {
     display: flex;
     flex-direction: row;
     position: relative;
-    padding: 60px 20px 30px 20px;
+    padding: 30px 20px 30px 20px;
     height: 620px;
     width: 350px;
     border-radius: 30px;
@@ -41,14 +41,14 @@ body {
     position: absolute;
     width: 85%;
     left: 27px;
-    transition: .5s ease-in-out;
+
 }
 
 .box-register {
     position: absolute;
     width: 85%;
     right: -350px;
-    transition: .5s ease-in-out;
+
 }
 
 .top-header {
@@ -142,16 +142,13 @@ body {
     color: #000;
 }
 
-.box-login,
-.box-register {
-    transition: left 0.5s ease-in-out, right 0.5s ease-in-out;
-}
+
 
 .switch {
     display: flex;
     flex-direction: column;
     position: absolute;
-    bottom: 50px;
+
     left: 25px;
     width: 85%;
     padding-top: 10px;
