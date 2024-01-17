@@ -1,107 +1,147 @@
 html {
-    font-size: 20px;
-    line-height: 1.6;
-    font-family: 'Nippo-Regular';
-  }
-  body {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-  header {
-    padding: 1rem 3rem;
-    background-color: #1a265a;
-    text-align: center;
-  }
-  header h1 {
-    font-size: 2rem;
-    color: #f1600d;
-  }
-  header h2 {
-    font-size: 1.2rem;
-    color: #fef6ed;
-  }
-  main {
-    display: grid;
-    grid-gap: 1rem;
-    max-width: 1600px;
-    margin: 2rem auto;
-}
-figure {
-    border: 1px solid #1a265a;
-    border-radius: 20px;
-    overflow: hidden;
-}
-img {
-    width: 100%;
-    max-width: 100%;
-    height: auto;
-    display: block;
-}
-  figcaption {
-    padding: 1rem;
-    text-align: center;
-    background-color: #f1600d;
-  }
-  .doc {
-    padding: 0.5rem;
-    font-size: 0.9rem;
-}
-  footer {
-    background-color: #1a265a;
-    color: #fef6ed;
-    text-align: center;
-    padding: 1rem 3rem;
-  }
-  @media screen and (min-width: 600px) {
-    main {
-        grid-template-columns: repeat(2, minmax(250px, 1fr));
-    }
+  font-size: 4rem/1.618/1.618;
+  line-height: 1.6;
+  font-family: 'Nippo-Regular';
 }
 
-@media screen and (min-width: 900px) {
-    main {
-        grid-template-columns: repeat(3, minmax(250px, 1fr));
-    }
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-@media screen and (min-width: 1200px) {
-    main {
-        grid-template-columns: repeat(4, minmax(250px, 1fr));
-    }
-}
-/* Add a black background color to the top navigation */
-.topnav {
-  background-color: #333;
-  overflow: hidden;
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
-/* Style the links inside the navigation bar */
-.topnav a {
-  float: right;
-  display: block;
-  color: #fef6ed;
+header {
+  margin: 0;
+  padding-top: 1rem;
+  background-color: #1a265a;
   text-align: center;
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+}
+
+.header-text {
+  flex-grow: 1;
+}
+
+.header-text h1 {
+  font-size: 4rem;
+  color: #f1600d;
+}
+
+.header-text h2 {
+  font-size: 4rem/1.618;
+  color: #fef6ed;
+}
+
+.user-profile img {
+  width: 65px;
+  border-radius: 50%;
+  transition: background-color 0.3s, color 0.3s, transform 0.3s, opacity 0.3s;
+}
+
+.user-profile:hover img {
+  background-color: #f1600d;
+  color: black;
+  opacity: 0.8;
+  transform: scale(1.1); /* Increase size by 10% */
+}
+
+.topnav {
+  background-color: transparent;
+  overflow: hidden;
+  display: flex;
+  justify-content: flex-end;
+  padding-bottom: 1rem;
+  padding-right: 1rem;
+}
+
+.topnav a {
+  display: inline-block;
+  color: #f2f2f2;
   padding: 14px 16px;
   text-decoration: none;
   font-size: 17px;
+  border-radius: 10px;
+  margin-left: 10px;
 }
 
-/* Change the color of links on hover */
+.topnav a img {
+  width: 29px;
+}
+
 .topnav a:hover {
   background-color: #f1600d;
   color: black;
 }
 
-/* Add an active class to highlight the current page */
 .topnav a.active {
   background-color: #f1600d;
-  color: #fef6ed;
-  float: left;
-  border-radius: 10px;
+  color: white;
 }
 
-/* Hide the link that should open and close the topnav on small screens */
-.topnav .icon {
-  display: none;
+main {
+  display: grid;
+  grid-gap: 1rem;
+  max-width: 1600px;
+  margin: 2rem auto;
+}
+
+figure {
+  border: 1px solid #1a265a;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+img {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+figcaption {
+  padding: 1rem;
+  text-align: center;
+  background-color: #f1600d;
+}
+
+.doc {
+  padding: 0.5rem;
+  font-size: 0.9rem;
+}
+
+footer {
+  background-color: #1a265a;
+  color: #fef6ed;
+  text-align: center;
+  padding: 1rem 3rem;
+}
+
+@media screen and (min-width: 600px) {
+  main {
+    grid-template-columns: repeat(2, minmax(250px, 1fr));
+  }
+}
+
+@media screen and (min-width: 900px) {
+  main {
+    grid-template-columns: repeat(3, minmax(250px, 1fr));
+  }
+}
+
+@media screen and (min-width: 1200px) {
+  main {
+    grid-template-columns: repeat(4, minmax(250px, 1fr));
+  }
 }
