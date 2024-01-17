@@ -46,3 +46,38 @@ function getData() {
     .catch(error => console.error("Error fetching data:", error));
 }
 
+document.addEventListener("DOMContentLoaded", () => {
+  const navbar = document.getElementById("navbar");
+  const topnavSection = document.getElementById("myTopnav");
+
+  let options = {
+    root: null,
+    rootMargin: "0px",
+    threshold: 0
+  };
+
+  const observer = new IntersectionObserver(handleIntersect, options);
+  observer.observe(topnavSection);
+
+  function handleIntersect(entries) {
+    const entry = entries[0];
+    const isTopnavVisible = entry.isIntersecting;
+    const isTopScrolled = window.scrollY > 20;
+
+    if (!isTopnavVisible && isTopScrolled) {
+      // When the section is not in view and top is scrolled, display the navbar
+      navbar.style.top = "0";
+    } else {
+      // When the section is in view or top is not scrolled, hide the navbar
+      navbar.style.top = "-100px"; // Adjust this value
+    }
+  }
+
+  // Initial check to determine the initial state
+  handleIntersect([{ isIntersecting: false }]);
+});
+
+window.onscroll = function() {
+  // Additional scroll behavior if needed
+  // ...
+};

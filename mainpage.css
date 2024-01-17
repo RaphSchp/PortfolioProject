@@ -90,6 +90,82 @@ header {
   color: white;
 }
 
+.topnav input[type=text] {
+  float: right;
+  padding: 6px;
+  border: none;
+  margin-top: 8px;
+  margin-right: 16px;
+  font-size: 17px;
+  border-radius: 10px;
+}
+
+#navbar {
+  background-color: #1a265a;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  position: fixed;
+  top: -200px;
+  width: 100%;
+  transition: top 0.3s;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+}
+
+.brand-text {
+  font-size: 2rem;
+  color: #f1600d;
+  margin-right: 10px;
+  font-weight: bold;
+}
+
+.nav-links {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  flex-grow: 1;
+}
+
+#navbar a {
+  display: inline-block;
+  color: #f2f2f2;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+  border-radius: 10px;
+  margin-left: 10px;
+}
+
+#navbar a img {
+  width: 29px;
+  height: auto; /* Ensure images maintain their aspect ratio */
+}
+
+#navbar a:hover {
+  background-color: #f1600d;
+  color: black;
+}
+
+#navbar a.active {
+  background-color: #f1600d;
+  color: white;
+}
+
+#navbar input[type=text] {
+  padding: 6px;
+  border: none;
+  margin-top: 8px;
+  margin-right: 16px;
+  font-size: 17px;
+  border-radius: 10px;
+  line-height: 45px; /* Set line-height to the desired value */
+}
+
 main {
   display: grid;
   grid-gap: 1rem;
@@ -145,3 +221,4 @@ footer {
     grid-template-columns: repeat(4, minmax(250px, 1fr));
   }
 }
+
