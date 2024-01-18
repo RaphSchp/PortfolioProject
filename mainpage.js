@@ -30,13 +30,13 @@ function getData() {
         let img = document.createElement("img");
         let doc = document.createElement("p");
         let figcaption = document.createElement("figcaption");
-    
+
         img.src = item.img;
         img.alt = item.name;
         doc.textContent = item.doc;
         doc.classList.add("doc");
         figcaption.textContent = item.name;
-    
+
         figure.appendChild(img);
         figure.appendChild(doc);
         figure.appendChild(figcaption);
