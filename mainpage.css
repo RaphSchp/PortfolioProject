@@ -95,6 +95,7 @@ header {
   border-radius: 10px;
   margin-right: 20px;
   border-color: #f1600d;
+  cursor: pointer;
 }
 
 .topnav a img,
@@ -164,12 +165,13 @@ header {
   border-radius: 10px;
   margin-right: 20px;
   border-color: #f1600d;
+  cursor: pointer;
 }
 
 #navbar a img,
 #navbar button img {
   width: 29px;
-  height: auto; /* Ensure images maintain their aspect ratio */
+  height: auto;
 }
 
 #navbar a:hover,
@@ -189,7 +191,7 @@ header {
   text-decoration: none;
   font-size: 17px;
   border-radius: 10px;
-  margin-left: 10px;
+
 }
 
 main {
@@ -248,3 +250,54 @@ footer {
   }
 }
 
+.menuNav {
+  height: 100%;
+  width: 0;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  right: 0;
+  background-color: #1a265a;
+  overflow-x: hidden;
+  transition: width 0.5s;
+  padding-top: 60px;
+  border-left: 4px solid transparent; /* Initially set to transparent */
+}
+
+.menuNav.show-border {
+  border-left-color: #f1600d; /* Color when the sidebar is open */
+}
+
+.menuNav ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.menuNav li {
+  padding: 8px 8px 8px 8px;
+  text-decoration: none;
+  font-size: 25px;
+  color: #818181;
+  display: block;
+  transition: 0.3s;
+}
+
+.menuNav li:hover {
+  background-color: #1a265a;
+  color: #f1f1f1;
+}
+
+.menuNav .closebtn {
+  position: absolute;
+  top: 0;
+  right: 25px;
+  font-size: 36px;
+  margin-left: 50px;
+}
+
+
+
+@media screen and (max-height: 450px) {
+  .menuNav {padding-top: 15px;}
+  .menuNav a {font-size: 18px;}
+}
