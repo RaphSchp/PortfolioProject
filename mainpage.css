@@ -66,6 +66,15 @@ header {
   padding-right: 1rem;
 }
 
+.topnav input[type=text] {
+  display: inline-block;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+  border-radius: 10px;
+  margin-left: 10px;
+}
+
 .topnav a {
   display: inline-block;
   color: #f2f2f2;
@@ -76,11 +85,25 @@ header {
   margin-left: 10px;
 }
 
-.topnav a img {
+.topnav button {
+  display: inline-block;
+  color: #f2f2f2;
+  background-color: #1a265a;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+  border-radius: 10px;
+  margin-right: 20px;
+  border-color: #f1600d;
+}
+
+.topnav a img,
+.topnav button img {
   width: 29px;
 }
 
-.topnav a:hover {
+.topnav a:hover,
+.topnav button:hover {
   background-color: #f1600d;
   color: black;
 }
@@ -88,15 +111,6 @@ header {
 .topnav a.active {
   background-color: #f1600d;
   color: white;
-}
-
-.topnav input[type=text] {
-    display: inline-block;
-    padding: 14px 16px;
-    text-decoration: none;
-    font-size: 17px;
-    border-radius: 10px;
-    margin-left: 10px;
 }
 
 #navbar {
@@ -140,12 +154,26 @@ header {
   margin-left: 10px;
 }
 
-#navbar a img {
+#navbar button {
+  display: inline-block;
+  color: #f2f2f2;
+  background-color: #1a265a;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+  border-radius: 10px;
+  margin-right: 20px;
+  border-color: #f1600d;
+}
+
+#navbar a img,
+#navbar button img {
   width: 29px;
   height: auto; /* Ensure images maintain their aspect ratio */
 }
 
-#navbar a:hover {
+#navbar a:hover,
+#navbar button:hover {
   background-color: #f1600d;
   color: black;
 }
