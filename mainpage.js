@@ -40,25 +40,51 @@ function getData() {
         // Create HTML elements for each item in the data
         let figure = document.createElement("figure");
         let img = document.createElement("img");
-        let doc = document.createElement("p");
         let figcaption = document.createElement("figcaption");
+        let doc = document.createElement("p");
 
         // Set attributes and content for the created elements
         img.src = item.img;
         img.alt = item.name;
+        figcaption.textContent = item.name;
         doc.textContent = item.doc;
         doc.classList.add("doc");
-        figcaption.textContent = item.name;
+
+        // Add icons for participate, message, and favorites
+        let participateIcon = createIconLink("images/participate.png", "#participate-link");
+        let messageIcon = createIconLink("images/message.png", "#message-link");
+        let favoritesIcon = createIconLink("images/favorites.png", "#favorites-link");
 
         // Append the created elements to the main section
         figure.appendChild(img);
-        figure.appendChild(doc);
         figure.appendChild(figcaption);
+        figure.appendChild(doc);
+        figure.appendChild(participateIcon);
+        figure.appendChild(messageIcon);
+        figure.appendChild(favoritesIcon);
+
         main.appendChild(figure);
       });
+
+      // Function to create an icon link
+      function createIconLink(src, href) {
+        let iconLink = document.createElement("a");
+        iconLink.href = href;
+
+        let icon = document.createElement("img");
+        icon.src = src;
+        icon.alt = ""; // Add alt text if necessary
+        icon.classList.add("action-icon"); // You can apply styles to this class in your CSS
+
+        // Append the icon to the link
+        iconLink.appendChild(icon);
+
+        return iconLink;
+      }
     })
     .catch(error => console.error("Error fetching data:", error));
 }
+
                                                                                          // SCROLL DOWN NAV BAR
 // Event listener for when the DOM content is fully loaded
 document.addEventListener("DOMContentLoaded", () => {

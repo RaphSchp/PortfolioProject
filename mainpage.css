@@ -54,7 +54,7 @@ header {
   background-color: #f1600d;
   color: black;
   opacity: 0.8;
-  transform: scale(1.1); /* Increase size by 10% */
+  transform: scale(1.1);
 }
 
 .topnav {
@@ -202,12 +202,15 @@ main {
 }
 
 figure {
-  border: 1px solid #1a265a;
+  border: 6px solid #f1600d;
   border-radius: 20px;
   overflow: hidden;
+  background-color:#1a265a;
 }
 
-img {
+main img {
+  border-radius: 20px;
+  border: 6px solid #1a265a;
   width: 100%;
   max-width: 100%;
   height: auto;
@@ -215,14 +218,23 @@ img {
 }
 
 figcaption {
-  padding: 1rem;
-  text-align: center;
-  background-color: #f1600d;
+  font-size: 1rem;
+  padding: 0.5rem;
+  text-align: left;
+  color: #f1600d;
 }
 
 .doc {
   padding: 0.5rem;
   font-size: 0.9rem;
+  color: #fef6ed;
+}
+
+.action-icon {
+  display: inline-block;
+  margin-left: 20px;
+  width: 60px;
+  height: auto;
 }
 
 footer {
@@ -261,11 +273,11 @@ footer {
   overflow-x: hidden;
   transition: width 0.5s;
   padding-top: 60px;
-  border-left: 4px solid transparent; /* Initially set to transparent */
+  border-left: 4px solid transparent;
 }
 
 .menuNav.show-border {
-  border-left-color: #f1600d; /* Color when the sidebar is open */
+  border-left-color: #f1600d;
 }
 
 .menuNav ul {
