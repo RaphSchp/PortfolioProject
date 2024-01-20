@@ -15,4 +15,20 @@ app.use(bodyParse.urlencoded({
 
 //connect databasessssssss
 
-mongoose.connect('mongodb://')
+mongoose.connect('mongodb://0.0.0.027017/mydb',{
+    useNewUrlParser:true,
+    useUnifiedTopology: true
+})
+
+var db= mongoose.connection;
+
+//check connection 
+
+db.on('error', () => console.log("error in connecting database"));
+db.once('open', () => console.log("Connected to Database"));
+
+//create checking page
+
+app.get("/", (req, res) => {
+    return res.redirect("index.html");
+}).listen(3000);
