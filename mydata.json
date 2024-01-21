@@ -9,6 +9,7 @@
       "event_hour": "10:00 AM",
       "event_date": "2024-03-15",
       "city": "Los Angeles",
+      "participants": "14",
       "publication_date": "2024-02-02"
     },
     {
@@ -20,6 +21,7 @@
       "event_hour": "12:30 PM",
       "event_date": "2024-04-02",
       "city": "New York",
+      "participants": "5",
       "publication_date": "2024-02-02"
     },
     {
@@ -31,6 +33,7 @@
       "event_hour": "3:15 PM",
       "event_date": "2024-05-20",
       "city": "Denver",
+      "participants": "3",
       "publication_date": "2024-02-02"
     },
     {
@@ -42,6 +45,7 @@
       "event_hour": "2:45 PM",
       "event_date": "2024-06-08",
       "city": "London",
+      "participants": "11",
       "publication_date": "2024-02-02"
     },
     {
@@ -53,6 +57,7 @@
       "event_hour": "9:00 AM",
       "event_date": "2024-07-15",
       "city": "Tokyo",
+      "participants": "52",
       "publication_date": "2024-02-02"
     }
   ]
