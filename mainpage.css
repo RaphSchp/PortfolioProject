@@ -224,10 +224,25 @@ figcaption {
   color: #f1600d;
 }
 
+.action-icon:hover{
+  background-color: #f1600d;
+  color: black;
+  padding: 3px;
+}
+
 .doc {
   padding: 0.5rem;
   font-size: 0.9rem;
   color: #fef6ed;
+}
+
+.event-hour,
+.event-date,
+.city,
+.participants {
+  font-size: 1rem;
+  color: #fef6ed;
+  padding: 0.5rem;
 }
 
 .action-icon {
