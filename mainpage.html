@@ -88,45 +88,52 @@
     </header>
     <main>
         <!-- Images will be loaded here with figure and figcaption -->
-        <div id="modalBackground" class="modal-background">
-            <!-- Event Creation Box -->
-            <div id="createEventBox" class="event-box">
-                <h2>Create Event</h2>
-                <form id="eventForm">
-                    <ul>
-                        <li>
-                            <label for="eventName">Event Name:</label>
-                            <input type="text" id="eventName" name="eventName" required>
-                        </li>
-                        <li>
-                            <label for="eventDescription">Event Description:</label>
-                            <textarea id="eventDescription" name="eventDescription" required></textarea>
-                        </li>
-                        <li>
-                            <label for="eventTime">Event Time:</label>
-                            <input type="text" id="eventTime" name="eventTime" required>
-                        </li>
-                        <li>
-                            <label for="eventDate">Event Date:</label>
-                            <input type="date" id="eventDate" name="eventDate" required>
-                        </li>
-                        <li>
-                            <label for="eventCity">Event City:</label>
-                            <input type="text" id="eventCity" name="eventCity" required>
-                        </li>
-                        <li>
-                            <label for="participants">Participants:</label>
-                            <input type="number" id="participants" name="participants" required>
-                        </li>
-                        <li>
-                            <label for="eventLocation">Event Location:</label>
-                            <input type="text" id="eventLocation" name="eventLocation" required>
-                        </li>
-                    </ul>
-                    <button type="button" onclick="submitEvent()">Create Event</button>
-                </form>
-            </div>
-        </div>
+        <!-- Modal Background -->
+<div id="modalBackground" class="modal-background">
+  <!-- Event Creation Box -->
+  <div id="createEventBox" class="event-box">
+      <h2>Create Event</h2>
+      <a href="#" class="close-btn" onclick="closeEventBox()">&times;</a>
+      <form id="eventForm">
+          <ul>
+              <li>
+                  <label for="eventName">Event Name:</label>
+                  <input type="text" id="eventName" name="eventName" required>
+              </li>
+              <li>
+                  <label for="eventDescription">Event Description:</label>
+                  <textarea id="eventDescription" name="eventDescription" required></textarea>
+              </li>
+              <li>
+                  <label for="eventTime">Event Time:</label>
+                  <input type="text" id="eventTime" name="eventTime" required>
+              </li>
+              <li>
+                  <label for="eventDate">Event Date:</label>
+                  <input type="date" id="eventDate" name="eventDate" required>
+              </li>
+              <li>
+                  <label for="eventCity">Event City:</label>
+                  <input type="text" id="eventCity" name="eventCity" required>
+              </li>
+              <li>
+                  <label for="participants">Participants:</label>
+                  <input type="number" id="participants" name="participants" required>
+              </li>
+              <li>
+                  <label for="eventLocation">Event Location:</label>
+                  <input type="text" id="eventLocation" name="eventLocation" required>
+              </li>
+              <li>
+                  <label for="eventImage">Event Image:</label>
+                  <input type="file" id="eventImage" name="eventImage" accept="image/*" required>
+              </li>
+          </ul>
+          <button type="button" onclick="submitEvent()">Create Event</button>
+      </form>
+  </div>
+</div>
+
     </main>
     <footer>
         <p>&copy;Kangaroo 2024</p>

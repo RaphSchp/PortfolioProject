@@ -1,4 +1,4 @@
-// FETCH DATA --------------------------------------------------------------------------------------------------------------------------------
+// FETCH DATA -------------------------------------------------------------------------------------------------------------------------------------
 const URL = "mydata.json";
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -122,7 +122,7 @@ function getData() {
     .catch(error => console.error("Error fetching data:", error));
 }
 
-// SCROLL DOWN NAV BAR --------------------------------------------------------------------------------------------------------------------------------
+// SCROLL DOWN NAV BAR ----------------------------------------------------------------------------------------------------------------------------
 document.addEventListener("DOMContentLoaded", () => {
   const navbar = document.getElementById("navbar");
   const topnavSection = document.getElementById("myTopnav");
@@ -156,7 +156,7 @@ window.onscroll = function () {
   // ...
 };
 
-// NAVIGATION SIDE BAR --------------------------------------------------------------------------------------------------------------------------------
+// NAVIGATION SIDE BAR ----------------------------------------------------------------------------------------------------------------------------
 function openMenuNav() {
   const menuNav = document.getElementById("menuNav");
   menuNav.classList.add("show-border");
@@ -169,7 +169,7 @@ function closeMenuNav() {
   menuNav.style.width = "0";
 }
 
-//CREATE EVENT BOX --------------------------------------------------------------------------------------------------------------------------------
+// CREATE EVENT BOX --------------------------------------------------------------------------------------------------------------------------------
 
 document.addEventListener("DOMContentLoaded", () => {
   const createEventLinks = document.querySelectorAll('.create-event-link');
@@ -185,6 +185,11 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 });
+
+function closeEventBox() {
+  document.getElementById('modalBackground').style.display = 'none';
+}
+
 
 function submitEvent() {
   // Add logic to handle form submission
