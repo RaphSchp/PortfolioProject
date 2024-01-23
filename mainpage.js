@@ -1,4 +1,4 @@
-// FETCH DATA
+// FETCH DATA --------------------------------------------------------------------------------------------------------------------------------
 const URL = "mydata.json";
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -69,7 +69,6 @@ function getData() {
         city.textContent = "";
         city.appendChild(cityLabel);
         city.appendChild(cityValue);
-        city.style.color = "#f1600d"; // Set text color for the label
         city.classList.add("city");
 
         // Participants
@@ -102,7 +101,7 @@ function getData() {
       function createLabelSpan(labelText) {
         let labelSpan = document.createElement("span");
         labelSpan.textContent = labelText;
-        labelSpan.style.color = "#f1600d"; // Set text color for the label
+        labelSpan.style.color = "#f1600d";
         return labelSpan;
       }
 
@@ -123,7 +122,7 @@ function getData() {
     .catch(error => console.error("Error fetching data:", error));
 }
 
-// SCROLL DOWN NAV BAR
+// SCROLL DOWN NAV BAR --------------------------------------------------------------------------------------------------------------------------------
 document.addEventListener("DOMContentLoaded", () => {
   const navbar = document.getElementById("navbar");
   const topnavSection = document.getElementById("myTopnav");
@@ -157,7 +156,7 @@ window.onscroll = function () {
   // ...
 };
 
-// NAVIGATION SIDE BAR
+// NAVIGATION SIDE BAR --------------------------------------------------------------------------------------------------------------------------------
 function openMenuNav() {
   const menuNav = document.getElementById("menuNav");
   menuNav.classList.add("show-border");
@@ -168,4 +167,30 @@ function closeMenuNav() {
   const menuNav = document.getElementById("menuNav");
   menuNav.classList.remove("show-border");
   menuNav.style.width = "0";
+}
+
+//CREATE EVENT BOX --------------------------------------------------------------------------------------------------------------------------------
+
+document.addEventListener("DOMContentLoaded", () => {
+  const createEventLinks = document.querySelectorAll('.create-event-link');
+  const modalBackground = document.getElementById('modalBackground');
+
+  // Hide modal background by default
+  modalBackground.style.display = 'none';
+
+  createEventLinks.forEach(link => {
+    link.addEventListener('click', (event) => {
+      event.preventDefault();
+      modalBackground.style.display = 'flex';
+    });
+  });
+});
+
+function submitEvent() {
+  // Add logic to handle form submission
+  // ...
+
+  // After handling the submission, hide the modal
+  const modalBackground = document.getElementById('modalBackground');
+  modalBackground.style.display = 'none';
 }

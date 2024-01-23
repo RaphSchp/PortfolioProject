@@ -109,7 +109,7 @@ header {
   color: black;
 }
 
-.topnav a.active {
+.topnav a.create-event-link {
   background-color: #f1600d;
   color: white;
 }
@@ -180,7 +180,7 @@ header {
   color: black;
 }
 
-#navbar a.active {
+#navbar a.create-event-link {
   background-color: #f1600d;
   color: white;
 }
@@ -250,6 +250,57 @@ figcaption {
   margin-left: 20px;
   width: 60px;
   height: auto;
+}
+
+.modal-background {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  justify-content: center;
+  align-items: center;
+}
+
+#createEventBox h2 {
+  color: #f1600d; 
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+#createEventBox ul {
+  color: #fef6ed; 
+  font-size: 1rem;
+}
+
+.event-box {
+  border: 6px solid #f1600d;
+  background-color:#1a265a;
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 400px;
+}
+
+#modalBackground {
+  display: flex;
+}
+
+form ul {
+  list-style: none;
+  padding: 0;
+}
+
+form li {
+  margin-bottom: 10px;
+}
+
+form label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
 }
 
 footer {
