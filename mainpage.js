@@ -199,3 +199,36 @@ function submitEvent() {
   const modalBackground = document.getElementById('modalBackground');
   modalBackground.style.display = 'none';
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+  const searchInput = document.getElementById("searchInput");
+  const searchButton = document.getElementById("searchButton");
+  const eventContainer = document.getElementById("eventContainer");
+
+  // Your existing code...
+
+  // Event listener for the "Enter" key in the search input
+  searchInput.addEventListener("keyup", (event) => {
+    if (event.key === "Enter") {
+      handleSearch();
+    }
+  });
+
+  // Event listener for the button click
+  searchButton.addEventListener("click", handleSearch);
+
+  function handleSearch() {
+    const searchTerm = searchInput.value.toLowerCase();
+
+    // Loop through figures and toggle display based on search term
+    figures.forEach((figure) => {
+      const figCaptionText = figure.querySelector("figcaption").textContent.toLowerCase();
+
+      if (figCaptionText.includes(searchTerm)) {
+        figure.style.display = "block"; // Show the figure
+      } else {
+        figure.style.display = "none"; // Hide the figure
+      }
+    });
+  }
+});
