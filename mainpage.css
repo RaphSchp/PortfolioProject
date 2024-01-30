@@ -191,6 +191,7 @@ header {
   text-decoration: none;
   font-size: 17px;
   border-radius: 10px;
+  margin-left: 10px;
 
 }
 
@@ -312,16 +313,20 @@ form label {
   cursor: pointer;
   text-decoration: none;
   color: #fef6ed;
-  transition: color 0.3s;
-  width: 40px;
-  height: 40px;
-  border-radius: 20px;
+  transition: color 0.3s, background-color 0.3s;
+  width: 35px;
+  height: 35px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .close-btn:hover {
   background-color: #f1600d;
-
+  color: black;
 }
+
 
 footer {
   background-color: #1a265a;
