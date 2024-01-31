@@ -1,3 +1,7 @@
+// Global variable to keep track of rendered event IDs
+let renderedEventIds = new Set();
+let figures = [];
+
 // FETCH DATA -------------------------------------------------------------------------------------------------------------------------------------
 const URL = "mydata.json";
 
@@ -29,97 +33,107 @@ function getData() {
       console.log("Using local JSON data", mydata);
 
       mydata.items.forEach(item => {
-        let figure = document.createElement("figure");
-        let img = document.createElement("img");
-        let figcaption = document.createElement("figcaption");
-        let doc = document.createElement("p");
-        let eventHour = document.createElement("p");
-        let eventDate = document.createElement("p");
-        let city = document.createElement("p");
-        let participants = document.createElement("p");
+        // Check if the event ID has been rendered
+        if (!renderedEventIds.has(item.id)) {
+          // Render the event
+          let figure = document.createElement("figure");
+          let img = document.createElement("img");
+          let figcaption = document.createElement("figcaption");
+          let doc = document.createElement("p");
+          let eventHour = document.createElement("p");
+          let eventDate = document.createElement("p");
+          let city = document.createElement("p");
+          let participants = document.createElement("p");
 
-        img.src = item.img;
-        img.alt = item.name;
-        figcaption.textContent = item.name;
-        doc.textContent = item.doc;
-        doc.classList.add("doc");
+          img.src = item.img;
+          img.alt = item.name;
+          figcaption.textContent = item.name;
+          doc.textContent = item.doc;
+          doc.classList.add("doc");
 
-        // Event Hour
-        let eventHourLabel = createLabelSpan("Event Hour: ");
-        let eventHourValue = document.createElement("span");
-        eventHourValue.textContent = item.event_hour;
-        eventHour.textContent = "";
-        eventHour.appendChild(eventHourLabel);
-        eventHour.appendChild(eventHourValue);
-        eventHour.classList.add("event-hour");
+          // Event Hour
+          let eventHourLabel = createLabelSpan("Event Hour: ");
+          let eventHourValue = document.createElement("span");
+          eventHourValue.textContent = item.event_hour;
+          eventHour.textContent = "";
+          eventHour.appendChild(eventHourLabel);
+          eventHour.appendChild(eventHourValue);
+          eventHour.classList.add("event-hour");
 
-        // Event Date
-        let eventDateLabel = createLabelSpan("Event Date: ");
-        let eventDateValue = document.createElement("span");
-        eventDateValue.textContent = item.event_date;
-        eventDate.textContent = "";
-        eventDate.appendChild(eventDateLabel);
-        eventDate.appendChild(eventDateValue);
-        eventDate.classList.add("event-date");
+          // Event Date
+          let eventDateLabel = createLabelSpan("Event Date: ");
+          let eventDateValue = document.createElement("span");
+          eventDateValue.textContent = item.event_date;
+          eventDate.textContent = "";
+          eventDate.appendChild(eventDateLabel);
+          eventDate.appendChild(eventDateValue);
+          eventDate.classList.add("event-date");
 
-        // City
-        let cityLabel = createLabelSpan("City: ");
-        let cityValue = document.createElement("span");
-        cityValue.textContent = item.city;
-        city.textContent = "";
-        city.appendChild(cityLabel);
-        city.appendChild(cityValue);
-        city.classList.add("city");
+          // City
+          let cityLabel = createLabelSpan("City: ");
+          let cityValue = document.createElement("span");
+          cityValue.textContent = item.city;
+          city.textContent = "";
+          city.appendChild(cityLabel);
+          city.appendChild(cityValue);
+          city.classList.add("city");
 
-        // Participants
-        let participantsLabel = createLabelSpan("Participants: ");
-        let participantsValue = document.createElement("span");
-        participantsValue.textContent = item.participants;
-        participants.textContent = "";
-        participants.appendChild(participantsLabel);
-        participants.appendChild(participantsValue);
-        participants.classList.add("participants");
+          // Participants
+          let participantsLabel = createLabelSpan("Participants: ");
+          let participantsValue = document.createElement("span");
+          participantsValue.textContent = item.participants;
+          participants.textContent = "";
+          participants.appendChild(participantsLabel);
+          participants.appendChild(participantsValue);
+          participants.classList.add("participants");
 
-        let participateIcon = createIconLink("images/participate.png", "#participate-link");
-        let messageIcon = createIconLink("images/message.png", "#message-link");
-        let favoritesIcon = createIconLink("images/favorites.png", "#favorites-link");
+          let participateIcon = createIconLink("images/participate.png", "#participate-link");
+          let messageIcon = createIconLink("images/message.png", "#message-link");
+          let favoritesIcon = createIconLink("images/favorites.png", "#favorites-link");
 
-        figure.appendChild(img);
-        figure.appendChild(figcaption);
-        figure.appendChild(doc);
-        figure.appendChild(eventHour);
-        figure.appendChild(eventDate);
-        figure.appendChild(city);
-        figure.appendChild(participants);
-        figure.appendChild(participateIcon);
-        figure.appendChild(messageIcon);
-        figure.appendChild(favoritesIcon);
+          figure.appendChild(img);
+          figure.appendChild(figcaption);
+          figure.appendChild(doc);
+          figure.appendChild(eventHour);
+          figure.appendChild(eventDate);
+          figure.appendChild(city);
+          figure.appendChild(participants);
+          figure.appendChild(participateIcon);
+          figure.appendChild(messageIcon);
+          figure.appendChild(favoritesIcon);
 
-        main.appendChild(figure);
+          main.appendChild(figure);
+
+          // Add the event ID to the set of rendered IDs
+          renderedEventIds.add(item.id);
+        }
       });
 
-      function createLabelSpan(labelText) {
-        let labelSpan = document.createElement("span");
-        labelSpan.textContent = labelText;
-        labelSpan.style.color = "#f1600d";
-        return labelSpan;
-      }
-
-      function createIconLink(src, href) {
-        let iconLink = document.createElement("a");
-        iconLink.href = href;
-
-        let icon = document.createElement("img");
-        icon.src = src;
-        icon.alt = "";
-        icon.classList.add("action-icon");
-
-        iconLink.appendChild(icon);
-
-        return iconLink;
-      }
+      // Update the figures array after rendering new events
+      figures = Array.from(document.querySelectorAll("figure"));
     })
     .catch(error => console.error("Error fetching data:", error));
+}
+
+function createLabelSpan(labelText) {
+  let labelSpan = document.createElement("span");
+  labelSpan.textContent = labelText;
+  labelSpan.style.color = "#f1600d";
+  return labelSpan;
+}
+
+function createIconLink(src, href) {
+  let iconLink = document.createElement("a");
+  iconLink.href = href;
+
+  let icon = document.createElement("img");
+  icon.src = src;
+  icon.alt = "";
+  icon.classList.add("action-icon");
+
+  iconLink.appendChild(icon);
+
+  return iconLink;
 }
 
 // SCROLL DOWN NAV BAR ----------------------------------------------------------------------------------------------------------------------------
@@ -190,7 +204,6 @@ function closeEventBox() {
   document.getElementById('modalBackground').style.display = 'none';
 }
 
-
 function submitEvent() {
   // Add logic to handle form submission
   // ...
@@ -200,35 +213,91 @@ function submitEvent() {
   modalBackground.style.display = 'none';
 }
 
+// SEARCH FUNCTION --------------------------------------------------------------------------------------------------------------------------------
 document.addEventListener("DOMContentLoaded", () => {
-  const searchInput = document.getElementById("searchInput");
-  const searchButton = document.getElementById("searchButton");
-  const eventContainer = document.getElementById("eventContainer");
+  const searchInputs = document.querySelectorAll("#navbar-search-input, #topnav-search-input");
+  const navbarSearchButton = document.getElementById("navbar-search-button");
+  const topnavSearchButton = document.getElementById("topnav-search-button");
 
-  // Your existing code...
+// Event listener for the button clicks
+navbarSearchButton.addEventListener("click", handleNavbarSearch);
+topnavSearchButton.addEventListener("click", handleTopnavSearch);
 
-  // Event listener for the "Enter" key in the search input
+function handleNavbarSearch() {
+  handleSearch("navbar-search-input");
+}
+
+function handleTopnavSearch() {
+  handleSearch("topnav-search-input");
+}
+
+function handleSearch(inputId) {
+  const searchTerm = document.getElementById(inputId).value.toLowerCase();
+
+  // Loop through all figures and toggle display based on search term
+  const allFigures = Array.from(document.querySelectorAll("main figure, #myTopnav figure"));
+  allFigures.forEach((figure) => {
+    // ... (rest of the handleSearch function remains the same)
+  });
+}
+
+const navbarSearchInput = document.getElementById("navbar-search-input");
+const topnavSearchInput = document.getElementById("topnav-search-input");
+
+navbarSearchInput.addEventListener("keyup", (event) => {
+  if (event.key === "Enter") {
+    handleNavbarSearch();
+  }
+});
+
+topnavSearchInput.addEventListener("keyup", (event) => {
+  if (event.key === "Enter") {
+    handleTopnavSearch();
+  }
+});
+
+
+// Event listener for the "Enter" key in the search inputs
+searchInputs.forEach((searchInput) => {
   searchInput.addEventListener("keyup", (event) => {
     if (event.key === "Enter") {
-      handleSearch();
+      const inputId = searchInput.id;
+      handleSearch(inputId);
     }
   });
+});
 
-  // Event listener for the button click
-  searchButton.addEventListener("click", handleSearch);
+// Event listener for the button clicks
+navbarSearchButton.addEventListener("click", () => handleSearch("navbar-search-input"));
+topnavSearchButton.addEventListener("click", () => handleSearch("topnav-search-input"));
 
-  function handleSearch() {
-    const searchTerm = searchInput.value.toLowerCase();
+function handleSearch(inputId) {
+  const searchTerm = document.getElementById(inputId).value.toLowerCase();
 
-    // Loop through figures and toggle display based on search term
-    figures.forEach((figure) => {
-      const figCaptionText = figure.querySelector("figcaption").textContent.toLowerCase();
+  // Loop through all figures and toggle display based on search term
+  const allFigures = Array.from(document.querySelectorAll("main figure, #myTopnav figure"));
+  allFigures.forEach((figure) => {
+    const figCaptionText = figure.querySelector("figcaption").textContent.toLowerCase();
+    const docText = figure.querySelector(".doc").textContent.toLowerCase();
+    const eventHourText = figure.querySelector(".event-hour span:last-child").textContent.toLowerCase();
+    const eventDateText = figure.querySelector(".event-date span:last-child").textContent.toLowerCase();
+    const cityText = figure.querySelector(".city span:last-child").textContent.toLowerCase();
+    const participantsText = figure.querySelector(".participants span:last-child").textContent.toLowerCase();
 
-      if (figCaptionText.includes(searchTerm)) {
-        figure.style.display = "block"; // Show the figure
-      } else {
-        figure.style.display = "none"; // Hide the figure
-      }
-    });
-  }
+    const isMatch =
+      figCaptionText.includes(searchTerm) ||
+      docText.includes(searchTerm) ||
+      eventHourText.includes(searchTerm) ||
+      eventDateText.includes(searchTerm) ||
+      cityText.includes(searchTerm) ||
+      participantsText.includes(searchTerm);
+
+    if (isMatch) {
+      figure.style.display = "block"; // Show the figure
+    } else {
+      figure.style.display = "none"; // Hide the figure
+    }
+  });
+}
+
 });
