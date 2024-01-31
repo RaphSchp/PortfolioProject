@@ -136,16 +136,20 @@ function createIconLink(src, href) {
   return iconLink;
 }
 
-// SCROLL DOWN NAV BAR ----------------------------------------------------------------------------------------------------------------------------
+// SCROLL DOWN NAV BAR + UP BUTTON ----------------------------------------------------------------------------------------------------------------
 document.addEventListener("DOMContentLoaded", () => {
   const navbar = document.getElementById("navbar");
   const topnavSection = document.getElementById("myTopnav");
+  let mybutton = document.getElementById("myBtn");
 
   let options = {
     root: null,
     rootMargin: "0px",
     threshold: 0
   };
+
+  // Initialize the button display
+  toggleButtonDisplay();
 
   const observer = new IntersectionObserver(handleIntersect, options);
   observer.observe(topnavSection);
@@ -160,15 +164,33 @@ document.addEventListener("DOMContentLoaded", () => {
     } else {
       navbar.style.top = "-100px";
     }
+
+    // Update button display on intersect
+    toggleButtonDisplay();
   }
 
-  handleIntersect([{ isIntersecting: false }]);
+  window.addEventListener("scroll", toggleButtonDisplay);
+
+  function toggleButtonDisplay() {
+    // Get the button:
+    let mybutton = document.getElementById("myBtn");
+
+    if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+      mybutton.style.display = "block";
+    } else {
+      mybutton.style.display = "none";
+    }
+  }
+
+  // Scroll to top when the button is clicked
+mybutton.addEventListener("click", () => {
+  // Replace "path/to/your/image.png" with the actual path to your image
+  mybutton.style.backgroundImage = "url('images/up.png')";
+  document.body.scrollTop = 0; // For Safari
+  document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
 });
 
-window.onscroll = function () {
-  // Additional scroll behavior if needed
-  // ...
-};
+});
 
 // NAVIGATION SIDE BAR ----------------------------------------------------------------------------------------------------------------------------
 function openMenuNav() {
@@ -183,7 +205,7 @@ function closeMenuNav() {
   menuNav.style.width = "0";
 }
 
-// CREATE EVENT BOX --------------------------------------------------------------------------------------------------------------------------------
+// CREATE EVENT BOX -------------------------------------------------------------------------------------------------------------------------------
 
 document.addEventListener("DOMContentLoaded", () => {
   const createEventLinks = document.querySelectorAll('.create-event-link');
@@ -219,85 +241,73 @@ document.addEventListener("DOMContentLoaded", () => {
   const navbarSearchButton = document.getElementById("navbar-search-button");
   const topnavSearchButton = document.getElementById("topnav-search-button");
 
-// Event listener for the button clicks
-navbarSearchButton.addEventListener("click", handleNavbarSearch);
-topnavSearchButton.addEventListener("click", handleTopnavSearch);
+  // Event listener for the button clicks
+  navbarSearchButton.addEventListener("click", handleNavbarSearch);
+  topnavSearchButton.addEventListener("click", handleTopnavSearch);
 
-function handleNavbarSearch() {
-  handleSearch("navbar-search-input");
-}
-
-function handleTopnavSearch() {
-  handleSearch("topnav-search-input");
-}
-
-function handleSearch(inputId) {
-  const searchTerm = document.getElementById(inputId).value.toLowerCase();
-
-  // Loop through all figures and toggle display based on search term
-  const allFigures = Array.from(document.querySelectorAll("main figure, #myTopnav figure"));
-  allFigures.forEach((figure) => {
-    // ... (rest of the handleSearch function remains the same)
-  });
-}
-
-const navbarSearchInput = document.getElementById("navbar-search-input");
-const topnavSearchInput = document.getElementById("topnav-search-input");
-
-navbarSearchInput.addEventListener("keyup", (event) => {
-  if (event.key === "Enter") {
-    handleNavbarSearch();
+  function handleNavbarSearch() {
+    handleSearch("navbar-search-input");
   }
-});
 
-topnavSearchInput.addEventListener("keyup", (event) => {
-  if (event.key === "Enter") {
-    handleTopnavSearch();
+  function handleTopnavSearch() {
+    handleSearch("topnav-search-input");
   }
-});
 
+  const navbarSearchInput = document.getElementById("navbar-search-input");
+  const topnavSearchInput = document.getElementById("topnav-search-input");
 
-// Event listener for the "Enter" key in the search inputs
-searchInputs.forEach((searchInput) => {
-  searchInput.addEventListener("keyup", (event) => {
+  navbarSearchInput.addEventListener("keyup", (event) => {
     if (event.key === "Enter") {
-      const inputId = searchInput.id;
-      handleSearch(inputId);
+      handleNavbarSearch();
     }
   });
-});
 
-// Event listener for the button clicks
-navbarSearchButton.addEventListener("click", () => handleSearch("navbar-search-input"));
-topnavSearchButton.addEventListener("click", () => handleSearch("topnav-search-input"));
-
-function handleSearch(inputId) {
-  const searchTerm = document.getElementById(inputId).value.toLowerCase();
-
-  // Loop through all figures and toggle display based on search term
-  const allFigures = Array.from(document.querySelectorAll("main figure, #myTopnav figure"));
-  allFigures.forEach((figure) => {
-    const figCaptionText = figure.querySelector("figcaption").textContent.toLowerCase();
-    const docText = figure.querySelector(".doc").textContent.toLowerCase();
-    const eventHourText = figure.querySelector(".event-hour span:last-child").textContent.toLowerCase();
-    const eventDateText = figure.querySelector(".event-date span:last-child").textContent.toLowerCase();
-    const cityText = figure.querySelector(".city span:last-child").textContent.toLowerCase();
-    const participantsText = figure.querySelector(".participants span:last-child").textContent.toLowerCase();
-
-    const isMatch =
-      figCaptionText.includes(searchTerm) ||
-      docText.includes(searchTerm) ||
-      eventHourText.includes(searchTerm) ||
-      eventDateText.includes(searchTerm) ||
-      cityText.includes(searchTerm) ||
-      participantsText.includes(searchTerm);
-
-    if (isMatch) {
-      figure.style.display = "block"; // Show the figure
-    } else {
-      figure.style.display = "none"; // Hide the figure
+  topnavSearchInput.addEventListener("keyup", (event) => {
+    if (event.key === "Enter") {
+      handleTopnavSearch();
     }
   });
-}
 
+  // Event listener for the "Enter" key in the search inputs
+  searchInputs.forEach((searchInput) => {
+    searchInput.addEventListener("keyup", (event) => {
+      if (event.key === "Enter") {
+        const inputId = searchInput.id;
+        handleSearch(inputId);
+      }
+    });
+  });
+
+  // Event listener for the button clicks
+  navbarSearchButton.addEventListener("click", () => handleSearch("navbar-search-input"));
+  topnavSearchButton.addEventListener("click", () => handleSearch("topnav-search-input"));
+
+  function handleSearch(inputId) {
+    const searchTerm = document.getElementById(inputId).value.toLowerCase();
+
+    // Loop through all figures and toggle display based on search term
+    const allFigures = Array.from(document.querySelectorAll("main figure, #myTopnav figure"));
+    allFigures.forEach((figure) => {
+      const figCaptionText = figure.querySelector("figcaption").textContent.toLowerCase();
+      const docText = figure.querySelector(".doc").textContent.toLowerCase();
+      const eventHourText = figure.querySelector(".event-hour span:last-child").textContent.toLowerCase();
+      const eventDateText = figure.querySelector(".event-date span:last-child").textContent.toLowerCase();
+      const cityText = figure.querySelector(".city span:last-child").textContent.toLowerCase();
+      const participantsText = figure.querySelector(".participants span:last-child").textContent.toLowerCase();
+
+      const isMatch =
+        figCaptionText.includes(searchTerm) ||
+        docText.includes(searchTerm) ||
+        eventHourText.includes(searchTerm) ||
+        eventDateText.includes(searchTerm) ||
+        cityText.includes(searchTerm) ||
+        participantsText.includes(searchTerm);
+
+      if (isMatch) {
+        figure.style.display = "block"; // Show the figure
+      } else {
+        figure.style.display = "none"; // Hide the figure
+      }
+    });
+  }
 });
