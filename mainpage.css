@@ -424,13 +424,15 @@ footer {
   padding: 15px;
   border-radius: 10px;
   font-size: 18px;
+  transition: background-color 0.3s, transform 0.3s;
 }
 
 #myBtn img {
-  width: 100%; /* Ensure the image takes up the full width of the button */
+  width: 100%;
   height: auto;
 }
 
 #myBtn:hover {
   transform: scale(1.1);
 }
+

@@ -184,8 +184,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Scroll to top when the button is clicked
 mybutton.addEventListener("click", () => {
-  // Replace "path/to/your/image.png" with the actual path to your image
-  mybutton.style.backgroundImage = "url('images/up.png')";
   document.body.scrollTop = 0; // For Safari
   document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
 });
