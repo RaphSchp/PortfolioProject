@@ -92,7 +92,7 @@ h2 {
     padding-left: 8px;
   }
 
-  
+
   /*responsive*/
   @media(max-width: 767px){
     .footer-col{
@@ -107,7 +107,7 @@ h2 {
   }
 
 .raphaelschopfergithub{
-  background-image: url('images/github.png');
+  background-image: url('../../assets/images/github.png');
   background-size: cover;
   width: 50px;
   height: 50px;;
@@ -117,7 +117,7 @@ h2 {
   transition: transform 0.3s ease, filter 0.3s ease;
 }
 .raphaelschopferlinkedin{
-  background-image: url('images/linkedin.png');
+  background-image: url('../../assets/images/linkedin.png');
   background-size: cover;
   width: 50px;
   height: 50px;;
@@ -128,7 +128,7 @@ h2 {
 }
 .benjaminmarchalgithub{
   margin-top: 10px;
-  background-image: url('images/github.png');
+  background-image: url('../../assets/images/github.png');
   background-size: cover;
   width: 50px;
   height: 50px;;
@@ -138,7 +138,7 @@ h2 {
   transition: transform 0.3s ease, filter 0.3s ease;
 }
 .benjaminmarchallinkedin{
-  background-image: url('images/linkedin.png');
+  background-image: url('../../assets/images/linkedin.png');
   background-size: cover;
   width: 50px;
   height: 50px;;
@@ -148,19 +148,19 @@ h2 {
   transition: transform 0.3s ease, filter 0.3s ease;
 }
 .raphaelschopfergithub:hover{
-  background-image: url('images/github-hover.png');
+  background-image: url('../../assets/images/github-hover.png');
   transform: scale(1.2);
 }
 .raphaelschopferlinkedin:hover{
-  background-image: url('images/linkedin-hover.png');
+  background-image: url('../../assets/images/linkedin-hover.png');
   transform: scale(1.2);
 }
 .benjaminmarchalgithub:hover{
-  background-image: url('images/github-hover.png');
+  background-image: url('../../assets/images/github-hover.png');
   transform: scale(1.2);
 }
 .benjaminmarchallinkedin:hover{
-  background-image: url('images/linkedin-hover.png');
+  background-image: url('../../assets/images/linkedin-hover.png');
   transform: scale(1.2);
 }
 .social-links{
@@ -182,6 +182,6 @@ h2 {
 .raphael p,
 .benjamin p {
   margin-bottom: 10px;
-  font-size: 16px; 
+  font-size: 16px;
 
 }
