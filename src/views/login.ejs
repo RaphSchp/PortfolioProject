@@ -1,0 +1,65 @@
+<!-- login.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+        integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="loginpage.css">
+    <link rel="stylesheet" href="Nippo_Complete/Nippo_Complete/Fonts/WEB/css/nippo.css">
+    <script src="loginpage.js"></script>
+    <title>Kangaroo</title>
+</head>
+
+<body>
+    <div class="container">
+        <div class="box">
+
+            <!-- Login Section -->
+            <div class="box-login" id="login">
+                <div class="top-header">
+                    <h1>Kangaroo</h1>
+                    <p>Login</p>
+                </div>
+                <div class="input-group">
+                    <div class="input-field">
+                        <input type="text" class="input-box" id="logEmail" required>
+                        <label for="logEmail">Email address</label>
+                    </div>
+                    <div class="input-field">
+                        <input type="password" class="input-box" id="logPassword" required>
+                        <label for="logPassword">Password</label>
+                        <div class="eye-area">
+                            <div class="eye-box" onclick="myLogPassword()">
+                                <i class="fa-regular fa-eye" id="eye"></i>
+                                <i class="fa-regular fa-eye-slash" id="eye-slash"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="remember">
+                        <input type="checkbox" id="formCheck" class="check">
+                        <label for="formCheck">Remember Me</label>
+                    </div>
+                    <div class="input-field">
+                        <input type="submit" class="input-submit" value="Sign In" required>
+                    </div>
+                    <div class="forgot">
+                        <a href="#">Forgot password?</a>
+                    </div>
+                    <div class="switch">
+                        <p class="login-text" id="login-text">
+                            Don't have an account yet?<br>
+                            <a href="#register" onclick="switchTo('register')">Register here</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
