@@ -3,7 +3,7 @@ let renderedEventIds = new Set();
 let figures = [];
 
 // FETCH DATA -------------------------------------------------------------------------------------------------------------------------------------
-const URL = "mydata.json";
+const URL = "../../backend/data/mydata.json";
 
 document.addEventListener("DOMContentLoaded", () => {
   let options = {
@@ -87,9 +87,9 @@ function getData() {
           participants.appendChild(participantsValue);
           participants.classList.add("participants");
 
-          let participateIcon = createIconLink("images/participate.png", "#participate-link");
-          let messageIcon = createIconLink("images/message.png", "#message-link");
-          let favoritesIcon = createIconLink("images/favorites.png", "#favorites-link");
+          let participateIcon = createIconLink("../assets/images/participate.png", "#participate-link");
+          let messageIcon = createIconLink("../assets/images/message.png", "#message-link");
+          let favoritesIcon = createIconLink("../assets/images/favorites.png", "#favorites-link");
 
           figure.appendChild(img);
           figure.appendChild(figcaption);
