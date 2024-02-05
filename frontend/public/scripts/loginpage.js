@@ -1,3 +1,43 @@
+// Fonction pour gérer la soumission du formulaire de connexion
+function handleLogin() {
+    const email = document.getElementById('logEmail').value;
+    const password = document.getElementById('logPassword').value;
+
+    console.log('Clic sur le bouton de connexion');
+
+    // Envoi des données au serveur
+    fetch('/login', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Vérification de la réponse du serveur
+        if (data.success) {
+            // Redirection vers la page principale en cas de succès
+            window.location.href = '/pages/mainpage.html';
+        } else {
+            // Affichage d'un message d'erreur en cas d'échec
+            alert('Identifiant ou mot de passe incorrect.');
+        }
+    })
+    .catch(error => {
+        console.error('Erreur lors de la soumission du formulaire de connexion:', error);
+    });
+}
+
+// Attacher l'événement au bouton de connexion si la page est chargée
+document.addEventListener('DOMContentLoaded', () => {
+    const loginButton = document.querySelector('.input-submit');
+    if (loginButton) {
+        loginButton.addEventListener('click', handleLogin);
+    }
+});
+
+// DO NOT CHANGE THIS
 function switchTo(section) {
     const x = document.getElementById('login');
     const y = document.getElementById('register');
@@ -72,3 +112,4 @@ function switchTo(section) {
          c.style.opacity = "0";
       }
      }
+// DO NOT CHANGE THIS
