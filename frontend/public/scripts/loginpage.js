@@ -9,9 +9,12 @@ function handleLogin() {
     const email = document.getElementById('logEmail').value;
     const password = document.getElementById('logPassword').value;
 
-    console.log('Clic sur le bouton de connexion');
+    if (!email || !password) {
+        alert('Please enter both email and password.');
+        return;
+    }
 
-    // Envoi des données au serveur
+    // Send data to the server
     fetch('/login', {
         method: 'POST',
         headers: {
@@ -21,29 +24,86 @@ function handleLogin() {
     })
     .then(response => response.json())
     .then(data => {
-        // Vérification de la réponse du serveur
         if (data.success) {
-            // Redirection vers la page principale en cas de succès
+            // Redirect to the main page upon successful login
             window.location.href = '/pages/mainpage.html';
         } else {
-            // Affichage d'un message d'erreur en cas d'échec
-            alert('Identifiant ou mot de passe incorrect.');
+            alert('Incorrect email or password.');
         }
     })
     .catch(error => {
-        console.error('Erreur lors de la soumission du formulaire de connexion:', error);
+        console.error('Error submitting login form:', error);
+        alert('An error occurred while logging in. Please try again later.');
     });
 }
 
 // Attacher l'événement au bouton de connexion si la page est chargée
 document.addEventListener('DOMContentLoaded', () => {
-    const loginButton = document.querySelector('.input-submit');
+    const loginButton = document.querySelector('.input-submit-login');
     if (loginButton) {
         loginButton.addEventListener('click', handleLogin);
     }
 });
 
-// DO NOT CHANGE THIS
+// Fonction pour gérer l'inscription
+function handleRegistration() {
+    const username = document.getElementById('regUsername').value;
+    const email = document.getElementById('regEmail').value;
+    const password = document.getElementById('regPassword').value;
+    const passwordConfirmation = document.getElementById('regPasswordConfirmation').value;
+
+    // Vérifier si les passwords ne sont pas identiques ou vides
+    if (password !== passwordConfirmation || password === '') {
+        alert('Password and Password Confirmation do not match or are empty.');
+        return;
+    }
+
+    // Vérifier si l'email est valide
+    if (!validateEmail(email)) {
+        alert('Email is not valid.');
+        return;
+    }
+
+    fetch('/register', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, email, password, passwordConfirmation }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Afficher un message de validation
+            alert(data.message);
+            // Rediriger l'utilisateur vers la page de connexion
+            window.location.href = '/login';
+        } else {
+            // Afficher un message d'erreur
+            alert(data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error during registration:', error);
+        alert('An error occurred. Please try again later.');
+    });
+}
+
+// Fonction pour valider un email
+function validateEmail(email) {
+    const re = /\S+@\S+\.\S+/;
+    return re.test(email);
+}
+
+// Attacher l'événement au bouton d'inscription
+document.addEventListener('DOMContentLoaded', () => {
+    const registerButton = document.querySelector('.input-submit-register');
+    if (registerButton) {
+        registerButton.addEventListener('click', handleRegistration);
+    }
+});
+
+// Fonction pour basculer entre les formulaires de connexion et d'inscription
 function switchTo(section) {
     const x = document.getElementById('login');
     const y = document.getElementById('register');
@@ -68,10 +128,7 @@ function switchTo(section) {
     }
 }
 
-
    // View Password codes
-         
-      
    function myLogPassword(){
     var a = document.getElementById("logPassword");
     var b = document.getElementById("eye");
@@ -118,4 +175,3 @@ function switchTo(section) {
          c.style.opacity = "0";
       }
      }
-// DO NOT CHANGE THIS

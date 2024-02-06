@@ -23,6 +23,12 @@ const userSchema = new mongoose.Schema({
 // Création du modèle utilisateur
 const User = mongoose.model('User', userSchema);
 
+// Function to validate an email address
+function validateEmail(email) {
+    const re = /\S+@\S+\.\S+/;
+    return re.test(email);
+}
+
 // Route pour la connexion
 app.post('/login', async (req, res) => {
     try {
@@ -42,6 +48,49 @@ app.post('/login', async (req, res) => {
     }
 });
 
+// Route pour l'inscription
+app.post('/register', async (req, res) => {
+    try {
+        const { username, email, password, passwordConfirmation } = req.body;
+
+        // Vérifier si les passwords ne sont pas identiques ou vides
+        if (password !== passwordConfirmation || password === '') {
+            return res.status(400).json({ success: false, message: 'Password and Password Confirmation do not match or are empty' });
+        }
+
+        // Vérifier si l'email est valide
+        if (!validateEmail(email)) {
+            return res.status(400).json({ success: false, message: 'Email is not valid' });
+        }
+
+        // Vérifier si l'email est déjà utilisé
+        const existingEmail = await User.findOne({ email });
+        if (existingEmail) {
+            return res.status(400).json({ success: false, message: 'Email already exists' });
+        }
+
+        // Vérifier si l'username est déjà utilisé
+        const existingUsername = await User.findOne({ username });
+        if (existingUsername) {
+            return res.status(400).json({ success: false, message: 'Username already exists' });
+        }
+
+        // Créer un nouvel utilisateur avec les valeurs par défaut
+        const newUser = new User({
+            email,
+            password,
+            name: username, // Utiliser la valeur de regUsername pour name
+            userpic: 'lol.jpeg', // Définir la valeur par défaut de userpic
+        });
+        await newUser.save();
+
+        // Envoyer un message de validation
+        res.status(200).json({ success: true, message: 'Registration successful. Welcome! Please log in.' });
+    } catch (error) {
+        console.error('Error during registration:', error);
+        res.status(500).json({ success: false, message: 'Internal Server Error' });
+    }
+});
 
 // Route pour servir la page loginpage.html
 app.get('/login', (req, res) => {
@@ -53,17 +102,12 @@ app.get('/register', (req, res) => {
     res.sendFile(path.join(__dirname,"..", 'frontend', 'public', 'pages', 'loginpage.html'));
 });
 
-
 // Servez les fichiers statiques depuis le dossier 'frontend'
 app.use(express.static(path.join(__dirname, '..', 'frontend')));
 
 // Vous n'avez besoin que de cette ligne pour servir les fichiers statiques
 // Assurez-vous que le chemin est correct
 app.use(express.static(path.join(__dirname, '..', 'frontend', 'public')));
-
-// ... le reste de votre configuration ...
-
-
 
 // Route pour gérer toutes les autres requêtes et rediriger vers 'public/pages/mainpage.html'
 app.get('*', (req, res) => {
