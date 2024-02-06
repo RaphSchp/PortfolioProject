@@ -48,6 +48,12 @@ app.get('/login', (req, res) => {
     res.sendFile(path.join(__dirname,"..", 'frontend', 'public', 'pages', 'loginpage.html'));
 });
 
+// Route pour servir la page d'inscription
+app.get('/register', (req, res) => {
+    res.sendFile(path.join(__dirname,"..", 'frontend', 'public', 'pages', 'loginpage.html'));
+});
+
+
 // Servez les fichiers statiques depuis le dossier 'frontend'
 app.use(express.static(path.join(__dirname, '..', 'frontend')));
 
@@ -61,7 +67,7 @@ app.use(express.static(path.join(__dirname, '..', 'frontend', 'public')));
 
 // Route pour gérer toutes les autres requêtes et rediriger vers 'public/pages/mainpage.html'
 app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname,"..", 'frontend', 'public', 'pages', 'mainpage.html'));
+    res.sendFile(path.join(__dirname,"..", 'frontend', 'public', 'pages', 'loginpage.html'));
 });
 
 // Démarrage du serveur

@@ -1,3 +1,9 @@
+document.addEventListener('DOMContentLoaded', function() {
+    if (window.location.href.includes('/register')) {
+        switchTo('register');
+    }
+});
+
 // Fonction pour gérer la soumission du formulaire de connexion
 function handleLogin() {
     const email = document.getElementById('logEmail').value;
