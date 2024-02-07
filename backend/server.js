@@ -16,8 +16,10 @@ mongoose.connect('mongodb://localhost:27017/kangaroo', {
 
 // Définition du schéma de l'utilisateur
 const userSchema = new mongoose.Schema({
-    email: String,
-    password: String,
+    email: { type: String, required: true },
+    password: { type: String, required: true },
+    username: { type: String, required: true },
+    userpic: { type: String, default: 'lol.jpeg' }
 });
 
 // Création du modèle utilisateur
@@ -79,10 +81,11 @@ app.post('/register', async (req, res) => {
         const newUser = new User({
             email,
             password,
-            name: username, // Utiliser la valeur de regUsername pour name
-            userpic: 'lol.jpeg', // Définir la valeur par défaut de userpic
+            username, // Utilisez la valeur de regUsername pour le nom d'utilisateur
+            userpic: 'lol.jpeg' // Définissez la valeur par défaut de l'image utilisateur
         });
         await newUser.save();
+        
 
         // Envoyer un message de validation
         res.status(200).json({ success: true, message: 'Registration successful. Welcome! Please log in.' });
