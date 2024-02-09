@@ -22,6 +22,22 @@ const userSchema = new mongoose.Schema({
     userpic: { type: String, default: 'lol.jpeg' }
 });
 
+// Définition du schéma de l'event
+const eventSchema = new mongoose.Schema({
+    name: { type: String, required: true },
+    img: { type: String, required: true },
+    doc: { type: String, required: true },
+    event_hour: { type: String, required: true },
+    event_date: { type: String, required: true },
+    city: { type: String, required: true },
+    address: { type: String, required: true },
+    participants: { type: String, required: true },
+});
+
+const Event = mongoose.model('Event', eventSchema);
+
+module.exports = Event;
+
 // Création du modèle utilisateur
 const User = mongoose.model('User', userSchema);
 
@@ -92,6 +108,17 @@ app.post('/register', async (req, res) => {
     } catch (error) {
         console.error('Error during registration:', error);
         res.status(500).json({ success: false, message: 'Internal Server Error' });
+    }
+});
+
+// Route pour récupérer tous les événements depuis la base de données MongoDB
+app.get('/events', async (req, res) => {
+    try {
+        const events = await Event.find();
+        res.json(events);
+    } catch (error) {
+        console.error('Error fetching events:', error);
+        res.status(500).json({ success: false, error: 'Internal Server Error' });
     }
 });
 

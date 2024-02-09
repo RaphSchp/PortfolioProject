@@ -3,7 +3,6 @@ let renderedEventIds = new Set();
 let figures = [];
 
 // FETCH DATA -------------------------------------------------------------------------------------------------------------------------------------
-const URL = "../../../backend/data/mydata.json";
 
 document.addEventListener("DOMContentLoaded", () => {
   let options = {
@@ -26,15 +25,15 @@ function handleIntersect(entries) {
 }
 
 function getData() {
-  fetch(URL)
+  fetch("/events")
     .then(response => response.json())
-    .then(mydata => {
+    .then(events => {
       let main = document.querySelector("main");
-      console.log("Using local JSON data", mydata);
+      console.log("Using data from MongoDB:", events);
 
-      mydata.items.forEach(item => {
+      events.forEach(event => {
         // Check if the event ID has been rendered
-        if (!renderedEventIds.has(item.id)) {
+        if (!renderedEventIds.has(event.id)) {
           // Render the event
           let figure = document.createElement("figure");
           let img = document.createElement("img");
@@ -43,18 +42,19 @@ function getData() {
           let eventHour = document.createElement("p");
           let eventDate = document.createElement("p");
           let city = document.createElement("p");
+          let address = document.createElement("p");
           let participants = document.createElement("p");
 
-          img.src = item.img;
-          img.alt = item.name;
-          figcaption.textContent = item.name;
-          doc.textContent = item.doc;
+          img.src = event.img;
+          img.alt = event.name;
+          figcaption.textContent = event.name;
+          doc.textContent = event.doc;
           doc.classList.add("doc");
 
           // Event Hour
           let eventHourLabel = createLabelSpan("Event Hour: ");
           let eventHourValue = document.createElement("span");
-          eventHourValue.textContent = item.event_hour;
+          eventHourValue.textContent = event.event_hour;
           eventHour.textContent = "";
           eventHour.appendChild(eventHourLabel);
           eventHour.appendChild(eventHourValue);
@@ -63,7 +63,7 @@ function getData() {
           // Event Date
           let eventDateLabel = createLabelSpan("Event Date: ");
           let eventDateValue = document.createElement("span");
-          eventDateValue.textContent = item.event_date;
+          eventDateValue.textContent = event.event_date;
           eventDate.textContent = "";
           eventDate.appendChild(eventDateLabel);
           eventDate.appendChild(eventDateValue);
@@ -72,16 +72,25 @@ function getData() {
           // City
           let cityLabel = createLabelSpan("City: ");
           let cityValue = document.createElement("span");
-          cityValue.textContent = item.city;
+          cityValue.textContent = event.city;
           city.textContent = "";
           city.appendChild(cityLabel);
           city.appendChild(cityValue);
           city.classList.add("city");
 
+          // Address
+          let addressLabel = createLabelSpan("Address: ");
+          let addressValue = document.createElement("span");
+          addressValue.textContent = event.address;
+          address.textContent = "";
+          address.appendChild(addressLabel);
+          address.appendChild(addressValue);
+          address.classList.add("address");
+
           // Participants
           let participantsLabel = createLabelSpan("Participants: ");
           let participantsValue = document.createElement("span");
-          participantsValue.textContent = item.participants;
+          participantsValue.textContent = event.participants;
           participants.textContent = "";
           participants.appendChild(participantsLabel);
           participants.appendChild(participantsValue);
@@ -97,6 +106,7 @@ function getData() {
           figure.appendChild(eventHour);
           figure.appendChild(eventDate);
           figure.appendChild(city);
+          figure.appendChild(address);
           figure.appendChild(participants);
           figure.appendChild(participateIcon);
           figure.appendChild(messageIcon);
@@ -105,7 +115,7 @@ function getData() {
           main.appendChild(figure);
 
           // Add the event ID to the set of rendered IDs
-          renderedEventIds.add(item.id);
+          renderedEventIds.add(event.id);
         }
       });
 

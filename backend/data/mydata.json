@@ -9,6 +9,7 @@
       "event_hour": "10:00 AM",
       "event_date": "2024-03-15",
       "city": "Los Angeles",
+      "address": "123 Main St, Los Angeles, CA 90001",
       "participants": "14",
       "publication_date": "2024-02-02"
     },
@@ -21,6 +22,7 @@
       "event_hour": "12:30 PM",
       "event_date": "2024-04-02",
       "city": "New York",
+      "address": "456 Park Ave, New York, NY 10001",
       "participants": "5",
       "publication_date": "2024-02-02"
     },
@@ -33,6 +35,7 @@
       "event_hour": "3:15 PM",
       "event_date": "2024-05-20",
       "city": "Denver",
+      "address": "789 Mountain Rd, Denver, CO 80001",
       "participants": "3",
       "publication_date": "2024-02-02"
     },
@@ -45,6 +48,7 @@
       "event_hour": "2:45 PM",
       "event_date": "2024-06-08",
       "city": "London",
+      "address": "101 Stadium Ave, London, UK SW1A 1AA",
       "participants": "11",
       "publication_date": "2024-02-02"
     },
@@ -57,6 +61,7 @@
       "event_hour": "9:00 AM",
       "event_date": "2024-07-15",
       "city": "Tokyo",
+      "address": "234 Marathon Rd, Tokyo, Japan 100-0005",
       "participants": "52",
       "publication_date": "2024-02-02"
     },
@@ -69,6 +74,7 @@
       "event_hour": "4:30 PM",
       "event_date": "2025-06-15",
       "city": "Berlin",
+      "address": "567 Sports St, Berlin, Germany 10115",
       "participants": "12",
       "publication_date": "2025-03-01"
     },
@@ -81,6 +87,7 @@
       "event_hour": "3:00 PM",
       "event_date": "2025-11-15",
       "city": "Tokyo",
+      "address": "789 Volleyball Rd, Tokyo, Japan 100-0005",
       "participants": "12",
       "publication_date": "2025-03-06"
     },
@@ -93,6 +100,7 @@
       "event_hour": "4:30 PM",
       "event_date": "2025-06-15",
       "city": "Berlin",
+      "address": "567 Basketball Blvd, Berlin, Germany 10115",
       "participants": "12",
       "publication_date": "2025-03-01"
     },
@@ -105,6 +113,7 @@
       "event_hour": "2:00 PM",
       "event_date": "2025-09-10",
       "city": "Sydney",
+      "address": "345 Swim Ln, Sydney NSW 2000, Australia",
       "participants": "8",
       "publication_date": "2025-04-12"
     },
@@ -117,6 +126,7 @@
       "event_hour": "1:00 PM",
       "event_date": "2025-08-20",
       "city": "Paris",
+      "address": "456 Chess Ave, Paris, France 75001",
       "participants": "6",
       "publication_date": "2025-05-22"
     },
@@ -129,6 +139,7 @@
       "event_hour": "3:30 PM",
       "event_date": "2025-07-25",
       "city": "Toronto",
+      "address": "789 Ping Pong Rd, Toronto, ON M5J 2G8, Canada",
       "participants": "10",
       "publication_date": "2025-06-01"
     },
@@ -141,6 +152,7 @@
       "event_hour": "5:30 PM",
       "event_date": "2025-10-05",
       "city": "Mumbai",
+      "address": "101 Lifting Ln, Mumbai, Maharashtra 400001, India",
       "participants": "7",
       "publication_date": "2025-07-15"
     },
@@ -153,6 +165,7 @@
       "event_hour": "10:45 AM",
       "event_date": "2025-12-12",
       "city": "Rome",
+      "address": "234 Golf Course Rd, Rome, Italy 00185",
       "participants": "9",
       "publication_date": "2025-08-30"
     },
@@ -165,6 +178,7 @@
       "event_hour": "2:15 PM",
       "event_date": "2026-01-18",
       "city": "Seoul",
+      "address": "567 Speedway Blvd, Seoul, South Korea 03185",
       "participants": "15",
       "publication_date": "2025-10-10"
     },
@@ -177,6 +191,7 @@
       "event_hour": "1:30 PM",
       "event_date": "2026-02-28",
       "city": "Cape Town",
+      "address": "789 Frisbee Dr, Cape Town, South Africa 8001",
       "participants": "11",
       "publication_date": "2025-12-01"
     },
@@ -189,6 +204,7 @@
       "event_hour": "7:00 PM",
       "event_date": "2026-03-20",
       "city": "Singapore",
+      "address": "101 E-Sports St, Singapore 049315",
       "participants": "20",
       "publication_date": "2026-01-05"
     },
@@ -201,6 +217,7 @@
       "event_hour": "11:30 AM",
       "event_date": "2026-04-15",
       "city": "Dubai",
+      "address": "456 Shuttlecock Blvd, Dubai - United Arab Emirates",
       "participants": "8",
       "publication_date": "2026-02-15"
     },
@@ -213,6 +230,7 @@
       "event_hour": "3:45 PM",
       "event_date": "2026-05-25",
       "city": "Los Angeles",
+      "address": "234 Skydiving Ave, Los Angeles, CA 90045",
       "participants": "4",
       "publication_date": "2026-03-01"
     },
@@ -225,6 +243,7 @@
       "event_hour": "1:00 PM",
       "event_date": "2026-06-12",
       "city": "Paris",
+      "address": "567 Chess Blvd, Paris, France 75001",
       "participants": "10",
       "publication_date": "2026-04-01"
     },
@@ -237,6 +256,7 @@
       "event_hour": "2:30 PM",
       "event_date": "2026-07-20",
       "city": "Barcelona",
+      "address": "789 Motocross Rd, Barcelona, Spain 08005",
       "participants": "15",
       "publication_date": "2026-05-10"
     },
@@ -249,6 +269,7 @@
       "event_hour": "4:30 PM",
       "event_date": "2025-06-15",
       "city": "Berlin",
+      "address": "567 Basketball Blvd, Berlin, Germany 10115",
       "participants": "12",
       "publication_date": "2025-03-01"
     },
@@ -261,6 +282,7 @@
       "event_hour": "6:15 PM",
       "event_date": "2026-09-05",
       "city": "Sydney",
+      "address": "234 Rollerblading Rd, Sydney NSW 2000, Australia",
       "participants": "9",
       "publication_date": "2026-06-15"
     },
@@ -273,18 +295,20 @@
       "event_hour": "2:45 PM",
       "event_date": "2026-10-15",
       "city": "Tokyo",
+      "address": "345 Swim Ln, Tokyo, Japan 100-0005",
       "participants": "15",
       "publication_date": "2026-07-30"
     },
     {
-      "name": "Aria Garcia",
+      "name": "Ava Wilson",
       "userpic": "lol.jpeg",
       "id": 24,
       "img": "https://picsum.photos/200/?random=24",
-      "doc": "Aria Garcia welcomes you to a thrilling archery competition. Aim for the bullseye!",
+      "doc": "Ava Wilson welcomes you to a thrilling archery competition. Aim for the bullseye!",
       "event_hour": "12:00 PM",
       "event_date": "2026-11-20",
       "city": "Seoul",
+      "address": "456 Archery Dr, Seoul, South Korea 03185",
       "participants": "7",
       "publication_date": "2026-09-01"
     },
@@ -297,6 +321,7 @@
       "event_hour": "11:00 AM",
       "event_date": "2026-12-10",
       "city": "Cape Town",
+      "address": "101 Cycling Rd, Cape Town, South Africa 8001",
       "participants": "10",
       "publication_date": "2026-10-01"
     },
@@ -309,6 +334,7 @@
       "event_hour": "3:00 PM",
       "event_date": "2025-11-15",
       "city": "Tokyo",
+      "address": "789 Volleyball Rd, Tokyo, Japan 100-0005",
       "participants": "12",
       "publication_date": "2025-03-06"
     }

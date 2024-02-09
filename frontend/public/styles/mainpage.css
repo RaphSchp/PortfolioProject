@@ -241,6 +241,7 @@ figcaption {
 .event-hour,
 .event-date,
 .city,
+.address,
 .participants {
   font-size: 1rem;
   color: #fef6ed;
