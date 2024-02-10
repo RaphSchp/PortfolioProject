@@ -243,6 +243,63 @@ function submitEvent() {
   modalBackground.style.display = 'none';
 }
 
+// AUTO-FILL WITH SPORTS.JSON ---------------------------------------------------------------------------------------------------------------------
+// Récupérer la liste des sports dès que la page est chargée
+document.addEventListener("DOMContentLoaded", async () => {
+  // Récupérer la liste des sports depuis le fichier JSON
+  const sports = await fetchSports();
+  
+  // Écouter les événements sur l'input pour filtrer les sports
+  const eventSportInput = document.getElementById('eventSport');
+  eventSportInput.addEventListener('input', () => filterSports(sports));
+});
+
+// Fonction pour récupérer la liste des sports depuis le fichier JSON
+async function fetchSports() {
+  const response = await fetch('../../../backend/data/sports.json');
+  const data = await response.json();
+  return data.sports;
+}
+
+// Fonction pour filtrer les sports et mettre à jour le datalist
+function filterSports(sports) {
+  var input, filter, datalist, sportOptions, i;
+  input = document.getElementById("eventSport");
+  filter = input.value.toLowerCase();
+  datalist = document.getElementById("sportsList");
+
+  // Si la valeur de l'input est vide, supprime le datalist
+  if (filter === "") {
+      if (datalist) {
+          datalist.remove();
+      }
+      return;
+  }
+
+  // Crée le datalist s'il n'existe pas
+  if (!datalist) {
+      datalist = document.createElement("datalist");
+      datalist.id = "sportsList";
+      input.parentNode.appendChild(datalist);
+  }
+
+  // Clear previous options
+  datalist.innerHTML = "";
+
+  // Populate datalist with matching sports
+  for (i = 0; i < sports.length; i++) {
+      if (sports[i].toLowerCase().startsWith(filter)) {
+          var option = document.createElement("option");
+          option.value = sports[i];
+          datalist.appendChild(option);
+          // Limite à 5 options
+          if (datalist.childNodes.length >= 5) {
+              break;
+          }
+      }
+  }
+}
+
 // SEARCH FUNCTION --------------------------------------------------------------------------------------------------------------------------------
 document.addEventListener("DOMContentLoaded", () => {
   const searchInputs = document.querySelectorAll("#navbar-search-input, #topnav-search-input");

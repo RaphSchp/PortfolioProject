@@ -14,13 +14,16 @@ mongoose.connect('mongodb://localhost:27017/kangaroo', {
     useUnifiedTopology: true,
 });
 
-// Définition du schéma de l'utilisateur
+// Définition du schéma de l'user
 const userSchema = new mongoose.Schema({
     email: { type: String, required: true },
     password: { type: String, required: true },
     username: { type: String, required: true },
     userpic: { type: String, default: 'lol.jpeg' }
 });
+
+// Création du modèle user
+const User = mongoose.model('User', userSchema);
 
 // Définition du schéma de l'event
 const eventSchema = new mongoose.Schema({
@@ -34,12 +37,10 @@ const eventSchema = new mongoose.Schema({
     participants: { type: String, required: true },
 });
 
+// Création du modèle event
 const Event = mongoose.model('Event', eventSchema);
 
 module.exports = Event;
-
-// Création du modèle utilisateur
-const User = mongoose.model('User', userSchema);
 
 // Function to validate an email address
 function validateEmail(email) {
