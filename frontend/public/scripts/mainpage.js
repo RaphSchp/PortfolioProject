@@ -254,12 +254,17 @@ document.addEventListener("DOMContentLoaded", async () => {
   eventSportInput.addEventListener('input', () => filterSports(sports));
 });
 
-// Fonction pour récupérer la liste des sports depuis le fichier JSON
 async function fetchSports() {
-  const response = await fetch('../../../backend/data/sports.json');
-  const data = await response.json();
-  return data.sports;
+  try {
+    const response = await fetch('/sports.json'); // Utilisation d'un chemin absolu
+    const data = await response.json();
+    return data.sports;
+  } catch (error) {
+    console.error('Erreur lors de la récupération des sports:', error);
+    return []; // Retourne un tableau vide en cas d'erreur
+  }
 }
+
 
 // Fonction pour filtrer les sports et mettre à jour le datalist
 function filterSports(sports) {

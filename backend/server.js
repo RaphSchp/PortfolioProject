@@ -133,6 +133,12 @@ app.get('/register', (req, res) => {
     res.sendFile(path.join(__dirname,"..", 'frontend', 'public', 'pages', 'loginpage.html'));
 });
 
+// Route pour servir le fichier sports.json
+app.get('/sports.json', (req, res) => {
+    res.sendFile(path.join(__dirname, 'data', 'sports.json'));
+});
+
+
 // Servez les fichiers statiques depuis le dossier 'frontend'
 app.use(express.static(path.join(__dirname, '..', 'frontend')));
 
