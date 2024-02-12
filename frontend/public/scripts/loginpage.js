@@ -37,11 +37,21 @@ function handleLogin() {
     });
 }
 
-// Attacher l'événement au bouton de connexion si la page est chargée
 document.addEventListener('DOMContentLoaded', () => {
     const loginButton = document.querySelector('.input-submit-login');
+    const boxLoginInput = document.querySelector('.box-login');
+
     if (loginButton) {
         loginButton.addEventListener('click', handleLogin);
+    }
+
+    if (boxLoginInput) {
+        // Écoute l'événement keydown sur les champs de saisie
+        boxLoginInput.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') { 
+                handleLogin();
+            }
+        });
     }
 });
 
@@ -95,13 +105,23 @@ function validateEmail(email) {
     return re.test(email);
 }
 
-// Attacher l'événement au bouton d'inscription
 document.addEventListener('DOMContentLoaded', () => {
     const registerButton = document.querySelector('.input-submit-register');
+    const boxRegisterInput = document.querySelector('.box-register');
+
     if (registerButton) {
         registerButton.addEventListener('click', handleRegistration);
     }
+
+    if (boxRegisterInput) {
+        boxRegisterInput.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') { 
+                handleRegistration();
+            }
+        });
+    }
 });
+
 
 // Fonction pour basculer entre les formulaires de connexion et d'inscription
 function switchTo(section) {
