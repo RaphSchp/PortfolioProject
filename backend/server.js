@@ -9,10 +9,7 @@ const PORT = 3000;
 app.use(bodyParser.json());
 
 // Connexion à la base de données MongoDB
-mongoose.connect('mongodb://localhost:27017/kangaroo', {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-});
+mongoose.connect('mongodb://localhost:27017/kangaroo');
 
 // Définition du schéma de l'user
 const userSchema = new mongoose.Schema({
@@ -27,14 +24,16 @@ const User = mongoose.model('User', userSchema);
 
 // Définition du schéma de l'event
 const eventSchema = new mongoose.Schema({
-    name: { type: String, required: true },
+    event_name: { type: String, required: true },
     img: { type: String, required: true },
+    sport: { type: String, required: true },
     doc: { type: String, required: true },
     event_hour: { type: String, required: true },
     event_date: { type: String, required: true },
     city: { type: String, required: true },
     address: { type: String, required: true },
     participants: { type: String, required: true },
+    publication_date: { type: String, required: true },
 });
 
 // Création du modèle event

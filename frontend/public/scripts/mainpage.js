@@ -38,6 +38,7 @@ function getData() {
           let figure = document.createElement("figure");
           let img = document.createElement("img");
           let figcaption = document.createElement("figcaption");
+          let sport = document.createElement("p");
           let doc = document.createElement("p");
           let eventHour = document.createElement("p");
           let eventDate = document.createElement("p");
@@ -46,10 +47,19 @@ function getData() {
           let participants = document.createElement("p");
 
           img.src = event.img;
-          img.alt = event.name;
-          figcaption.textContent = event.name;
+          img.alt = event.event_name;
+          figcaption.textContent = event.event_name;
           doc.textContent = event.doc;
           doc.classList.add("doc");
+
+          // Sport
+          let sportLabel = createLabelSpan("Sport: ");
+          let sportValue = document.createElement("span");
+          sportValue.textContent = event.sport;
+          sport.textContent = "";
+          sport.appendChild(sportLabel);
+          sport.appendChild(sportValue);
+          sport.classList.add("sport");
 
           // Event Hour
           let eventHourLabel = createLabelSpan("Event Hour: ");
@@ -102,6 +112,7 @@ function getData() {
 
           figure.appendChild(img);
           figure.appendChild(figcaption);
+          figure.appendChild(sport);
           figure.appendChild(doc);
           figure.appendChild(eventHour);
           figure.appendChild(eventDate);
