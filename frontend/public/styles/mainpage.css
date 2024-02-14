@@ -187,7 +187,7 @@ header {
 }
 
 #navbar input[type=text] {
-  height: 66px;  /* Adjust the height as needed */
+  height: 66px;
   padding: 14px 16px;
   font-size: 17px;
   border-radius: 10px;
@@ -256,7 +256,8 @@ figcaption {
   height: auto;
 }
 
-.modal-background {
+.modal-background,
+.modal-background2 {
   display: none;
   position: fixed;
   top: 0;
@@ -289,10 +290,75 @@ figcaption {
   position: relative;
 }
 
-#modalBackground {
+#modalBackground,
+#modalBackground2 {
   display: flex;
 }
 
+/* SWITCH */
+/* The switch - the box around the slider */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #f1600d;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #f1600d;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+/* SWITCH */
 form ul {
   list-style: none;
   padding: 0;
@@ -327,7 +393,7 @@ form label {
 
 .close-btn:hover {
   background-color: #f1600d;
-  color: black;
+  color: #fef6ed;
 }
 
 
@@ -438,3 +504,82 @@ footer {
   transform: scale(1.1);
 }
 
+/* ////////////////////////////// */
+/* Profile Box */
+
+#profileBox {
+  border: 6px solid #f1600d;
+  background-color:#1a265a;
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 400px;
+  position: relative;
+}
+
+#profileBox h2 {
+  color: #f1600d; 
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+#profileBox ul {
+  color: #fef6ed; 
+  font-size: 1rem;
+  list-style: none;
+  padding: 0;
+}
+
+#profileBox ul li {
+  margin-bottom: 10px;
+}
+
+#profileBox label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+#profileBox input[type="text"],
+#profileBox input[type="email"],
+#profileBox textarea {
+  width: calc(100% - 20px);
+  padding: 10px;
+  border-radius: 5px;
+  border: 2px solid #f1600d;
+  background-color: #1a265a;
+  color: #fef6ed;
+}
+
+#profileBox textarea {
+  resize: none;
+  height: 80px;
+}
+
+#profileBox button {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: #f1600d;
+  color: #fff;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+#profileBox button:hover {
+  background-color: #d44a0d;
+}
+
+#profileBox .close-btn {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  font-size: 20px;
+  cursor: pointer;
+  color: #fef6ed;
+}
+
+#profileBox .close-btn:hover {
+  color: #fef6ed;
+}

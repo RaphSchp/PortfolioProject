@@ -254,6 +254,35 @@ function submitEvent() {
   modalBackground.style.display = 'none';
 }
 
+///////////////////////PROFILE/////////////////////////////////////////////////////////////////////////////////////////////////////////
+document.addEventListener("DOMContentLoaded", () => {
+  const profileLink = document.querySelectorAll('.user-profile');
+  const modalBackground2 = document.getElementById('modalBackground2');
+
+  // Hide modal background by default
+  modalBackground2.style.display = 'none';
+
+  profileLink.forEach(link => {
+    link.addEventListener('click', (event) => {
+      event.preventDefault();
+      modalBackground2.style.display = 'flex';
+    });
+  });
+});
+
+function closeProfileBox() {
+  document.getElementById('modalBackground2').style.display = 'none';
+}
+
+function editProfile() {
+  // Add logic to handle form submission
+  // ...
+
+  // After handling the submission, hide the modal
+  const modalBackground = document.getElementById('modalBackground2');
+  modalBackground.style.display = 'none';
+}
+
 // AUTO-FILL WITH SPORTS.JSON ---------------------------------------------------------------------------------------------------------------------
 // Récupérer la liste des sports dès que la page est chargée
 document.addEventListener("DOMContentLoaded", async () => {
@@ -392,3 +421,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+// Function to open profile box
