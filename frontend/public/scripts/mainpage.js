@@ -33,7 +33,7 @@ function getData() {
 
       events.forEach(event => {
         // Check if the event ID has been rendered
-        if (!renderedEventIds.has(event.id)) {
+        if (!renderedEventIds.has(event._id)) {
           // Render the event
           let figure = document.createElement("figure");
           let img = document.createElement("img");
@@ -46,7 +46,7 @@ function getData() {
           let address = document.createElement("p");
           let participants = document.createElement("p");
 
-          img.src = event.img;
+          img.src = "../../assets/testimage/" + event.img;
           img.alt = event.event_name;
           figcaption.textContent = event.event_name;
           doc.textContent = event.doc;
@@ -126,7 +126,7 @@ function getData() {
           main.appendChild(figure);
 
           // Add the event ID to the set of rendered IDs
-          renderedEventIds.add(event.id);
+          renderedEventIds.add(event._id);
         }
       });
 
@@ -254,7 +254,7 @@ function submitEvent() {
   modalBackground.style.display = 'none';
 }
 
-///////////////////////PROFILE/////////////////////////////////////////////////////////////////////////////////////////////////////////
+// PROFILE BOX ------------------------------------------------------------------------------------------------------------------------------------
 document.addEventListener("DOMContentLoaded", () => {
   const profileLink = document.querySelectorAll('.user-profile');
   const modalBackground2 = document.getElementById('modalBackground2');
@@ -421,7 +421,3 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
-
-
-/////////////////////////////////////////////////////////////////////////////////////////////
-// Function to open profile box
