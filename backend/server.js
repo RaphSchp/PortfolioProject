@@ -169,10 +169,15 @@ app.get('/events', async (req, res) => {
 // Route pour se déconnecter
 app.post('/logout', (req, res) => {
     // Détruire la session
-    req.session.destroy();
-    res.status(200).json({ success: true });
+    req.session.destroy((err) => {
+        if (err) {
+            console.error('Erreur lors de la déconnexion :', err);
+            return res.status(500).json({ success: false, message: 'Internal Server Error' });
+        }
+        // Rediriger vers une page de confirmation de déconnexion ou une autre page appropriée
+        res.redirect('/login');
+    });
 });
-
 
 // Route pour servir la page loginpage.html
 app.get('/login', (req, res) => {
@@ -188,7 +193,6 @@ app.get('/register', (req, res) => {
 app.get('/sports.json', (req, res) => {
     res.sendFile(path.join(__dirname, 'data', 'sports.json'));
 });
-
 
 // Servez les fichiers statiques depuis le dossier 'frontend'
 app.use(express.static(path.join(__dirname, '..', 'frontend')));

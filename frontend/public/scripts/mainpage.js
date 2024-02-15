@@ -319,6 +319,26 @@ function editProfile() {
   modalBackground.style.display = 'none';
 }
 
+// Fonction pour se déconnecter côté client
+function logout() {
+  fetch('/logout', {
+      method: 'GET'
+  })
+  .then(response => {
+      if (response.ok) {
+          // Redirection vers la page de connexion une fois déconnecté
+          window.location.href = '/login';
+      } else {
+          console.error('Erreur lors de la déconnexion:', response.statusText);
+          // Traiter les erreurs si nécessaire
+      }
+  })
+  .catch(error => {
+      console.error('Erreur lors de la déconnexion:', error);
+      // Traiter les erreurs si nécessaire
+  });
+}
+
 
 
 // AUTO-FILL WITH SPORTS.JSON ---------------------------------------------------------------------------------------------------------------------
