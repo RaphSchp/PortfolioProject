@@ -2,11 +2,19 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
 const mongoose = require('mongoose');
+const session = require('express-session');
 
 const app = express();
 const PORT = 3000;
 
 app.use(bodyParser.json());
+
+// Configuration de la session
+app.use(session({
+    secret: 'mySecret',
+    resave: false,
+    saveUninitialized: false
+  }));
 
 // Connexion à la base de données MongoDB
 mongoose.connect('mongodb://localhost:27017/kangaroo');
@@ -47,6 +55,31 @@ function validateEmail(email) {
     return re.test(email);
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+// Route pour récupérer les informations de l'utilisateur connecté
+app.get('/getLoggedInUserInfo', async (req, res) => {
+    try {
+        // Vérifier si l'utilisateur est connecté
+        if (!req.session.userId) {
+            return res.status(401).json({ success: false, message: 'Unauthorized' });
+        }
+
+        // Rechercher l'utilisateur dans la base de données
+        const user = await User.findById(req.session.userId);
+
+        if (!user) {
+            return res.status(404).json({ success: false, message: 'User not found' });
+        }
+
+        // Renvoyer les informations de l'utilisateur
+        res.json({ success: true, username: user.username, email: user.email });
+    } catch (error) {
+        console.error('Error fetching user info:', error);
+        res.status(500).json({ success: false, error: 'Internal Server Error' });
+    }
+});
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // Route pour la connexion
 app.post('/login', async (req, res) => {
     try {
@@ -58,6 +91,7 @@ app.post('/login', async (req, res) => {
         if (!user) {
             res.json({ success: false });
         } else {
+            req.session.userId = user._id;
             res.json({ success: true });
         }
     } catch (error) {
@@ -114,6 +148,11 @@ app.post('/register', async (req, res) => {
 // Route pour récupérer tous les événements depuis la base de données MongoDB
 app.get('/events', async (req, res) => {
     try {
+        // Vérifier si l'utilisateur est connecté
+        if (!req.session.userId) {
+            return res.status(401).json({ success: false, message: 'Unauthorized' });
+        }
+
         const events = await Event.find();
         res.json(events);
     } catch (error) {
@@ -121,6 +160,14 @@ app.get('/events', async (req, res) => {
         res.status(500).json({ success: false, error: 'Internal Server Error' });
     }
 });
+
+// Route pour se déconnecter
+app.post('/logout', (req, res) => {
+    // Détruire la session
+    req.session.destroy();
+    res.status(200).json({ success: true });
+});
+
 
 // Route pour servir la page loginpage.html
 app.get('/login', (req, res) => {
@@ -145,7 +192,7 @@ app.use(express.static(path.join(__dirname, '..', 'frontend')));
 // Assurez-vous que le chemin est correct
 app.use(express.static(path.join(__dirname, '..', 'frontend', 'public')));
 
-// Route pour gérer toutes les autres requêtes et rediriger vers 'public/pages/mainpage.html'
+// Route pour gérer toutes les autres requêtes et rediriger vers 'public/pages/loginpage.html'
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname,"..", 'frontend', 'public', 'pages', 'loginpage.html'));
 });

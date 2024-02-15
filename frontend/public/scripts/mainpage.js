@@ -4,6 +4,19 @@ let figures = [];
 
 // FETCH DATA -------------------------------------------------------------------------------------------------------------------------------------
 
+//
+document.addEventListener("DOMContentLoaded", async () => {
+  // Récupérer les informations de l'utilisateur connecté depuis le serveur
+  const response = await fetch("/getLoggedInUserInfo");
+  const userData = await response.json();
+
+  // Mettre à jour les champs du formulaire avec les informations de l'utilisateur
+  document.getElementById("username").value = userData.username;
+  document.getElementById("email").value = userData.email;
+});
+
+//
+
 document.addEventListener("DOMContentLoaded", () => {
   let options = {
     root: null,

@@ -583,3 +583,7 @@ footer {
 #profileBox .close-btn:hover {
   color: #fef6ed;
 }
+
+#profileBox a {
+  color: #f1600d;
+}
