@@ -10,9 +10,10 @@ document.addEventListener("DOMContentLoaded", async () => {
   const response = await fetch("/getLoggedInUserInfo");
   const userData = await response.json();
 
-  // Mettre à jour les champs du formulaire avec les informations de l'utilisateur
-  document.getElementById("username").value = userData.username;
-  document.getElementById("email").value = userData.email;
+// Mettre à jour les champs du formulaire avec les informations de l'utilisateur
+document.getElementById("username").textContent = userData.username;
+document.getElementById("email").textContent = userData.email;
+
 });
 
 //
@@ -59,7 +60,7 @@ function getData() {
           let address = document.createElement("p");
           let participants = document.createElement("p");
 
-          img.src = "../../assets/testimage/" + event.img;
+          img.src = "../../assets/user_image/" + event.img;
           img.alt = event.event_name;
           figcaption.textContent = event.event_name;
           doc.textContent = event.doc;
@@ -170,6 +171,28 @@ function createIconLink(src, href) {
   return iconLink;
 }
 
+document.addEventListener("DOMContentLoaded", () => {
+  fetch('/getLoggedInUserInfo')
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        // Sélectionner tous les éléments userpic par leur ID
+        const userpics = document.querySelectorAll('#userpic, #userpic2');
+
+        // Itérer sur chaque userpic et mettre à jour son src et son alt
+        userpics.forEach(userpic => {
+          userpic.src = `../../assets/user_image/${data.userpic}`;
+          userpic.alt = 'User Profile';
+        });
+      } else {
+        console.error(data.message);
+      }
+    })
+    .catch(error => console.error('Error fetching user info:', error));
+});
+
+
+
 // SCROLL DOWN NAV BAR + UP BUTTON ----------------------------------------------------------------------------------------------------------------
 document.addEventListener("DOMContentLoaded", () => {
   const navbar = document.getElementById("navbar");
@@ -269,7 +292,7 @@ function submitEvent() {
 
 // PROFILE BOX ------------------------------------------------------------------------------------------------------------------------------------
 document.addEventListener("DOMContentLoaded", () => {
-  const profileLink = document.querySelectorAll('.user-profile');
+  const profileLink = document.querySelectorAll('.user-profile a');
   const modalBackground2 = document.getElementById('modalBackground2');
 
   // Hide modal background by default
@@ -295,6 +318,8 @@ function editProfile() {
   const modalBackground = document.getElementById('modalBackground2');
   modalBackground.style.display = 'none';
 }
+
+
 
 // AUTO-FILL WITH SPORTS.JSON ---------------------------------------------------------------------------------------------------------------------
 // Récupérer la liste des sports dès que la page est chargée

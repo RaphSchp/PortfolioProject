@@ -71,13 +71,18 @@ app.get('/getLoggedInUserInfo', async (req, res) => {
             return res.status(404).json({ success: false, message: 'User not found' });
         }
 
+        // Afficher le nom de fichier image de l'utilisateur dans la console
+        console.log('Userpic:', user.userpic);
+
         // Renvoyer les informations de l'utilisateur
-        res.json({ success: true, username: user.username, email: user.email });
+        res.json({ success: true, username: user.username, email: user.email, userpic: user.userpic });
     } catch (error) {
         console.error('Error fetching user info:', error);
         res.status(500).json({ success: false, error: 'Internal Server Error' });
     }
 });
+
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Route pour la connexion

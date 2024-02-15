@@ -24,7 +24,7 @@
         <!-- User Profile -->
         <div class="user-profile">
             <a href="#user">
-                <img src="../../assets/lol.jpeg" alt="User Profile">
+                <img src="" alt="User Profile" id="userpic">
             </a>
         </div>
     </div>
@@ -155,21 +155,22 @@
     <div id="modalBackground2" class="modal-background2">
 <!-- Profile Box -->
 <div id="profileBox" class="event-box">
-    <h2>Mon Profil</h2>
+    <h2>My Profile</h2>
     <span class="close-btn" onclick="closeProfileBox()">&times;</span>
     <div class="user-profile">
-        <img src="../../assets/lol.jpeg" alt="User Profile">
-    </div>
+        <a href="#user">
+            <img src="" alt="User Profile" id="userpic2">
+        </a>
     <form id="profileForm">
         <ul>
             <li>
                 <label for="username">Username:</label>
-                <input type="text" id="username" name="username">
+                <span id="username" name="username"></span>
             </li>
             <li>
                 <label for="email">Email:</label>
-                <input type="email" id="email" name="email">
-            </li>
+                <span id="email" name="email"></span>
+            </li>        
             <li>
                 <a href="#">I forgot my password</a>
             </li>
