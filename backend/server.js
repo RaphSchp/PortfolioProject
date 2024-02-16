@@ -71,9 +71,6 @@ app.get('/getLoggedInUserInfo', async (req, res) => {
             return res.status(404).json({ success: false, message: 'User not found' });
         }
 
-        // Afficher le nom de fichier image de l'utilisateur dans la console
-        console.log('Userpic:', user.userpic);
-
         // Renvoyer les informations de l'utilisateur
         res.json({ success: true, username: user.username, email: user.email, userpic: user.userpic });
     } catch (error) {
@@ -209,4 +206,19 @@ app.get('*', (req, res) => {
 // Démarrage du serveur
 app.listen(PORT, () => {
     console.log(`Serveur en cours d'exécution sur le port ${PORT}`);
+});
+
+
+
+
+// Route to filter events by sport
+app.get('/events/sport/:sport', async (req, res) => {
+    try {
+        const sport = req.params.sport;
+        const events = await Event.find({ sport });
+        res.json(events);
+    } catch (error) {
+        console.error('Error filtering events by sport:', error);
+        res.status(500).json({ success: false, error: 'Internal Server Error' });
+    }
 });

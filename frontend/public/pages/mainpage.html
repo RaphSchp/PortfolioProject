@@ -56,7 +56,13 @@
             <div id="menuNav" class="menuNav">
                 <a href="javascript:void(0)" class="closebtn" onclick="closeMenuNav()">&times;</a>
                 <ul>
-                    <li><a href="#">FilterExemple</a></li>
+                    <li>
+                        <label for="sportFilter">Select Sport:</label>
+                        <select id="sportFilter">
+                            <option value="">All Sports</option>
+                        </select>
+                        <button onclick="applySportFilter()">Apply</button>
+                    </li>
                     <li><a href="#">FilterExemple</a></li>
                     <li><a href="#">FilterExemple</a></li>
                     <li><a href="#">FilterExemple</a></li>

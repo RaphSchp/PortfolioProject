@@ -479,3 +479,42 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
+
+
+// FILTERS
+
+// Fetch sports list from the server
+async function fetchSportsList() {
+  try {
+      const response = await fetch('/sports.json');
+      const data = await response.json();
+      return data.sports;
+  } catch (error) {
+      console.error('Error fetching sports list:', error);
+      return [];
+  }
+}
+
+// Function to handle applying sport filter
+async function applySportFilter() {
+  const selectedSport = document.getElementById('sportFilter').value;
+  // Send selectedSport to the server for filtering events
+  // Implement sending the request to the server
+}
+
+// Populate sports dropdown/select
+async function populateSportsDropdown() {
+  const sportsList = await fetchSportsList();
+  const sportDropdown = document.getElementById('sportFilter');
+  sportsList.forEach(sport => {
+      const option = document.createElement('option');
+      option.value = sport;
+      option.textContent = sport;
+      sportDropdown.appendChild(option);
+  });
+}
+
+// Call the function to populate sports dropdown on page load
+document.addEventListener('DOMContentLoaded', () => {
+  populateSportsDropdown();
+});
