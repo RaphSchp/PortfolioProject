@@ -459,6 +459,8 @@ document.addEventListener("DOMContentLoaded", () => {
       const figCaptionText = figure.querySelector("figcaption").textContent.toLowerCase();
       const docText = figure.querySelector(".doc").textContent.toLowerCase();
       const eventHourText = figure.querySelector(".event-hour span:last-child").textContent.toLowerCase();
+      const sportText = figure.querySelector(".sport span:last-child").textContent.toLowerCase();
+      const addressText = figure.querySelector(".address span:last-child").textContent.toLowerCase();
       const eventDateText = figure.querySelector(".event-date span:last-child").textContent.toLowerCase();
       const cityText = figure.querySelector(".city span:last-child").textContent.toLowerCase();
       const participantsText = figure.querySelector(".participants span:last-child").textContent.toLowerCase();
@@ -467,6 +469,8 @@ document.addEventListener("DOMContentLoaded", () => {
         figCaptionText.includes(searchTerm) ||
         docText.includes(searchTerm) ||
         eventHourText.includes(searchTerm) ||
+        sportText.includes(searchTerm) ||
+        addressText.includes(searchTerm) ||
         eventDateText.includes(searchTerm) ||
         cityText.includes(searchTerm) ||
         participantsText.includes(searchTerm);
@@ -497,10 +501,22 @@ async function fetchSportsList() {
 
 // Function to handle applying sport filter
 async function applySportFilter() {
-  const selectedSport = document.getElementById('sportFilter').value;
-  // Send selectedSport to the server for filtering events
-  // Implement sending the request to the server
-}
+  const selectedSport = document.getElementById('sportFilter').value.toLowerCase();
+    // Loop through all figures and toggle display based on search term
+    const allFigures = Array.from(document.querySelectorAll("main figure, #myTopnav figure"));
+    allFigures.forEach((figure) => {
+      const sportSection = figure.querySelector(".sport").textContent.toLowerCase();
+
+      const isMatch =
+      sportSection.includes(selectedSport);
+
+      if (isMatch) {
+        figure.style.display = "block";
+      } else {
+        figure.style.display = "none";
+      }
+    });
+  }
 
 // Populate sports dropdown/select
 async function populateSportsDropdown() {
@@ -513,8 +529,38 @@ async function populateSportsDropdown() {
       sportDropdown.appendChild(option);
   });
 }
+console.log("Element:", document.getElementById("dateSort"));
 
 // Call the function to populate sports dropdown on page load
 document.addEventListener('DOMContentLoaded', () => {
   populateSportsDropdown();
+});
+
+function sortEventsByDate(order) {
+  console.log('Sorting events by date:', order); // Check if the function is called and with what order
+  figures.sort(function(a, b) {
+    const dateA = new Date(a.querySelector('.event-date span:last-child').textContent);
+    const dateB = new Date(b.querySelector('.event-date span:last-child').textContent);
+    if (order === 'newer') {
+      return dateB - dateA; // Sort newer first
+    } else {
+      return dateA - dateB; // Sort older first
+    }
+  });
+
+  // Append sorted figures back to the main container
+  const main = document.querySelector("main");
+  main.innerHTML = "";
+  figures.forEach(figure => {
+    main.appendChild(figure);
+  });
+}
+
+
+document.addEventListener("DOMContentLoaded", function() {
+  // Event listener for select change
+  document.getElementById("dateSort").addEventListener("change", function() {
+      var sortOrder = this.value;
+      sortEventsByDate(sortOrder);
+  });
 });
