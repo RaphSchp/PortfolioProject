@@ -484,9 +484,8 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
-
-// FILTERS
-
+// FILTERS ----------------------------------------------------------------------------------------------------------------------------------------
+// ** SPORT ---------------------------------------------------------------------------------------------------------------------------------------
 // Fetch sports list from the server
 async function fetchSportsList() {
   try {
@@ -536,31 +535,39 @@ document.addEventListener('DOMContentLoaded', () => {
   populateSportsDropdown();
 });
 
+// ** DATE ----------------------------------------------------------------------------------------------------------------------------------------
 function sortEventsByDate(order) {
-  console.log('Sorting events by date:', order); // Check if the function is called and with what order
-  figures.sort(function(a, b) {
+  console.log('Sorting events by date:', order); // Vérifie si la fonction est appelée et avec quel ordre
+
+  // Fonction de comparaison pour trier les événements par date
+  const compareDates = function(a, b) {
     const dateA = new Date(a.querySelector('.event-date span:last-child').textContent);
     const dateB = new Date(b.querySelector('.event-date span:last-child').textContent);
-    if (order === 'newer') {
-      return dateB - dateA; // Sort newer first
-    } else {
-      return dateA - dateB; // Sort older first
-    }
+    return order === 'newer' ? dateB - dateA : dateA - dateB;
+  };
+
+  // Trier les figures en utilisant la fonction de comparaison
+  figures.sort(compareDates);
+
+  // Détacher les figures de leur parent
+  figures.forEach(figure => {
+    figure.parentNode.removeChild(figure);
   });
 
-  // Append sorted figures back to the main container
+  // Réinsérer les figures triées dans le bon ordre
   const main = document.querySelector("main");
-  main.innerHTML = "";
   figures.forEach(figure => {
     main.appendChild(figure);
   });
 }
-
-
+// Ajouter un écouteur d'événement pour détecter les changements dans la sélection de tri
 document.addEventListener("DOMContentLoaded", function() {
-  // Event listener for select change
   document.getElementById("dateSort").addEventListener("change", function() {
-      var sortOrder = this.value;
-      sortEventsByDate(sortOrder);
+    var sortOrder = this.value;
+    sortEventsByDate(sortOrder);
   });
 });
+
+
+// ** CITY ----------------------------------------------------------------------------------------------------------------------------------------
+// ** ON DEMAND / OPEN ----------------------------------------------------------------------------------------------------------------------------
