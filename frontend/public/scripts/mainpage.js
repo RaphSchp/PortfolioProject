@@ -59,6 +59,7 @@ function getData() {
           let city = document.createElement("p");
           let address = document.createElement("p");
           let participants = document.createElement("p");
+          let status = document.createElement("p");
 
           img.src = "../../assets/user_image/" + event.img;
           img.alt = event.event_name;
@@ -120,6 +121,15 @@ function getData() {
           participants.appendChild(participantsValue);
           participants.classList.add("participants");
 
+          // Status
+          let statusLabel = createLabelSpan("Status: ");
+          let statusValue = document.createElement("span");
+          statusValue.textContent = event.status;
+          status.textContent = "";
+          status.appendChild(statusLabel);
+          status.appendChild(statusValue);
+          status.classList.add("status");
+
           let participateIcon = createIconLink("../../assets/images/participate.png", "#participate-link");
           let messageIcon = createIconLink("../../assets/images/message.png", "#message-link");
           let favoritesIcon = createIconLink("../../assets/images/favorites.png", "#favorites-link");
@@ -133,6 +143,7 @@ function getData() {
           figure.appendChild(city);
           figure.appendChild(address);
           figure.appendChild(participants);
+          figure.appendChild(status);
           figure.appendChild(participateIcon);
           figure.appendChild(messageIcon);
           figure.appendChild(favoritesIcon);
@@ -528,7 +539,6 @@ async function populateSportsDropdown() {
       sportDropdown.appendChild(option);
   });
 }
-console.log("Element:", document.getElementById("dateSort"));
 
 // Call the function to populate sports dropdown on page load
 document.addEventListener('DOMContentLoaded', () => {
@@ -570,7 +580,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 // ** CITY ----------------------------------------------------------------------------------------------------------------------------------------
-// Function to fetch cities data
+// Fetch cities data
 async function fetchCitiesData() {
   try {
       const response = await fetch('/cities.json');
@@ -582,15 +592,9 @@ async function fetchCitiesData() {
   }
 }
 
-function applyCityFilter() {
-  const selectedCity = document.getElementById('cityInput').value.trim();
-  filterEventsByCity(selectedCity);
-}
-
-
 // Function to filter cities based on input
 async function filterCities() {
-  const input = document.getElementById('cityInput').value.toLowerCase();
+  const input = document.getElementById('cityInput').value.toLowerCase().trim();
   const suggestionsContainer = document.getElementById('citySuggestions');
   suggestionsContainer.innerHTML = '';
 
@@ -615,14 +619,11 @@ async function filterCities() {
 
 // Function to filter events by selected city
 function filterEventsByCity(selectedCity) {
-  // Convert selected city to lowercase for case-insensitive matching
   const city = selectedCity.toLowerCase();
 
-  // Loop through all figures and toggle display based on selected city
   const allFigures = Array.from(document.querySelectorAll("main figure"));
   allFigures.forEach((figure) => {
       const citySection = figure.querySelector(".city").textContent.toLowerCase();
-
       const isMatch = citySection.includes(city);
 
       if (isMatch) {
@@ -633,17 +634,59 @@ function filterEventsByCity(selectedCity) {
   });
 }
 
-// Event listener for the "Apply" button click
+// Apply city filter
+function applyCityFilter() {
+  const selectedCity = document.getElementById('cityInput').value.trim();
+  filterEventsByCity(selectedCity);
+}
+
+// Event listener for DOMContentLoaded
 document.addEventListener("DOMContentLoaded", () => {
-    const applyButton = document.querySelector("#applyCityFilterButton");
-    applyButton.addEventListener("click", applyCityFilter);
+  const applyButton = document.querySelector("#applyCityFilterButton");
+  if (applyButton) {
+      applyButton.addEventListener("click", applyCityFilter);
+  }
+
+  const cityInput = document.getElementById('cityInput');
+  if (cityInput) {
+      cityInput.addEventListener('input', filterCities);
+  }
+
+  // Call filterCities initially to populate suggestions based on initial input value
+  filterCities();
 });
 
-// Event listener for changes in the city input
-document.getElementById('cityInput').addEventListener('input', filterCities);
 
-// Call filterCities initially to populate suggestions based on initial input value
-filterCities();
+function filterEventsByStatus(status) {
+  // Check if figures is defined
+  if (!figures) return;
+
+  // Loop through all figures and toggle display based on the selected status
+  figures.forEach(figure => {
+    const eventStatusElement = figure.querySelector('.status');
+    if (!eventStatusElement) return; // Ensure .status element is found
+    const eventStatus = eventStatusElement.textContent.toLowerCase().trim().replace("status: ", ""); // Extract status without "status: "
+    // Show the figure if it matches the selected status or if "All" is selected
+    if (status === 'All' || eventStatus === status.toLowerCase()) {
+      figure.style.display = 'block';
+    } else {
+      figure.style.display = 'none';
+    }
+  });
+}
 
 
-// ** ON DEMAND / OPEN ----------------------------------------------------------------------------------------------------------------------------
+// Add an event listener to detect changes in the status selection
+document.addEventListener("DOMContentLoaded", function() {
+  const statusSelect = document.getElementById("statusSort");
+  
+  // Initially filter based on the default status selection
+  const defaultStatus = statusSelect.value;
+  filterEventsByStatus(defaultStatus);
+
+  // Add event listener to status select dropdown
+  statusSelect.addEventListener("change", function() {
+    const selectedStatus = this.value;
+    filterEventsByStatus(selectedStatus);
+  });
+});
