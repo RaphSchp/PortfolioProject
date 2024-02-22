@@ -570,4 +570,80 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 // ** CITY ----------------------------------------------------------------------------------------------------------------------------------------
+// Function to fetch cities data
+async function fetchCitiesData() {
+  try {
+      const response = await fetch('/cities.json');
+      const data = await response.json();
+      return data;
+  } catch (error) {
+      console.error('Error fetching cities data:', error);
+      return [];
+  }
+}
+
+function applyCityFilter() {
+  const selectedCity = document.getElementById('cityInput').value.trim();
+  filterEventsByCity(selectedCity);
+}
+
+
+// Function to filter cities based on input
+async function filterCities() {
+  const input = document.getElementById('cityInput').value.toLowerCase();
+  const suggestionsContainer = document.getElementById('citySuggestions');
+  suggestionsContainer.innerHTML = '';
+
+  const cities = await fetchCitiesData();
+  const filteredCities = cities.filter(city => city.name.toLowerCase().startsWith(input));
+
+  const suggestionsList = document.createElement('ul');
+  suggestionsList.setAttribute('id', 'cityList');
+
+  filteredCities.slice(0, 4).forEach(city => {
+      const li = document.createElement('li');
+      li.textContent = `${city.name}, ${city.country}`;
+      li.onclick = () => {
+          document.getElementById('cityInput').value = `${city.name}, ${city.country}`;
+          suggestionsContainer.innerHTML = '';
+      };
+      suggestionsList.appendChild(li);
+  });
+
+  suggestionsContainer.appendChild(suggestionsList);
+}
+
+// Function to filter events by selected city
+function filterEventsByCity(selectedCity) {
+  // Convert selected city to lowercase for case-insensitive matching
+  const city = selectedCity.toLowerCase();
+
+  // Loop through all figures and toggle display based on selected city
+  const allFigures = Array.from(document.querySelectorAll("main figure"));
+  allFigures.forEach((figure) => {
+      const citySection = figure.querySelector(".city").textContent.toLowerCase();
+
+      const isMatch = citySection.includes(city);
+
+      if (isMatch) {
+          figure.style.display = "block";
+      } else {
+          figure.style.display = "none";
+      }
+  });
+}
+
+// Event listener for the "Apply" button click
+document.addEventListener("DOMContentLoaded", () => {
+    const applyButton = document.querySelector("#applyCityFilterButton");
+    applyButton.addEventListener("click", applyCityFilter);
+});
+
+// Event listener for changes in the city input
+document.getElementById('cityInput').addEventListener('input', filterCities);
+
+// Call filterCities initially to populate suggestions based on initial input value
+filterCities();
+
+
 // ** ON DEMAND / OPEN ----------------------------------------------------------------------------------------------------------------------------

@@ -191,6 +191,11 @@ app.get('/sports.json', (req, res) => {
     res.sendFile(path.join(__dirname, 'data', 'sports.json'));
 });
 
+// Route pour servir le fichier cities.json
+app.get('/cities.json', (req, res) => {
+    res.sendFile(path.join(__dirname, 'data', 'cities.json'));
+});
+
 // Servez les fichiers statiques depuis le dossier 'frontend'
 app.use(express.static(path.join(__dirname, '..', 'frontend')));
 

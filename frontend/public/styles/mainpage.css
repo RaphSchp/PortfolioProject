@@ -436,6 +436,11 @@ footer {
   border-left: 4px solid transparent;
 }
 
+#cityInput {
+  width: 200px;
+  padding: 8px;
+}
+
 .menuNav.show-border {
   border-left-color: #f1600d;
 }
@@ -465,6 +470,11 @@ footer {
   right: 25px;
   font-size: 36px;
   margin-left: 50px;
+}
+
+#citySuggestions {
+  max-height: 150px;
+  overflow-y: auto;
 }
 
 
