@@ -12,6 +12,8 @@
     <link rel="stylesheet" href="../../assets/Nippo_Complete/Nippo_Complete/Fonts/WEB/css/nippo.css">
     <link rel="stylesheet" href="../styles/mainpage.css">
     <script src="../scripts/mainpage.js"></script>
+    <script src="https://cdn.socket.io/4.3.2/socket.io.min.js"></script>
+
 </head>
 <body>
 
@@ -41,9 +43,10 @@
             <a href="#create" class="create-event-link" id="navbarCreateEventLink">
                 <img src="../../assets/images/create.png" alt="Create Events">
             </a>
-            <a href="#notification">
+            <a href="#notification" class="message" id="message">
                 <img src="../../assets/images/notification.png" alt="Notifications">
             </a>
+            
             <a href="#favorites">
                 <img src="../../assets/images/favorites.png" alt="Favorites">
             </a>
@@ -97,7 +100,7 @@
         <a href="#create" class="create-event-link" id="topnavCreateEventLink">
             <img src="../../assets/images/create.png" alt="Create Events">
         </a>
-        <a href="#notification">
+        <a href="#notification" class="message" id="message">
             <img src="../../assets/images/notification.png" alt="Notifications">
         </a>
         <a href="#favorites">
@@ -218,6 +221,22 @@
     </form>
 </div>
 </div>
+    </div>
+
+
+<div id="modalBackgroundChat" class="modal-background-chat">
+    <div id="chatBox" class="chat-box">
+        <h2>Chat</h2>
+        <a href="#" id="closeChatButton" class="close-btn" onclick="closeChatBox()">&times;</a>
+        <div id="chatMessages"></div>
+        <form id="chatForm">
+            <input type="text" id="chatInput" placeholder="Type your message...">
+            <button type="submit">Send</button>
+        </form>
+    </div>
+</div>
+
+
 </main>
 
 <footer>

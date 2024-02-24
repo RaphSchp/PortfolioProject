@@ -690,3 +690,55 @@ document.addEventListener("DOMContentLoaded", function() {
     filterEventsByStatus(selectedStatus);
   });
 });
+
+
+///////////////////////////////////////////////////////////////////////////////////////
+
+
+document.addEventListener("DOMContentLoaded", () => {
+  const messageLink = document.querySelectorAll('.message');
+  const modalBackgroundChat = document.getElementById('modalBackgroundChat');
+
+  // Hide modal background by default
+  modalBackgroundChat.style.display = 'none';
+
+  messageLink.forEach(link => {
+    link.addEventListener('click', (event) => {
+    event.preventDefault();
+    console.log('Clicked on message link.'); // Adding console log
+    modalBackgroundChat.style.display = 'flex';
+  });
+});
+});
+
+
+
+
+function closeChatBox() {
+  document.getElementById('modalBackgroundChat').style.display = 'none';
+}
+
+
+  // // Socket.io setup
+  // const socket = io();
+
+  // const chatForm = document.getElementById('chatForm');
+  // const chatInput = document.getElementById('chatInput');
+  // const chatMessages = document.getElementById('chatMessages');
+
+  // chatForm.addEventListener('submit', (e) => {
+  //     e.preventDefault();
+  //     const message = chatInput.value.trim();
+  //     if (message !== '') {
+  //         // Envoyer le message via websocket au serveur
+  //         socket.emit('chat message', message);
+  //         chatInput.value = '';
+  //     }
+  // });
+
+  // socket.on('chat message', (msg) => {
+  //     // Afficher le message reçu dans la boîte de chat
+  //     const messageElement = document.createElement('div');
+  //     messageElement.innerText = msg;
+  //     chatMessages.appendChild(messageElement);
+  // });

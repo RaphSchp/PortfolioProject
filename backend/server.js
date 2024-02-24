@@ -227,3 +227,31 @@ app.get('/events/sport/:sport', async (req, res) => {
         res.status(500).json({ success: false, error: 'Internal Server Error' });
     }
 });
+
+
+
+// const http = require('http');
+// const socketIo = require('socket.io');
+
+// const server = http.createServer(app);
+// const io = socketIo(server);
+
+// // Définissez une variable pour stocker les utilisateurs connectés
+// const users = {};
+
+// // Écoutez les connexions Socket.io
+// io.on('connection', (socket) => {
+//     console.log('User connected');
+
+//     // Écoutez les événements 'chat message'
+//     socket.on('chat message', (msg) => {
+//         // Diffusez le message à tous les utilisateurs connectés
+//         io.emit('chat message', msg);
+//     });
+
+//     // Écoutez les événements de déconnexion
+//     socket.on('disconnect', () => {
+//         console.log('User disconnected');
+//     });
+// });
+

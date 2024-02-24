@@ -258,7 +258,8 @@ figcaption {
 }
 
 .modal-background,
-.modal-background2 {
+.modal-background2,
+.modal-background-chat {
   display: none;
   position: fixed;
   top: 0;
@@ -292,7 +293,8 @@ figcaption {
 }
 
 #modalBackground,
-#modalBackground2 {
+#modalBackground2,
+#modalBackgroundChat {
   display: flex;
 }
 
@@ -596,4 +598,61 @@ footer {
 
 #profileBox a {
   color: #f1600d;
+}
+
+
+/* Style for chat box */
+.chat-box {
+  border: 6px solid #f1600d;
+  background-color:#1a265a;
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 400px;
+  position: relative;
+}
+
+.chat-box h2 {
+  color: #f1600d; 
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+/* Style for chat messages container */
+#chatMessages {
+  max-height: 200px;
+  overflow-y: auto;
+  margin-bottom: 10px;
+}
+
+/* Style for chat input and send button */
+#chatInput {
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+#chatForm button {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: #f1600d;
+  color: #fff;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+#chatForm button:hover {
+  background-color: #d44a0d;
+}
+
+/* Style for close chat button */
+.close-chat-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+  color: #999;
 }
