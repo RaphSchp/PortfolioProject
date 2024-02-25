@@ -1,11 +1,19 @@
+const http = require('http');
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
 const mongoose = require('mongoose');
 const session = require('express-session');
+const socketIo = require('socket.io'); // Importez socket.io avant de l'utiliser
 
 const app = express();
 const PORT = 3000;
+
+const server = http.createServer(app);
+const io = socketIo(server); // Utilisez socket.io après son importation
+
+// Le reste de votre code ici...
+
 
 app.use(bodyParser.json());
 
@@ -203,13 +211,13 @@ app.use(express.static(path.join(__dirname, '..', 'frontend')));
 // Assurez-vous que le chemin est correct
 app.use(express.static(path.join(__dirname, '..', 'frontend', 'public')));
 
-// Route pour gérer toutes les autres requêtes et rediriger vers 'public/pages/loginpage.html'
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname,"..", 'frontend', 'public', 'pages', 'loginpage.html'));
-});
+ // Route pour gérer toutes les autres requêtes et rediriger vers 'public/pages/loginpage.html'
+ app.get('*', (req, res) => {
+     res.sendFile(path.join(__dirname,"..", 'frontend', 'public', 'pages', 'loginpage.html'));
+ });
 
 // Démarrage du serveur
-app.listen(PORT, () => {
+server.listen(PORT, () => {
     console.log(`Serveur en cours d'exécution sur le port ${PORT}`);
 });
 
@@ -228,30 +236,26 @@ app.get('/events/sport/:sport', async (req, res) => {
     }
 });
 
+// Route pour servir le fichier socket.io.js
+app.get('/socket.io/socket.io.js', (req, res) => {
+    const filePath = path.join(__dirname, 'node_modules', 'socket.io', 'client-dist', 'socket.io.js');
+    console.log("Chemin vers le fichier Socket.IO :", filePath);
+    res.sendFile(filePath);
+});
 
 
-// const http = require('http');
-// const socketIo = require('socket.io');
 
-// const server = http.createServer(app);
-// const io = socketIo(server);
+io.on('connection', (socket) => {
+    console.log('User connected');
 
-// // Définissez une variable pour stocker les utilisateurs connectés
-// const users = {};
+    socket.on('chat message', (msg) => {
+        io.emit('chat message', msg); // Diffuser le message à tous les utilisateurs connectés
 
-// // Écoutez les connexions Socket.io
-// io.on('connection', (socket) => {
-//     console.log('User connected');
 
-//     // Écoutez les événements 'chat message'
-//     socket.on('chat message', (msg) => {
-//         // Diffusez le message à tous les utilisateurs connectés
-//         io.emit('chat message', msg);
-//     });
+    });
 
-//     // Écoutez les événements de déconnexion
-//     socket.on('disconnect', () => {
-//         console.log('User disconnected');
-//     });
-// });
+    socket.on('disconnect', () => {
+        console.log('User disconnected');
+    });
+});
 

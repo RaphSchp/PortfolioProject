@@ -719,26 +719,29 @@ function closeChatBox() {
 }
 
 
-  // // Socket.io setup
-  // const socket = io();
+document.addEventListener('DOMContentLoaded', function() {
+  // Connexion au serveur Socket.IO
+  const socket = io();
 
-  // const chatForm = document.getElementById('chatForm');
-  // const chatInput = document.getElementById('chatInput');
-  // const chatMessages = document.getElementById('chatMessages');
+  // Éléments de chat
+  const chatForm = document.getElementById('chatForm');
+  const chatInput = document.getElementById('chatInput');
+  const chatMessages = document.getElementById('chatMessages');
 
-  // chatForm.addEventListener('submit', (e) => {
-  //     e.preventDefault();
-  //     const message = chatInput.value.trim();
-  //     if (message !== '') {
-  //         // Envoyer le message via websocket au serveur
-  //         socket.emit('chat message', message);
-  //         chatInput.value = '';
-  //     }
-  // });
+  // Gestion de l'envoi de message
+  chatForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const message = chatInput.value.trim();
+      if (message !== '') {
+          socket.emit('chat message', message); // Envoyer le message au serveur
+          chatInput.value = ''; // Effacer le champ de saisie après l'envoi
+      }
+  });
 
-  // socket.on('chat message', (msg) => {
-  //     // Afficher le message reçu dans la boîte de chat
-  //     const messageElement = document.createElement('div');
-  //     messageElement.innerText = msg;
-  //     chatMessages.appendChild(messageElement);
-  // });
+  // Réception des messages du serveur et affichage dans la boîte de chat
+  socket.on('chat message', (msg) => {
+      const messageElement = document.createElement('div');
+      messageElement.textContent = msg;
+      chatMessages.appendChild(messageElement);
+  });
+});
