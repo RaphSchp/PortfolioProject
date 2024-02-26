@@ -188,7 +188,7 @@ function closeEventBox() {
             await newUser.save();
 
 
-            // Envoyer un message de validation
+            // Envoyer un message de validations
             res.status(200).json({ success: true, message: 'Registration successful. Welcome! Please log in.' });
         } catch (error) {
             console.error('Error during registration:', error);
@@ -196,3 +196,32 @@ function closeEventBox() {
         }
     });
 
+
+    app.post('/create-event', async (req, res) => {
+        try {
+            const { eventName, eventSport, eventDescription, eventTime, eventDate, eventCity, eventAddress, participants, eventLocation, eventImage } = req.body;
+
+            // Créez votre logique de validation des données ici
+
+            // Créez un nouvel événement avec les valeurs fournies
+            const newEvent = new Event({
+                eventName,
+                eventSport,
+                eventDescription,
+                eventTime,
+                eventDate,
+                eventCity,
+                eventAddress,
+                participants,
+                eventLocation,
+                eventImage
+            });
+            await newEvent.save();
+
+            // Envoyer une réponse réussie
+            res.status(200).json({ success: true, message: 'Event created successfully.' });
+        } catch (error) {
+            console.error('Error during event creation:', error);
+            res.status(500).json({ success: false, message: 'Internal Server Error' });
+        }
+    });
