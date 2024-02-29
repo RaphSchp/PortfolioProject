@@ -228,17 +228,20 @@
     </div>
 
 
-<div id="modalBackgroundChat" class="modal-background-chat">
-    <div id="chatBox" class="chat-box">
-        <h2>Chat</h2>
-        <a href="#" id="closeChatButton" class="close-btn" onclick="closeChatBox()">&times;</a>
-        <div id="chatMessages"></div>
-        <form id="chatForm">
-            <input type="text" id="chatInput" placeholder="Type your message...">
-            <button type="submit">Send</button>
-        </form>
+    <div id="modalBackgroundChat" class="modal-background-chat">
+        <div id="chatBox" class="chat-box">
+            <h2>Chat</h2>
+            <div id="userList" class="user-list">
+                <!-- User list will be rendered here -->
+            </div>
+            <a href="#" id="closeChatButton" class="close-chat-btn" onclick="closeChatBox()">&times;</a>
+            <div id="chatMessages"></div>
+            <form id="chatForm">
+                <input type="text" id="chatInput" placeholder="Type your message...">
+                <button type="submit">Send</button>
+            </form>
+        </div>
     </div>
-</div>
 
 
 </main>
@@ -252,4 +255,5 @@
 </button>
 
 </body>
+
 </html>

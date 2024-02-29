@@ -5,6 +5,7 @@ const path = require('path');
 const mongoose = require('mongoose');
 const session = require('express-session');
 const socketIo = require('socket.io'); // Importez socket.io avant de l'utiliser
+const userSockets = new Map();
 
 const app = express();
 const PORT = 3000;
@@ -18,11 +19,19 @@ const io = socketIo(server); // Utilisez socket.io après son importation
 app.use(bodyParser.json());
 
 // Configuration de la session
-app.use(session({
+const sessionMiddleware = session({
     secret: 'mySecret',
     resave: false,
     saveUninitialized: false
-  }));
+});
+
+app.use(sessionMiddleware);
+
+// Associez le middleware de session à chaque connexion de socket
+io.use((socket, next) => {
+    sessionMiddleware(socket.request, {}, next);
+});
+
 
 // Connexion à la base de données MongoDB
 mongoose.connect('mongodb://localhost:27017/kangaroo');
@@ -63,55 +72,68 @@ function validateEmail(email) {
     return re.test(email);
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////
-// Route pour récupérer les informations de l'utilisateur connecté
-app.get('/getLoggedInUserInfo', async (req, res) => {
-    try {
-        // Vérifier si l'utilisateur est connecté
-        if (!req.session.userId) {
-            return res.status(401).json({ success: false, message: 'Unauthorized' });
-        }
 
-        // Rechercher l'utilisateur dans la base de données
-        const user = await User.findById(req.session.userId);
 
-        if (!user) {
-            return res.status(404).json({ success: false, message: 'User not found' });
-        }
-
-        // Renvoyer les informations de l'utilisateur
-        res.json({ success: true, username: user.username, email: user.email, userpic: user.userpic });
-    } catch (error) {
-        console.error('Error fetching user info:', error);
-        res.status(500).json({ success: false, error: 'Internal Server Error' });
-    }
-});
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
+// Définissez la fonction getUserIdFromSession pour récupérer l'ID de l'utilisateur à partir de la session
+// Définissez la fonction getUserIdFromSession pour récupérer l'ID de l'utilisateur à partir de la session
 
-// Route pour la connexion
-app.post('/login', async (req, res) => {
+  
+  
+  // Route pour récupérer les informations de l'utilisateur connecté
+  app.get('/getLoggedInUserInfo', async (req, res) => {
+      try {
+          // Vérifier si l'utilisateur est connecté
+          if (!req.session.userId) {
+              return res.status(401).json({ success: false, message: 'Unauthorized' });
+          }
+  
+          // Rechercher l'utilisateur dans la base de données
+          const user = await User.findById(req.session.userId);
+  
+          if (!user) {
+              return res.status(404).json({ success: false, message: 'User not found' });
+          }
+  
+          // Renvoyer les informations de l'utilisateur
+          res.json({ success: true, username: user.username, email: user.email, userpic: user.userpic });
+      } catch (error) {
+          console.error('Error fetching user info:', error);
+          res.status(500).json({ success: false, error: 'Internal Server Error' });
+      }
+  });
+  
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+app.post('/login', sessionMiddleware, async (req, res) => {
     try {
+        console.log('User session ID (login):', req.sessionID);
         const { email, password } = req.body;
-
+  
         // Recherche de l'utilisateur dans la base de données
         const user = await User.findOne({ email, password });
-
+  
         if (!user) {
             res.json({ success: false });
         } else {
+            // Stocker l'ID de l'utilisateur dans la session
             req.session.userId = user._id;
+  
+            // Répondre avec succès
             res.json({ success: true });
         }
     } catch (error) {
         console.error('Erreur lors de la recherche de l\'utilisateur :', error);
         res.status(500).json({ success: false, error: 'Internal Server Error' });
     }
-});
+  });
+  
 
 // Route pour l'inscription
-app.post('/register', async (req, res) => {
+app.post('/register', sessionMiddleware, async (req, res) => {
     try {
         const { username, email, password, passwordConfirmation } = req.body;
 
@@ -211,10 +233,7 @@ app.use(express.static(path.join(__dirname, '..', 'frontend')));
 // Assurez-vous que le chemin est correct
 app.use(express.static(path.join(__dirname, '..', 'frontend', 'public')));
 
- // Route pour gérer toutes les autres requêtes et rediriger vers 'public/pages/loginpage.html'
- app.get('*', (req, res) => {
-     res.sendFile(path.join(__dirname,"..", 'frontend', 'public', 'pages', 'loginpage.html'));
- });
+
 
 // Démarrage du serveur
 server.listen(PORT, () => {
@@ -236,26 +255,98 @@ app.get('/events/sport/:sport', async (req, res) => {
     }
 });
 
-// Route pour servir le fichier socket.io.js
-app.get('/socket.io/socket.io.js', (req, res) => {
-    const filePath = path.join(__dirname, 'node_modules', 'socket.io', 'client-dist', 'socket.io.js');
-    console.log("Chemin vers le fichier Socket.IO :", filePath);
-    res.sendFile(filePath);
+// server.js
+
+
+// Fonction pour récupérer l'ID de l'utilisateur à partir de la session
+function getUserIdFromSession(req) {
+    // Vérifiez si l'utilisateur est connecté et si oui, renvoyez son ID
+    if (req.session && req.session.userId) {
+        return req.session.userId;
+    } else {
+        return null;
+    }
+}
+
+const Conversation = require('./models/conversation');
+const Message = require('./models/message');
+
+// Handle user fetching
+app.get('/users', async (req, res) => {
+    try {
+        const users = await User.find({}, '_id username');
+        res.json(users);
+    } catch (error) {
+        console.error('Error fetching users:', error);
+        res.status(500).json({ success: false, error: 'Internal Server Error' });
+    }
 });
-
-
 
 io.on('connection', (socket) => {
-    console.log('User connected');
+    console.log(`User connected: ${socket.id}`);
 
-    socket.on('chat message', (msg) => {
-        io.emit('chat message', msg); // Diffuser le message à tous les utilisateurs connectés
+    // Lorsqu'un utilisateur se connecte, associez son ID utilisateur à son socket
+    const userId = getUserIdFromSession(socket.request);
+    if (userId) {
+        userSockets.set(userId, socket);
+    }
 
 
-    });
+// Gestion de l'événement 'private message'
+socket.on('private message', async (msg) => {
+    try {
+        if (!socket.request || !socket.request.session) {
+            console.error('Error: Socket request or session not available');
+            return;
+        }
+        
+        const senderId = getUserIdFromSession(socket.request); // Récupérez l'ID de l'expéditeur à partir de la session
+        if (!senderId) {
+            console.error('Error: User not authenticated');
+            return;
+        }
+        
+        // Logique de traitement des messages privés ici
+        const recipientId = msg.recipientId; // L'ID du destinataire provient des données du message
+        const content = msg.content; // Le contenu du message
+        
+        // Créez un nouveau message à enregistrer dans la base de données
+        const newMessage = new Message({
+            senderId: senderId,
+            recipientId: recipientId,
+            content: content
+        });
 
-    socket.on('disconnect', () => {
-        console.log('User disconnected');
-    });
+        // Enregistrez le nouveau message dans la base de données
+        await newMessage.save();
+
+        // Trouver le socket du destinataire à partir de son ID
+        const recipientSocket = userSockets.get(recipientId);
+        if (recipientSocket) {
+            // Envoyer le message au socket du destinataire
+            recipientSocket.emit('private message', {
+                senderId: senderId,
+                content: content
+            });
+        } else {
+            console.error('Error: Recipient socket not found');
+        }
+    } catch (error) {
+        console.error('Error saving private message:', error);
+    }
 });
 
+
+    
+// Gestion de la déconnexion de l'utilisateur
+socket.on('disconnect', () => {
+    console.log('User disconnected:', socket.id);
+
+    // Supprimez l'entrée correspondante dans la structure de données
+    userSockets.forEach((value, key) => {
+        if (value === socket) {
+            userSockets.delete(key);
+        }
+    });
+});
+});

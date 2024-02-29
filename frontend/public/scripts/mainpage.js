@@ -692,56 +692,112 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 
-///////////////////////////////////////////////////////////////////////////////////////
+// mainpage.js
+
+// Définissez la fonction getUserIdFromSession pour récupérer l'ID de l'utilisateur à partir du stockage local
+function getUserIdFromSession() {
+  // Récupérer l'ID de l'utilisateur depuis le stockage local du navigateur
+  const userId = localStorage.getItem('userId');
+  return userId;
+}
+
+
 
 
 document.addEventListener("DOMContentLoaded", () => {
-  const messageLink = document.querySelectorAll('.message');
   const modalBackgroundChat = document.getElementById('modalBackgroundChat');
+  let socket;
+  let selectedUserId = null;
 
   // Hide modal background by default
   modalBackgroundChat.style.display = 'none';
 
-  messageLink.forEach(link => {
+  // Show chat box when message link is clicked
+  document.querySelectorAll('.message').forEach(link => {
     link.addEventListener('click', (event) => {
-    event.preventDefault();
-    console.log('Clicked on message link.'); // Adding console log
-    modalBackgroundChat.style.display = 'flex';
+      event.preventDefault();
+      console.log('Clicked on message link.');
+      modalBackgroundChat.style.display = 'flex';
+      
+      // Set the selected user ID
+      selectedUserId = link.dataset.userId;
+      console.log("Selected User ID:", selectedUserId);
+    });
   });
+
+  // Function to append messages to chat
+  function appendMessageToChat(message) {
+    console.log("Message appended to chat:", message);
+    const chatMessages = document.getElementById('chatMessages');
+    const messageElement = document.createElement('div');
+    messageElement.textContent = message;
+    chatMessages.appendChild(messageElement);
+  }
+
+  // Connect to Socket.IO server
+  socket = io();
+  const chatForm = document.getElementById('chatForm');
+
+
+// mainpage.js
+
+// Function to handle form submission for sending a message
+chatForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const message = chatInput.value.trim();
+  if (message !== '' && selectedUserId) {
+    const recipientId = selectedUserId; 
+    // Emit a private message event to the server
+    // Make sure the user is authenticated before allowing message sending
+    // Also, ensure that the server properly handles authentication and only allows authenticated users to send messages
+    socket.emit('private message', { recipientId, content: message }); // Send only the recipient ID and message content
+    appendMessageToChat(`You sent a message to ${recipientId}: ${message}`);
+    chatInput.value = '';
+  }
 });
+
+// Listen for 'private message' event from the server and update UI
+socket.on('private message', (msg) => {
+  console.log("Private message received:", msg);
+  // Check if the message is intended for the current user
+  if (msg.recipientId === selectedUserId || msg.senderId === selectedUserId) {
+      // If yes, update the UI with the new message
+      const messageText = msg.senderId === socket.id ? `You (Private): ${msg.content}` : `${msg.senderId} (Private): ${msg.content}`;
+      appendMessageToChat(messageText);
+  }
 });
 
+// Function to render the user list
+function renderUserList() {
+  fetch('/users')
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
+    .then(users => {
+      const userListContainer = document.getElementById('userList');
+      userListContainer.innerHTML = '';
+      users.forEach(user => {
+        const userElement = document.createElement('div');
+        userElement.textContent = user.username;
+        userElement.classList.add('user');
+        userElement.dataset.userId = user._id;
 
+        // Add click event listener to select user
+        userElement.addEventListener('click', () => {
+          selectedUserId = user._id;
+          console.log("Selected User ID:", selectedUserId);
+        });
 
-
-function closeChatBox() {
-  document.getElementById('modalBackgroundChat').style.display = 'none';
+        userListContainer.appendChild(userElement);
+      });
+    })
+    .catch(error => {
+      console.error('Error fetching users:', error);
+    });
 }
 
-
-document.addEventListener('DOMContentLoaded', function() {
-  // Connexion au serveur Socket.IO
-  const socket = io();
-
-  // Éléments de chat
-  const chatForm = document.getElementById('chatForm');
-  const chatInput = document.getElementById('chatInput');
-  const chatMessages = document.getElementById('chatMessages');
-
-  // Gestion de l'envoi de message
-  chatForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const message = chatInput.value.trim();
-      if (message !== '') {
-          socket.emit('chat message', message); // Envoyer le message au serveur
-          chatInput.value = ''; // Effacer le champ de saisie après l'envoi
-      }
-  });
-
-  // Réception des messages du serveur et affichage dans la boîte de chat
-  socket.on('chat message', (msg) => {
-      const messageElement = document.createElement('div');
-      messageElement.textContent = msg;
-      chatMessages.appendChild(messageElement);
-  });
-});
+renderUserList();
+})

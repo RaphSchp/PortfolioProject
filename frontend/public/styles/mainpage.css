@@ -623,6 +623,7 @@ footer {
   max-height: 200px;
   overflow-y: auto;
   margin-bottom: 10px;
+  color: #fef6ed;
 }
 
 /* Style for chat input and send button */
@@ -655,4 +656,22 @@ footer {
   right: 10px;
   cursor: pointer;
   color: #999;
+}
+
+
+/* Style for user list */
+.user-list {
+  background-color: #f3f3f3;
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.user-list div {
+  margin-bottom: 5px;
+  cursor: pointer;
+}
+
+.user-list div:hover {
+  background-color: #eaeaea;
 }
