@@ -6,6 +6,7 @@ const mongoose = require('mongoose');
 const session = require('express-session');
 const socketIo = require('socket.io'); // Importez socket.io avant de l'utiliser
 const userSockets = new Map();
+const cors=require("cors")
 
 const app = express();
 const PORT = 3000;
@@ -17,6 +18,8 @@ const io = socketIo(server); // Utilisez socket.io après son importation
 
 
 app.use(bodyParser.json());
+
+app.use(cors())
 
 // Configuration de la session
 const sessionMiddleware = session({
@@ -34,7 +37,7 @@ io.use((socket, next) => {
 
 
 // Connexion à la base de données MongoDB
-mongoose.connect('mongodb://localhost:27017/kangaroo');
+mongoose.connect('mongodb+srv://bennorft:bennorft@cluster0.dyuhtxw.mongodb.net/eventsdata?retryWrites=true&w=majority&appName=Cluster0');
 
 // Définition du schéma de l'user
 const userSchema = new mongoose.Schema({
@@ -74,12 +77,25 @@ function validateEmail(email) {
 
 
 
+app.get("/random", async (req,res) => {
+    res.json({ message: "You are at good place" })
+})
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 // Définissez la fonction getUserIdFromSession pour récupérer l'ID de l'utilisateur à partir de la session
 // Définissez la fonction getUserIdFromSession pour récupérer l'ID de l'utilisateur à partir de la session
 
+
+app.post("/events",async(req,res)=>{
+    try {
+        const newEvent=Event(req.body)
+        await newEvent.save()
+        res.status(201).json({message:"Event Created Succesfully",succes:true})
+    } catch (error) {
+        res.status(400).json({message:error.message,success:false})
+    }
+})
   
   
   // Route pour récupérer les informations de l'utilisateur connecté
@@ -178,12 +194,12 @@ app.post('/register', sessionMiddleware, async (req, res) => {
 });
 
 // Route pour récupérer tous les événements depuis la base de données MongoDB
-app.get('/events', async (req, res) => {
+app.get('/events',sessionMiddleware, async (req, res) => {
     try {
         // Vérifier si l'utilisateur est connecté
-        if (!req.session.userId) {
-            return res.status(401).json({ success: false, message: 'Unauthorized' });
-        }
+        // if (!req.session.userId) {
+        //     return res.status(401).json({ success: false, message: 'Unauthorized' });
+        // }
 
         const events = await Event.find();
         res.json(events);
@@ -242,7 +258,6 @@ server.listen(PORT, () => {
 
 
 
-
 // Route to filter events by sport
 app.get('/events/sport/:sport', async (req, res) => {
     try {
@@ -254,6 +269,7 @@ app.get('/events/sport/:sport', async (req, res) => {
         res.status(500).json({ success: false, error: 'Internal Server Error' });
     }
 });
+
 
 // server.js
 
