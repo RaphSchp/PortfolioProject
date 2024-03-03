@@ -620,7 +620,7 @@ footer {
 
 /* Style for chat messages container */
 #chatMessages {
-  max-height: 200px;
+  max-height: 400px;
   overflow-y: auto;
   margin-bottom: 10px;
   color: #fef6ed;
@@ -649,18 +649,34 @@ footer {
   background-color: #d44a0d;
 }
 
-/* Style for close chat button */
 .close-chat-btn {
   position: absolute;
   top: 10px;
-  right: 10px;
+  right: 20px;
+  font-size: 20px;
   cursor: pointer;
-  color: #999;
+  text-decoration: none; /* Supprimer la décoration de lien */
+  color: #fef6ed;
+  transition: color 0.3s, background-color 0.3s;
+  width: 35px;
+  height: 35px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
+
+.close-chat-btn:hover {
+  background-color: #f1600d;
+  color: #fef6ed;
+}
+
 
 
 /* Style for user list */
 .user-list {
+  max-height: 200px;
+  overflow-y: auto;
   background-color: #f3f3f3;
   border: 1px solid #ccc;
   padding: 10px;
@@ -674,4 +690,24 @@ footer {
 
 .user-list div:hover {
   background-color: #eaeaea;
+}
+
+/* Style pour les messages reçus */
+#chatMessages .message-received {
+  text-align: left;
+  background-color: #fef6ed; /* Couleur de fond pour les messages reçus */
+  border-radius: 15px; /* Bord arrondi pour les messages reçus */
+  padding: 10px;
+  margin-bottom: 10px;
+  color: #f1600d;
+}
+
+/* Style pour les messages envoyés */
+#chatMessages .message-sent {
+  text-align: right;
+  background-color: #f1600d; /* Couleur de fond pour les messages envoyés */
+  border-radius: 15px; /* Bord arrondi pour les messages envoyés */
+  padding: 10px;
+  margin-bottom: 10px;
+  color: #fef6ed; /* Couleur du texte pour les messages envoyés */
 }

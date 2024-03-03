@@ -4,17 +4,18 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const mongoose = require('mongoose');
 const session = require('express-session');
-const socketIo = require('socket.io'); // Importez socket.io avant de l'utiliser
+const socketIo = require('socket.io');
 const userSockets = new Map();
+const Conversation = require('./models/conversation');
+const Message = require('./models/message');
+const User = require('./models/user');
+const Event = require('./models/event');
 
 const app = express();
 const PORT = 3000;
 
 const server = http.createServer(app);
-const io = socketIo(server); // Utilisez socket.io après son importation
-
-// Le reste de votre code ici...
-
+const io = socketIo(server); 
 
 app.use(bodyParser.json());
 
@@ -27,7 +28,7 @@ const sessionMiddleware = session({
 
 app.use(sessionMiddleware);
 
-// Associez le middleware de session à chaque connexion de socket
+// Associer le middleware de session à chaque connexion de socket
 io.use((socket, next) => {
     sessionMiddleware(socket.request, {}, next);
 });
@@ -35,36 +36,6 @@ io.use((socket, next) => {
 
 // Connexion à la base de données MongoDB
 mongoose.connect('mongodb://localhost:27017/kangaroo');
-
-// Définition du schéma de l'user
-const userSchema = new mongoose.Schema({
-    email: { type: String, required: true },
-    password: { type: String, required: true },
-    username: { type: String, required: true },
-    userpic: { type: String, default: 'lol.jpeg' }
-});
-
-// Création du modèle user
-const User = mongoose.model('User', userSchema);
-
-// Définition du schéma de l'event
-const eventSchema = new mongoose.Schema({
-    event_name: { type: String, required: true },
-    img: { type: String, required: true },
-    sport: { type: String, required: true },
-    doc: { type: String, required: true },
-    event_hour: { type: String, required: true },
-    event_date: { type: String, required: true },
-    city: { type: String, required: true },
-    address: { type: String, required: true },
-    participants: { type: String, required: true },
-    publication_date: { type: String, required: true },
-});
-
-// Création du modèle event
-const Event = mongoose.model('Event', eventSchema);
-
-module.exports = Event;
 
 // Function to validate an email address
 function validateEmail(email) {
@@ -74,36 +45,33 @@ function validateEmail(email) {
 
 
 
-
-
 //////////////////////////////////////////////////////////////////////////////////////////////////////
-// Définissez la fonction getUserIdFromSession pour récupérer l'ID de l'utilisateur à partir de la session
-// Définissez la fonction getUserIdFromSession pour récupérer l'ID de l'utilisateur à partir de la session
+// Définir la fonction getUserIdFromSession pour récupérer l'ID de l'utilisateur à partir de la session
+  
+  
+app.get('/getLoggedInUserInfo', async (req, res) => {
+    try {
+        // Vérifier si l'utilisateur est connecté
+        if (!req.session.userId) {
+            return res.status(401).json({ success: false, message: 'Unauthorized' });
+        }
 
-  
-  
-  // Route pour récupérer les informations de l'utilisateur connecté
-  app.get('/getLoggedInUserInfo', async (req, res) => {
-      try {
-          // Vérifier si l'utilisateur est connecté
-          if (!req.session.userId) {
-              return res.status(401).json({ success: false, message: 'Unauthorized' });
-          }
-  
-          // Rechercher l'utilisateur dans la base de données
-          const user = await User.findById(req.session.userId);
-  
-          if (!user) {
-              return res.status(404).json({ success: false, message: 'User not found' });
-          }
-  
-          // Renvoyer les informations de l'utilisateur
-          res.json({ success: true, username: user.username, email: user.email, userpic: user.userpic });
-      } catch (error) {
-          console.error('Error fetching user info:', error);
-          res.status(500).json({ success: false, error: 'Internal Server Error' });
-      }
-  });
+        // Rechercher l'utilisateur dans la base de données
+        const user = await User.findById(req.session.userId);
+
+        if (!user) {
+            return res.status(404).json({ success: false, message: 'User not found' });
+        }
+
+        // Renvoyer les informations de l'utilisateur, y compris son ID
+        res.json({ success: true, userId: req.session.userId, username: user.username, email: user.email, userpic: user.userpic });
+    } catch (error) {
+        console.error('Error fetching user info:', error);
+        res.status(500).json({ success: false, error: 'Internal Server Error' });
+    }
+});
+
+
   
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -119,6 +87,7 @@ app.post('/login', sessionMiddleware, async (req, res) => {
         if (!user) {
             res.json({ success: false });
         } else {
+            console.log('Stocker cet id dans la session:', user._id);
             // Stocker l'ID de l'utilisateur dans la session
             req.session.userId = user._id;
   
@@ -194,7 +163,7 @@ app.get('/events', async (req, res) => {
 });
 
 // Route pour se déconnecter
-app.post('/logout', (req, res) => {
+app.get('/logout', (req, res) => {
     // Détruire la session
     req.session.destroy((err) => {
         if (err) {
@@ -205,6 +174,7 @@ app.post('/logout', (req, res) => {
         res.redirect('/login');
     });
 });
+
 
 // Route pour servir la page loginpage.html
 app.get('/login', (req, res) => {
@@ -260,16 +230,17 @@ app.get('/events/sport/:sport', async (req, res) => {
 
 // Fonction pour récupérer l'ID de l'utilisateur à partir de la session
 function getUserIdFromSession(req) {
-    // Vérifiez si l'utilisateur est connecté et si oui, renvoyez son ID
-    if (req.session && req.session.userId) {
+    // Vérifier si l'utilisateur est connecté et si oui, renvoyez son ID
+    if (req.session && req.session.userId) 
+    {console.log(`Je suis connecté`);
         return req.session.userId;
     } else {
+        console.log(`Je retourne null`);
         return null;
     }
 }
 
-const Conversation = require('./models/conversation');
-const Message = require('./models/message');
+
 
 // Handle user fetching
 app.get('/users', async (req, res) => {
@@ -310,15 +281,29 @@ socket.on('private message', async (msg) => {
         const recipientId = msg.recipientId; // L'ID du destinataire provient des données du message
         const content = msg.content; // Le contenu du message
         
+        // Recherchez une conversation existante entre l'expéditeur et le destinataire
+        let conversation = await Conversation.findOne({
+            participants: { $all: [senderId, recipientId] }
+        });
+
+        // Si aucune conversation n'existe, créez une nouvelle conversation
+        if (!conversation) {
+            conversation = new Conversation({
+                participants: [senderId, recipientId]
+            });
+            await conversation.save();
+        }
+
         // Créez un nouveau message à enregistrer dans la base de données
         const newMessage = new Message({
+            conversationId: conversation._id, // Associez le message à la conversation
             senderId: senderId,
             recipientId: recipientId,
             content: content
         });
 
         // Enregistrez le nouveau message dans la base de données
-        await newMessage.save();
+        await newMessage.save(); // Assurez-vous que le message est enregistré dans la base de données
 
         // Trouver le socket du destinataire à partir de son ID
         const recipientSocket = userSockets.get(recipientId);
@@ -337,6 +322,8 @@ socket.on('private message', async (msg) => {
 });
 
 
+
+
     
 // Gestion de la déconnexion de l'utilisateur
 socket.on('disconnect', () => {
@@ -350,3 +337,34 @@ socket.on('disconnect', () => {
     });
 });
 });
+
+
+app.get('/messages/:userId', async (req, res) => {
+    try {
+      const userId = req.params.userId;
+
+      // Si userId est indéfini, renvoyer un message indiquant que l'ID de l'utilisateur est indéfini
+      if (!userId) {
+        console.log('User ID is undefined. Skipping error.');
+        return res.status(200).json({ success: true, message: 'User ID is undefined' });
+      }
+
+      // Find the conversation with the given user ID
+      const conversation = await Conversation.findOne({
+        participants: { $all: [req.session.userId, userId] }
+      });
+
+      // Si la conversation n'est pas trouvée, renvoyer un message indiquant que la conversation n'a pas été trouvée
+      if (!conversation) {
+        return res.status(404).json({ success: false, error: 'Conversation not found' });
+      }
+      
+      // Fetch messages for the conversation
+      const messages = await Message.find({ conversationId: conversation._id });
+      res.json(messages);
+    } catch (error) {
+      console.error('Error fetching messages:', error);
+      res.status(500).json({ success: false, error: 'Internal Server Error' });
+    }
+  });
+

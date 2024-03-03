@@ -691,16 +691,32 @@ document.addEventListener("DOMContentLoaded", function() {
   });
 });
 
+// CHAT BOX ---------------------------------------------------------------------------------------------------------------------------------------
 
-// mainpage.js
 
-// Définissez la fonction getUserIdFromSession pour récupérer l'ID de l'utilisateur à partir du stockage local
-function getUserIdFromSession() {
-  // Récupérer l'ID de l'utilisateur depuis le stockage local du navigateur
-  const userId = localStorage.getItem('userId');
-  return userId;
+
+async function getUserIdFromSession() {
+  try {
+    const response = await fetch('/getLoggedInUserInfo');
+    const data = await response.json();
+    
+    if (data.success && data.userId) {
+      console.log(`User ID : ${data.userId}`);
+      return data.userId;
+    } else {
+      console.error('User ID not found in session or response is not successful.');
+      return null;
+    }
+  } catch (error) {
+    console.error('Error fetching user ID from session:', error);
+    return null;
+  }
 }
 
+
+function closeChatBox() {
+  document.getElementById('modalBackgroundChat').style.display = 'none';
+}
 
 
 
@@ -708,96 +724,194 @@ document.addEventListener("DOMContentLoaded", () => {
   const modalBackgroundChat = document.getElementById('modalBackgroundChat');
   let socket;
   let selectedUserId = null;
+  const userId = getUserIdFromSession();
 
   // Hide modal background by default
   modalBackgroundChat.style.display = 'none';
 
-  // Show chat box when message link is clicked
-  document.querySelectorAll('.message').forEach(link => {
-    link.addEventListener('click', (event) => {
-      event.preventDefault();
-      console.log('Clicked on message link.');
-      modalBackgroundChat.style.display = 'flex';
-      
-      // Set the selected user ID
-      selectedUserId = link.dataset.userId;
-      console.log("Selected User ID:", selectedUserId);
-    });
-  });
-
-  // Function to append messages to chat
-  function appendMessageToChat(message) {
-    console.log("Message appended to chat:", message);
+  function appendMessageToChat(message, isSentByCurrentUser) {
     const chatMessages = document.getElementById('chatMessages');
     const messageElement = document.createElement('div');
+    
+    // Appliquer les classes CSS appropriées en fonction de qui envoie le message
+    if (isSentByCurrentUser) {
+      messageElement.classList.add('message-sent');
+      console.log('Using message-sent');
+    } else {
+      messageElement.classList.add('message-received');
+      console.log('Using message-received');
+    }
+  
     messageElement.textContent = message;
     chatMessages.appendChild(messageElement);
   }
 
+  
+  // Function to fetch messages from the conversation with a specific user
+  async function fetchMessagesForUser(userId) {
+    try {
+      // Check if userId is defined
+      if (!userId) {
+        console.log('User ID is undefined. Skipping message fetching.');
+        return []; // Return an empty array or handle this case as needed
+      }
+
+      console.log('Fetching messages for user:', userId);
+
+      const response = await fetch(`/messages/${userId}`); // Assuming you have an endpoint to fetch messages for a specific user
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const messages = await response.json();
+      return messages;
+    } catch (error) {
+      console.error('Error fetching messages:', error);
+      return [];
+    }
+  }
+
+  
+  async function renderMessages(messages) {
+    try {
+      const userId = await getUserIdFromSession(); // Attendre l'ID de l'utilisateur
+      const chatMessages = document.getElementById('chatMessages');
+      console.log('Rendering messages:', messages);
+      // Effacer les messages existants uniquement s'il n'y a pas de messages à ajouter
+      if (messages.length === 0) {
+        console.log('No messages to render. Clearing chat messages.');
+        chatMessages.innerHTML = '';
+      }
+      messages.forEach(message => {
+        // Déterminer si le message a été envoyé par l'utilisateur actuel
+        const isSentByCurrentUser = (message.senderId === userId); // Utilisation de l'ID de l'utilisateur pour la comparaison
+        console.log('Sender ID:', message.senderId);
+        console.log('Recipient ID:', message.recipientId);
+        console.log('Current User ID:', userId);
+        console.log('Is Sent By Current User:', isSentByCurrentUser);
+        appendMessageToChat(message.content, isSentByCurrentUser);
+      });
+    } catch (error) {
+      console.error('Error rendering messages:', error);
+    }
+  }
+
+
+
+
+// Charger les messages pour l'utilisateur sélectionné
+async function loadMessagesForSelectedUser() {
+  try {
+    // Obtenir l'ID de l'utilisateur à partir de la session
+    const userId = await getUserIdFromSession();
+    
+    if (selectedUserId) {
+      console.log('Loading messages for selected user:', selectedUserId);
+      const messages = await fetchMessagesForUser(selectedUserId);
+      clearChatMessages(); // Effacer les messages existants
+      renderMessages(messages, userId); // Passer l'ID de l'utilisateur pour la comparaison
+    }
+  } catch (error) {
+    console.error('Error loading messages:', error);
+  }
+}
+
+
+
+  // Function to clear chat messages
+  function clearChatMessages() {
+    const chatMessages = document.getElementById('chatMessages');
+    chatMessages.innerHTML = ''; // Clear the chat messages
+  }
+
+  // Show chat box when message link is clicked
+  document.querySelectorAll('.message').forEach(link => {
+    link.addEventListener('click', async (event) => {
+      event.preventDefault();
+      console.log('Clicked on message link.');
+      modalBackgroundChat.style.display = 'flex';
+
+      // Set the selected user ID
+      selectedUserId = link.dataset.userId;
+      console.log("Selected User ID:", selectedUserId);
+
+      // Check if selectedUserId is defined before fetching messages
+      if (selectedUserId) {
+        // Fetch messages for the selected user
+        const messages = await fetchMessagesForUser(selectedUserId);
+        renderMessages(messages);
+
+        await loadMessagesForSelectedUser();
+      } else {
+        console.log('Selected user ID is undefined. Skipping message fetching.');
+      }
+    });
+  });
+
+ 
   // Connect to Socket.IO server
   socket = io();
   const chatForm = document.getElementById('chatForm');
 
+  // Function to handle form submission for sending a message
+  chatForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const message = chatInput.value.trim();
+    if (message !== '' && selectedUserId) {
+      const recipientId = selectedUserId;
+      // Emit a private message event to the server
+      // Make sure the user is authenticated before allowing message sending
+      // Also, ensure that the server properly handles authentication and only allows authenticated users to send messages
+      socket.emit('private message', { recipientId, content: message }); // Send only the recipient ID and message content
+      appendMessageToChat(message, true);
+      chatInput.value = '';
+    }
+  });
 
-// mainpage.js
+  // Listen for 'private message' event from the server and update UI
+  socket.on('private message', (msg) => {
+    console.log("Private message received:", msg);
+    // Check if the message is intended for the current user
+    if (msg.recipientId === selectedUserId || msg.senderId === selectedUserId) {
+      // If yes, append the message content to the chat
+      appendMessageToChat(msg.content);
+    }
+    loadMessagesForSelectedUser();
+  });
 
-// Function to handle form submission for sending a message
-chatForm.addEventListener('submit', (e) => {
-  e.preventDefault();
-  const message = chatInput.value.trim();
-  if (message !== '' && selectedUserId) {
-    const recipientId = selectedUserId; 
-    // Emit a private message event to the server
-    // Make sure the user is authenticated before allowing message sending
-    // Also, ensure that the server properly handles authentication and only allows authenticated users to send messages
-    socket.emit('private message', { recipientId, content: message }); // Send only the recipient ID and message content
-    appendMessageToChat(`You sent a message to ${recipientId}: ${message}`);
-    chatInput.value = '';
-  }
-});
+  // Function to render the user list
+  function renderUserList() {
+    fetch('/users')
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(users => {
+        const userListContainer = document.getElementById('userList');
+        userListContainer.innerHTML = '';
+        users.forEach(user => {
+          const userElement = document.createElement('div');
+          userElement.textContent = user.username;
+          userElement.classList.add('user');
+          userElement.dataset.userId = user._id;
 
-// Listen for 'private message' event from the server and update UI
-socket.on('private message', (msg) => {
-  console.log("Private message received:", msg);
-  // Check if the message is intended for the current user
-  if (msg.recipientId === selectedUserId || msg.senderId === selectedUserId) {
-      // If yes, update the UI with the new message
-      const messageText = msg.senderId === socket.id ? `You (Private): ${msg.content}` : `${msg.senderId} (Private): ${msg.content}`;
-      appendMessageToChat(messageText);
-  }
-});
+          // Add click event listener to select user
+          userElement.addEventListener('click', async () => {
+            selectedUserId = user._id;
+            console.log("Selected User ID:", selectedUserId);
+            
+            // Fetch and render messages for the selected user
+            await loadMessagesForSelectedUser();
+          });
 
-// Function to render the user list
-function renderUserList() {
-  fetch('/users')
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      return response.json();
-    })
-    .then(users => {
-      const userListContainer = document.getElementById('userList');
-      userListContainer.innerHTML = '';
-      users.forEach(user => {
-        const userElement = document.createElement('div');
-        userElement.textContent = user.username;
-        userElement.classList.add('user');
-        userElement.dataset.userId = user._id;
-
-        // Add click event listener to select user
-        userElement.addEventListener('click', () => {
-          selectedUserId = user._id;
-          console.log("Selected User ID:", selectedUserId);
+          userListContainer.appendChild(userElement);
         });
-
-        userListContainer.appendChild(userElement);
+      })
+      .catch(error => {
+        console.error('Error fetching users:', error);
       });
-    })
-    .catch(error => {
-      console.error('Error fetching users:', error);
-    });
-}
+  }
 
-renderUserList();
-})
+  renderUserList();
+});
