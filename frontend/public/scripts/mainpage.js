@@ -718,7 +718,11 @@ function closeChatBox() {
   document.getElementById('modalBackgroundChat').style.display = 'none';
 }
 
-
+// Scroll to bottom of chat messages
+function scrollToBottom() {
+  const chatMessages = document.getElementById('chatMessages');
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+}
 
 document.addEventListener("DOMContentLoaded", () => {
   const modalBackgroundChat = document.getElementById('modalBackgroundChat');
@@ -789,6 +793,7 @@ document.addEventListener("DOMContentLoaded", () => {
         console.log('Current User ID:', userId);
         console.log('Is Sent By Current User:', isSentByCurrentUser);
         appendMessageToChat(message.content, isSentByCurrentUser);
+        scrollToBottom();
       });
     } catch (error) {
       console.error('Error rendering messages:', error);
@@ -864,6 +869,7 @@ async function loadMessagesForSelectedUser() {
       socket.emit('private message', { recipientId, content: message }); // Send only the recipient ID and message content
       appendMessageToChat(message, true);
       chatInput.value = '';
+      scrollToBottom();
     }
   });
 

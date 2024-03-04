@@ -608,7 +608,7 @@ footer {
   border-radius: 20px;
   padding: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  width: 400px;
+  width: 600px;
   position: relative;
 }
 
@@ -624,6 +624,8 @@ footer {
   overflow-y: auto;
   margin-bottom: 10px;
   color: #fef6ed;
+  display: flex; /* Ajout de flexbox */
+  flex-direction: column
 }
 
 /* Style for chat input and send button */
@@ -695,19 +697,32 @@ footer {
 /* Style pour les messages reçus */
 #chatMessages .message-received {
   text-align: left;
-  background-color: #fef6ed; /* Couleur de fond pour les messages reçus */
-  border-radius: 15px; /* Bord arrondi pour les messages reçus */
+  background-color: #fef6ed;
+  border-radius: 15px;
   padding: 10px;
   margin-bottom: 10px;
+  margin-right: auto;
   color: #f1600d;
+  max-width: 70%;
+
+  word-wrap: break-word;
+
+  
 }
 
 /* Style pour les messages envoyés */
 #chatMessages .message-sent {
   text-align: right;
-  background-color: #f1600d; /* Couleur de fond pour les messages envoyés */
-  border-radius: 15px; /* Bord arrondi pour les messages envoyés */
+  background-color: #f1600d; 
+  border-radius: 15px;
   padding: 10px;
   margin-bottom: 10px;
-  color: #fef6ed; /* Couleur du texte pour les messages envoyés */
+  margin-right: 5px;
+  margin-left: auto;
+  color: #fef6ed; 
+  max-width: 70%;
+
+  word-wrap: break-word;
+
+  
 }
