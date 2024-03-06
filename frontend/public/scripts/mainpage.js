@@ -884,40 +884,98 @@ async function loadMessagesForSelectedUser() {
     loadMessagesForSelectedUser();
   });
 
-  // Function to render the user list
-  function renderUserList() {
-    fetch('/users')
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
-      })
-      .then(users => {
-        const userListContainer = document.getElementById('userList');
-        userListContainer.innerHTML = '';
-        users.forEach(user => {
-          const userElement = document.createElement('div');
-          userElement.textContent = user.username;
-          userElement.classList.add('user');
-          userElement.dataset.userId = user._id;
+  // Gestionnaire d'événements pour la saisie dans le champ de recherche utilisateur
+const userSearchInput = document.getElementById('userSearchInput');
+userSearchInput.addEventListener('input', () => {
+  const filterText = userSearchInput.value.trim();
+  renderUserList(filterText);
+});
 
-          // Add click event listener to select user
+// Fonction pour rendre la liste des utilisateurs
+function renderUserList(filterText = '') {
+  fetch('/users')
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
+    .then(users => {
+      const userListContainer = document.getElementById('userList');
+      const chatInput = document.getElementById('userSearchInput');
+      userListContainer.innerHTML = '';
+
+      let count = 0;
+
+      if (filterText.trim() === '') {
+        // Ne rien faire si le champ de recherche est vide
+        return;
+      }
+
+      if (selectedUserId) {
+        const selectedUser = users.find(user => user._id === selectedUserId);
+        if (selectedUser) {
+          const userElement = document.createElement('div');
+          userElement.textContent = selectedUser.username;
+          userElement.classList.add('user-selected');
+          chatInput.style.display = 'none';
+          userElement.dataset.userId = selectedUser._id;
+
+          // Ajouter un gestionnaire d'événements de clic pour désélectionner l'utilisateur
           userElement.addEventListener('click', async () => {
-            selectedUserId = user._id;
+            selectedUserId = null; // Désélectionner l'utilisateur
             console.log("Selected User ID:", selectedUserId);
-            
-            // Fetch and render messages for the selected user
-            await loadMessagesForSelectedUser();
+            userElement.classList.remove('user-selected');
+            chatInput.style.display = 'flex';
+
+            // Re-render la liste des utilisateurs
+            renderUserList(filterText);
           });
 
           userListContainer.appendChild(userElement);
-        });
-      })
-      .catch(error => {
-        console.error('Error fetching users:', error);
-      });
-  }
+        }
+      } else {
+        users.forEach(user => {
+          if (count >= 4) return;
 
-  renderUserList();
+          if (user.username.toLowerCase().includes(filterText.toLowerCase())) {
+            const userElement = document.createElement('div');
+            userElement.textContent = user.username;
+            userElement.dataset.userId = user._id;
+
+            // Ajouter un gestionnaire d'événements de clic pour sélectionner l'utilisateur
+            userElement.addEventListener('click', async () => {
+              selectedUserId = user._id;
+              console.log("Selected User ID:", selectedUserId);
+              userElement.classList.add('user-selected');
+
+              // Fetch and render messages for the selected user
+              await loadMessagesForSelectedUser();
+
+              // Re-render la liste des utilisateurs
+              renderUserList(filterText);
+            });
+
+// Ajouter un gestionnaire d'événements pour l'effet hover
+userElement.addEventListener('mouseover', () => {
+  if (userElement.classList.contains('user-selected')) {
+      userElement.classList.add('user-selected-hover');
+  }
+});
+
+userElement.addEventListener('mouseout', () => {
+  userElement.classList.remove('user-selected-hover');
+});
+
+
+            userListContainer.appendChild(userElement);
+            count++;
+          }
+        });
+      }
+    })
+    .catch(error => {
+      console.error('Error fetching users:', error);
+    });
+}
 });

@@ -112,7 +112,7 @@ header {
 
 .topnav a.create-event-link {
   background-color: #f1600d;
-  color: white;
+  color: #fef6ed;
 }
 
 #navbar {
@@ -183,7 +183,7 @@ header {
 
 #navbar a.create-event-link {
   background-color: #f1600d;
-  color: white;
+  color: #fef6ed;
 }
 
 #navbar input[type=text] {
@@ -334,7 +334,7 @@ figcaption {
   width: 26px;
   left: 4px;
   bottom: 4px;
-  background-color: white;
+  background-color: #fef6ed;
   -webkit-transition: .4s;
   transition: .4s;
 }
@@ -500,7 +500,7 @@ footer {
   border: none;
   outline: none;
   background-color: #f1600d;
-  color: white;
+  color: #fef6ed;
   cursor: pointer;
   padding: 15px;
   border-radius: 10px;
@@ -620,11 +620,12 @@ footer {
 
 /* Style for chat messages container */
 #chatMessages {
+  margin-top: 5px;
   max-height: 400px;
   overflow-y: auto;
   margin-bottom: 10px;
   color: #fef6ed;
-  display: flex; /* Ajout de flexbox */
+  display: flex;
   flex-direction: column
 }
 
@@ -642,7 +643,7 @@ footer {
   border: none;
   border-radius: 5px;
   background-color: #f1600d;
-  color: #fff;
+  color: #fef6ed;
   cursor: pointer;
   margin-top: 10px;
 }
@@ -673,26 +674,53 @@ footer {
   color: #fef6ed;
 }
 
-
+#userSearchInput{
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
 
 /* Style for user list */
 .user-list {
   max-height: 200px;
   overflow-y: auto;
-  background-color: #f3f3f3;
-  border: 1px solid #ccc;
-  padding: 10px;
+  background-color: #fef6ed;
   border-radius: 5px;
 }
 
 .user-list div {
-  margin-bottom: 5px;
   cursor: pointer;
+  padding: 5px;
+  border-radius: 5px;
 }
 
 .user-list div:hover {
-  background-color: #eaeaea;
+  background-color: #f1600d;
+  color: #fef6ed;
 }
+
+.user-selected {
+  position: relative;
+  background-color: #f1600d;
+  color: #fef6ed;
+  border: 1.5px solid #fef6ed;
+}
+
+.user-selected:hover {
+  border-color: #f1600d;
+}
+
+.user-selected::after {
+  content: '×';
+  position: absolute;
+  top: 50%;
+  right: 5px;
+  transform: translateY(-50%);
+  color: #fef6ed;
+  cursor: pointer;
+}
+
 
 /* Style pour les messages reçus */
 #chatMessages .message-received {
@@ -704,10 +732,7 @@ footer {
   margin-right: auto;
   color: #f1600d;
   max-width: 70%;
-
-  word-wrap: break-word;
-
-  
+  word-wrap: break-word;  
 }
 
 /* Style pour les messages envoyés */
@@ -721,8 +746,5 @@ footer {
   margin-left: auto;
   color: #fef6ed; 
   max-width: 70%;
-
   word-wrap: break-word;
-
-  
 }
