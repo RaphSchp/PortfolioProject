@@ -1,254 +1,237 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="keywords" content="sports meeting, events, Kangaroo, sports website">
-    <meta name="author" content="Raphaël Schopfer">
-    <title>Kangaroo</title>
-    <meta name="description" content="Kangaroo is a sports meeting website">
-    <link rel="icon" type="image/x-icon" href="../../assets/images/kangaroo.png">
-    <link rel="icon" type="image/png" href="../../assets/images/kangaroo_logo.png">
-    <link rel="stylesheet" href="../../assets/Nippo_Complete/Nippo_Complete/Fonts/WEB/css/nippo.css">
-    <link rel="stylesheet" href="../styles/mainpage.css">
-    <script src="/socket.io/socket.io.js"></script>
-    <script src="../scripts/mainpage.js"></script>
-    
-
-
-
-
-</head>
-<body>
-
-<header>
-    <div class="header-content">
-        <div class="header-text">
-            <h1>Kangaroo</h1>
-            <h2>Events near you</h2>
-        </div>
-        <!-- User Profile -->
-        <div class="user-profile">
-            <a href="#user">
-                <img src="" alt="User Profile" id="userpic">
-            </a>
-        </div>
-    </div>
-    <div id="navbar">
-        <!-- Navigation Bar Scroll Links -->
-        <div class="brand">
-            <span class="brand-text">Kangaroo</span>
-        </div>
-        <div class="nav-links">
-            <input type="text" id="navbar-search-input" placeholder="Search..">
-            <button type="submit" id="navbar-search-button">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="keywords" content="sports meeting, events, Kangaroo, sports website">
+        <meta name="author" content="Raphaël Schopfer">
+        <title>Kangaroo</title>
+        <meta name="description" content="Kangaroo is a sports meeting website">
+        <link rel="icon" type="image/x-icon" href="../../assets/images/kangaroo.png">
+        <link rel="icon" type="image/png" href="../../assets/images/kangaroo_logo.png">
+        <link rel="stylesheet" href="../../assets/Nippo_Complete/Nippo_Complete/Fonts/WEB/css/nippo.css">
+        <link rel="stylesheet" href="../styles/mainpage.css">
+        <script src="/socket.io/socket.io.js"></script>
+        <script src="../scripts/mainpage.js"></script>
+    </head>
+    <body>
+        <header>
+            <div class="header-content">
+                <div class="header-text">
+                    <h1>Kangaroo</h1>
+                    <h2>Events near you</h2>
+                </div>
+                <!-- User Profile -->
+                <div class="user-profile">
+                    <a href="#user">
+                    <img src="" alt="User Profile" id="userpic">
+                    </a>
+                </div>
+            </div>
+            <div id="navbar">
+                <!-- Navigation Bar Scroll Links -->
+                <div class="brand">
+                    <span class="brand-text">Kangaroo</span>
+                </div>
+                <div class="nav-links">
+                    <input type="text" id="navbar-search-input" placeholder="Search..">
+                    <button type="submit" id="navbar-search-button">
+                    <img src="../../assets/images/search.png" alt="Search Button">
+                    </button>
+                    <a href="#create" class="create-event-link" id="navbarCreateEventLink">
+                    <img src="../../assets/images/create.png" alt="Create Events">
+                    </a>
+                    <a href="#notification" class="message" id="message">
+                    <img src="../../assets/images/message.png" alt="Notifications">
+                    </a>
+                    <a href="#favorites" class="favorites">
+                    <img src="../../assets/images/favorites.png" alt="Favorites">
+                    </a>
+                    <a href="#menu" onclick="openMenuNav()">
+                    <img src="../../assets/images/menu.png" alt="Filters">
+                    </a>
+                    <div id="menuNav" class="menuNav">
+                        <a href="javascript:void(0)" class="closebtn" onclick="closeMenuNav()">&times;</a>
+                        <ul>
+                            <li>
+                                <label for="sportFilter">Select Sport:</label>
+                                <select id="sportFilter">
+                                    <option value="">All Sports</option>
+                                </select>
+                                <button onclick="applySportFilter()">Apply</button>
+                            </li>
+                            <li>
+                                <label for="dateSort">Sort by:</label>
+                                <select id="dateSort">
+                                    <option value="older">Older First</option>
+                                    <option value="newer">Newer First</option>
+                                </select>
+                            </li>
+                            <li>
+                                <label for="citySort">City:</label>
+                                <input type="text" id="cityInput" oninput="filterCities()">
+                                <button onclick="applyCityFilter()">Apply</button>
+                                <div id="citySuggestions"></div>
+                            </li>
+                            <li>
+                                <label for="statusSort">Status:</label>
+                                <select id="statusSort">
+                                    <option value="All">All</option>
+                                    <option value="Demand">Demand</option>
+                                    <option value="Open">Open</option>
+                                </select>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="topnav" id="myTopnav">
+                <!-- Navigation Links -->
+                <input type="text" id="topnav-search-input" placeholder="Search..">
+                <button type="submit" id="topnav-search-button">
                 <img src="../../assets/images/search.png" alt="Search Button">
-            </button>
-            <a href="#create" class="create-event-link" id="navbarCreateEventLink">
+                </button>
+                <a href="#create" class="create-event-link" id="topnavCreateEventLink">
                 <img src="../../assets/images/create.png" alt="Create Events">
-            </a>
-            <a href="#notification" class="message" id="message">
+                </a>
+                <a href="#notification" class="message" id="message">
                 <img src="../../assets/images/message.png" alt="Notifications">
-            </a>
-            
-            <a href="#favorites" class="favorites">
+                </a>
+                <a href="#favorites" class="favorites">
                 <img src="../../assets/images/favorites.png" alt="Favorites">
-            </a>
-            <a href="#menu" onclick="openMenuNav()">
+                </a>
+                <a href="#menu" onclick="openMenuNav()">
                 <img src="../../assets/images/menu.png" alt="Filters">
-            </a>
-            <div id="menuNav" class="menuNav">
-                <a href="javascript:void(0)" class="closebtn" onclick="closeMenuNav()">&times;</a>
-                <ul>
-                    <li>
-                        <label for="sportFilter">Select Sport:</label>
-                        <select id="sportFilter">
-                            <option value="">All Sports</option>
-                        </select>
-                        <button onclick="applySportFilter()">Apply</button>
-                    </li>
-                    <li>
-                        <label for="dateSort">Sort by:</label>
-                        <select id="dateSort">
-                            <option value="older">Older First</option>
-                            <option value="newer">Newer First</option>
-                          </select>                          
-                    </li>
-                    <li>
-                        <label for="citySort">City:</label>
-                        <input type="text" id="cityInput" oninput="filterCities()">
-                        <button onclick="applyCityFilter()">Apply</button>
-                        <div id="citySuggestions"></div>
-                    </li>
-                    <li>
-                        <label for="statusSort">Status:</label>
-                        <select id="statusSort">
-                            <option value="All">All</option>
-                            <option value="Demand">Demand</option>
-                            <option value="Open">Open</option>
-                        </select>
-                    </li>                    
-                </ul>
+                </a>
             </div>
-        </div>
-    </div>
-    <div class="topnav" id="myTopnav">
-        <!-- Navigation Links -->
-        <input type="text" id="topnav-search-input" placeholder="Search..">
-        <button type="submit" id="topnav-search-button">
-            <img src="../../assets/images/search.png" alt="Search Button">
+        </header>
+        <main id="eventContainer_profileContainer">
+            <!-- Images will be loaded here with figure and figcaption -->
+            <!-- Modal Background -->
+            <div id="modalBackground" class="modal-background">
+                <!-- Event Creation Box -->
+                <div id="createEventBox" class="event-box">
+                    <h2>Create Event</h2>
+                    <a href="#" class="close-btn" onclick="closeEventBox()">&times;</a>
+                    <form id="eventForm">
+                        <ul>
+                            <li>
+                                <label for="eventName">Event Name:</label>
+                                <input type="text" id="eventName" name="eventName" required>
+                            </li>
+                            <li>
+                                <label for="eventSport">Sport: </label>
+                                <p>(select a suggestion)</p>
+                                <input id="eventSport" name="eventSport" list="sportsList" required>
+                                <datalist id="sportsList">
+                                    <!-- Options seront ajoutées dynamiquement par JavaScript -->
+                                </datalist>
+                            </li>
+                            <li>
+                                <label for="eventDescription">Event Description:</label>
+                                <textarea id="eventDescription" name="eventDescription" required></textarea>
+                            </li>
+                            <li>
+                                <label for="eventTime">Event Time:</label>
+                                <input type="text" id="eventTime" name="eventTime" required>
+                            </li>
+                            <li>
+                                <label for="eventDate">Event Date:</label>
+                                <input type="date" id="eventDate" name="eventDate" required>
+                            </li>
+                            <li>
+                                <label for="eventCity">Event City:</label>
+                                <input type="text" id="eventCity" name="eventCity" required>
+                            </li>
+                            <li>
+                                <label for="eventAddress">Event Address:</label>
+                                <textarea id="eventAddress" name="eventAddress" required></textarea>
+                            </li>
+                            <li>
+                                <label for="participants">Maximum Participants:</label>
+                                <input type="number" id="participants" name="participants" required>
+                            </li>
+                            <li>
+                                <label for="eventImage">Event Image:</label>
+                                <input type="file" id="eventImage" name="eventImage" accept="image/*" required>
+                            </li>
+                            <li>
+                                <p>On demand / Open</p>
+                                <label class="switch">
+                                <input type="checkbox">
+                                <span class="slider round"></span>
+                                </label>
+                            </li>
+                        </ul>
+                        <button type="button" onclick="submitEvent()">Create Event</button>
+                    </form>
+                </div>
+            </div>
+            <div id="modalBackground2" class="modal-background2">
+                <!-- Profile Box -->
+                <div id="profileBox" class="event-box">
+                    <h2>My Profile</h2>
+                    <span class="close-btn" onclick="closeProfileBox()">&times;</span>
+                    <div class="user-profile">
+                        <a href="#user">
+                        <img src="" alt="User Profile" id="userpic2">
+                        </a>
+                        <form id="profileForm">
+                            <ul>
+                                <li>
+                                    <label for="username">Username:</label>
+                                    <span id="username" name="username"></span>
+                                </li>
+                                <li>
+                                    <label for="email">Email:</label>
+                                    <span id="email" name="email"></span>
+                                </li>
+                                <li>
+                                    <a href="#">I forgot my password</a>
+                                </li>
+                                <li>
+                                    <label for="stars">Stars:</label>
+                                    <input type="number" id="stars" name="stars" value="5" readonly>
+                                </li>
+                                <li>
+                                    <label for="eventsParticipated">Events Participated:</label>
+                                    <input type="number" id="eventsParticipated" name="eventsParticipated" value="10" readonly>
+                                </li>
+                                <li>
+                                    <label for="bio">Bio:</label>
+                                    <textarea id="bio" name="bio" readonly>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vitae ultricies lectus.</textarea>
+                                </li>
+                                <li>
+                                    <a href="/logout" onclick="logout()">Log out</a>
+                                </li>
+                            </ul>
+                            <button type="button" onclick="editProfile()">Edit Profile</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div id="modalBackgroundChat" class="modal-background-chat">
+                <div id="chatBox" class="chat-box">
+                    <h2>Chat</h2>
+                    <input type="text" id="userSearchInput" placeholder="Search an user ...">
+                    <div id="userList" class="user-list">
+                        <!-- User list will be rendered here -->
+                    </div>
+                    <a href="#" id="closeChatButton" class="close-chat-btn" onclick="closeChatBox()">&times;</a>
+                    <div id="chatMessages"></div>
+                    <form id="chatForm">
+                        <input type="text" id="chatInput" placeholder="Type your message...">
+                        <button type="submit">Send</button>
+                    </form>
+                </div>
+            </div>
+        </main>
+        <footer>
+            <p>&copy;Kangaroo 2024</p>
+        </footer>
+        <button onclick="topFunction()" id="myBtn" title="Go to top">
+        <span style="display: none;">Go to top</span>
+        <img src="../../assets/images/up.png" alt="Go to top">
         </button>
-        <a href="#create" class="create-event-link" id="topnavCreateEventLink">
-            <img src="../../assets/images/create.png" alt="Create Events">
-        </a>
-        <a href="#notification" class="message" id="message">
-            <img src="../../assets/images/message.png" alt="Notifications">
-        </a>
-        <a href="#favorites" class="favorites">
-            <img src="../../assets/images/favorites.png" alt="Favorites">
-        </a>
-        <a href="#menu" onclick="openMenuNav()">
-            <img src="../../assets/images/menu.png" alt="Filters">
-        </a>
-    </div>
-</header>
-<main id="eventContainer_profileContainer">
-    <!-- Images will be loaded here with figure and figcaption -->
-    <!-- Modal Background -->
-    <div id="modalBackground" class="modal-background">
-        <!-- Event Creation Box -->
-        <div id="createEventBox" class="event-box">
-            <h2>Create Event</h2>
-            <a href="#" class="close-btn" onclick="closeEventBox()">&times;</a>
-            <form id="eventForm">
-                <ul>
-                    <li>
-                        <label for="eventName">Event Name:</label>
-                        <input type="text" id="eventName" name="eventName" required>
-                    </li>
-                    <li>
-                        <label for="eventSport">Sport:</label>
-                        <input id="eventSport" name="eventSport" list="sportsList" required>
-                        <datalist id="sportsList">
-                            <!-- Options seront ajoutées dynamiquement par JavaScript -->
-                        </datalist>
-                    </li>
-                    <li>
-                        <label for="eventDescription">Event Description:</label>
-                        <textarea id="eventDescription" name="eventDescription" required></textarea>
-                    </li>
-                    <li>
-                        <label for="eventTime">Event Time:</label>
-                        <input type="text" id="eventTime" name="eventTime" required>
-                    </li>
-                    <li>
-                        <label for="eventDate">Event Date:</label>
-                        <input type="date" id="eventDate" name="eventDate" required>
-                    </li>
-                    <li>
-                        <label for="eventCity">Event City:</label>
-                        <input type="text" id="eventCity" name="eventCity" required>
-                    </li>
-                    <li>
-                        <label for="eventAddress">Event Adress:</label>
-                        <input type="text" id="eventAddress" name="eventAddress" required>
-                    </li>
-                    <li>
-                        <label for="participants">Participants:</label>
-                        <input type="number" id="participants" name="participants" required>
-                    </li>
-                    <li>
-                        <label for="eventLocation">Event Location:</label>
-                        <input type="text" id="eventLocation" name="eventLocation" required>
-                    </li>
-                    <li>
-                        <label for="eventImage">Event Image:</label>
-                        <input type="file" id="eventImage" name="eventImage" accept="image/*" required>
-                    </li>
-                    <li>
-                        <p>On demand / Open</p>
-                        <label class="switch">
-                            <input type="checkbox">
-                            <span class="slider round"></span>
-                          </label>
-                    </li>
-                </ul>
-                <button type="button" onclick="submitEvent()">Create Event</button>
-            </form>
-        </div>
-    </div>
-    <div id="modalBackground2" class="modal-background2">
-<!-- Profile Box -->
-<div id="profileBox" class="event-box">
-    <h2>My Profile</h2>
-    <span class="close-btn" onclick="closeProfileBox()">&times;</span>
-    <div class="user-profile">
-        <a href="#user">
-            <img src="" alt="User Profile" id="userpic2">
-        </a>
-    <form id="profileForm">
-        <ul>
-            <li>
-                <label for="username">Username:</label>
-                <span id="username" name="username"></span>
-            </li>
-            <li>
-                <label for="email">Email:</label>
-                <span id="email" name="email"></span>
-            </li>        
-            <li>
-                <a href="#">I forgot my password</a>
-            </li>
-            <li>
-                <label for="stars">Stars:</label>
-                <input type="number" id="stars" name="stars" value="5" readonly>
-            </li>
-            <li>
-                <label for="eventsParticipated">Events Participated:</label>
-                <input type="number" id="eventsParticipated" name="eventsParticipated" value="10" readonly>
-            </li>
-            <li>
-                <label for="bio">Bio:</label>
-                <textarea id="bio" name="bio" readonly>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vitae ultricies lectus.</textarea>
-            </li>
-            <li>
-                <a href="/logout" onclick="logout()">Log out</a>
-            </li>
-        </ul>
-        <button type="button" onclick="editProfile()">Edit Profile</button>
-    </form>
-</div>
-</div>
-    </div>
-
-
-    <div id="modalBackgroundChat" class="modal-background-chat">
-        <div id="chatBox" class="chat-box">
-            <h2>Chat</h2>
-            <input type="text" id="userSearchInput" placeholder="Search an user ...">
-            <div id="userList" class="user-list">
-                <!-- User list will be rendered here -->
-            </div>
-            <a href="#" id="closeChatButton" class="close-chat-btn" onclick="closeChatBox()">&times;</a>
-            <div id="chatMessages"></div>
-            <form id="chatForm">
-                <input type="text" id="chatInput" placeholder="Type your message...">
-                <button type="submit">Send</button>
-            </form>
-        </div>
-    </div>
-
-
-</main>
-
-<footer>
-    <p>&copy;Kangaroo 2024</p>
-</footer>
-<button onclick="topFunction()" id="myBtn" title="Go to top">
-    <span style="display: none;">Go to top</span>
-    <img src="../../assets/images/up.png" alt="Go to top">
-</button>
-
-</body>
-
+    </body>
 </html>

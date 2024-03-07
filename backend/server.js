@@ -15,7 +15,7 @@ const app = express();
 const PORT = 3000;
 
 const server = http.createServer(app);
-const io = socketIo(server); 
+const io = socketIo(server);
 
 app.use(bodyParser.json());
 
@@ -47,85 +47,134 @@ function validateEmail(email) {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 // Définir la fonction getUserIdFromSession pour récupérer l'ID de l'utilisateur à partir de la session
-  
-  
+
+
 app.get('/getLoggedInUserInfo', async (req, res) => {
     try {
         // Vérifier si l'utilisateur est connecté
         if (!req.session.userId) {
-            return res.status(401).json({ success: false, message: 'Unauthorized' });
+            return res.status(401).json({
+                success: false,
+                message: 'Unauthorized'
+            });
         }
 
         // Rechercher l'utilisateur dans la base de données
         const user = await User.findById(req.session.userId);
 
         if (!user) {
-            return res.status(404).json({ success: false, message: 'User not found' });
+            return res.status(404).json({
+                success: false,
+                message: 'User not found'
+            });
         }
 
         // Renvoyer les informations de l'utilisateur, y compris son ID
-        res.json({ success: true, userId: req.session.userId, username: user.username, email: user.email, userpic: user.userpic });
+        res.json({
+            success: true,
+            userId: req.session.userId,
+            username: user.username,
+            email: user.email,
+            userpic: user.userpic
+        });
     } catch (error) {
         console.error('Error fetching user info:', error);
-        res.status(500).json({ success: false, error: 'Internal Server Error' });
+        res.status(500).json({
+            success: false,
+            error: 'Internal Server Error'
+        });
     }
 });
 
 
-  
+
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
 app.post('/login', sessionMiddleware, async (req, res) => {
     try {
         console.log('User session ID (login):', req.sessionID);
-        const { email, password } = req.body;
-  
+        const {
+            email,
+            password
+        } = req.body;
+
         // Recherche de l'utilisateur dans la base de données
-        const user = await User.findOne({ email, password });
-  
+        const user = await User.findOne({
+            email,
+            password
+        });
+
         if (!user) {
-            res.json({ success: false });
+            res.json({
+                success: false
+            });
         } else {
             console.log('Stocker cet id dans la session:', user._id);
             // Stocker l'ID de l'utilisateur dans la session
             req.session.userId = user._id;
-  
+
             // Répondre avec succès
-            res.json({ success: true });
+            res.json({
+                success: true
+            });
         }
     } catch (error) {
         console.error('Erreur lors de la recherche de l\'utilisateur :', error);
-        res.status(500).json({ success: false, error: 'Internal Server Error' });
+        res.status(500).json({
+            success: false,
+            error: 'Internal Server Error'
+        });
     }
-  });
-  
+});
+
 
 // Route pour l'inscription
 app.post('/register', sessionMiddleware, async (req, res) => {
     try {
-        const { username, email, password, passwordConfirmation } = req.body;
+        const {
+            username,
+            email,
+            password,
+            passwordConfirmation
+        } = req.body;
 
         // Vérifier si les passwords ne sont pas identiques ou vides
         if (password !== passwordConfirmation || password === '') {
-            return res.status(400).json({ success: false, message: 'Password and Password Confirmation do not match or are empty' });
+            return res.status(400).json({
+                success: false,
+                message: 'Password and Password Confirmation do not match or are empty'
+            });
         }
 
         // Vérifier si l'email est valide
         if (!validateEmail(email)) {
-            return res.status(400).json({ success: false, message: 'Email is not valid' });
+            return res.status(400).json({
+                success: false,
+                message: 'Email is not valid'
+            });
         }
 
         // Vérifier si l'email est déjà utilisé
-        const existingEmail = await User.findOne({ email });
+        const existingEmail = await User.findOne({
+            email
+        });
         if (existingEmail) {
-            return res.status(400).json({ success: false, message: 'Email already exists' });
+            return res.status(400).json({
+                success: false,
+                message: 'Email already exists'
+            });
         }
 
         // Vérifier si l'username est déjà utilisé
-        const existingUsername = await User.findOne({ username });
+        const existingUsername = await User.findOne({
+            username
+        });
         if (existingUsername) {
-            return res.status(400).json({ success: false, message: 'Username already exists' });
+            return res.status(400).json({
+                success: false,
+                message: 'Username already exists'
+            });
         }
 
         // Créer un nouvel utilisateur avec les valeurs par défaut
@@ -136,13 +185,19 @@ app.post('/register', sessionMiddleware, async (req, res) => {
             userpic: 'lol.jpeg' // Définissez la valeur par défaut de l'image utilisateur
         });
         await newUser.save();
-        
+
 
         // Envoyer un message de validation
-        res.status(200).json({ success: true, message: 'Registration successful. Welcome! Please log in.' });
+        res.status(200).json({
+            success: true,
+            message: 'Registration successful. Welcome! Please log in.'
+        });
     } catch (error) {
         console.error('Error during registration:', error);
-        res.status(500).json({ success: false, message: 'Internal Server Error' });
+        res.status(500).json({
+            success: false,
+            message: 'Internal Server Error'
+        });
     }
 });
 
@@ -151,14 +206,20 @@ app.get('/events', async (req, res) => {
     try {
         // Vérifier si l'utilisateur est connecté
         if (!req.session.userId) {
-            return res.status(401).json({ success: false, message: 'Unauthorized' });
+            return res.status(401).json({
+                success: false,
+                message: 'Unauthorized'
+            });
         }
 
         const events = await Event.find();
         res.json(events);
     } catch (error) {
         console.error('Error fetching events:', error);
-        res.status(500).json({ success: false, error: 'Internal Server Error' });
+        res.status(500).json({
+            success: false,
+            error: 'Internal Server Error'
+        });
     }
 });
 
@@ -168,7 +229,10 @@ app.get('/logout', (req, res) => {
     req.session.destroy((err) => {
         if (err) {
             console.error('Erreur lors de la déconnexion :', err);
-            return res.status(500).json({ success: false, message: 'Internal Server Error' });
+            return res.status(500).json({
+                success: false,
+                message: 'Internal Server Error'
+            });
         }
         // Rediriger vers une page de confirmation de déconnexion ou une autre page appropriée
         res.redirect('/login');
@@ -178,12 +242,12 @@ app.get('/logout', (req, res) => {
 
 // Route pour servir la page loginpage.html
 app.get('/login', (req, res) => {
-    res.sendFile(path.join(__dirname,"..", 'frontend', 'public', 'pages', 'loginpage.html'));
+    res.sendFile(path.join(__dirname, "..", 'frontend', 'public', 'pages', 'loginpage.html'));
 });
 
 // Route pour servir la page d'inscription
 app.get('/register', (req, res) => {
-    res.sendFile(path.join(__dirname,"..", 'frontend', 'public', 'pages', 'loginpage.html'));
+    res.sendFile(path.join(__dirname, "..", 'frontend', 'public', 'pages', 'loginpage.html'));
 });
 
 // Route pour servir le fichier sports.json
@@ -217,11 +281,16 @@ server.listen(PORT, () => {
 app.get('/events/sport/:sport', async (req, res) => {
     try {
         const sport = req.params.sport;
-        const events = await Event.find({ sport });
+        const events = await Event.find({
+            sport
+        });
         res.json(events);
     } catch (error) {
         console.error('Error filtering events by sport:', error);
-        res.status(500).json({ success: false, error: 'Internal Server Error' });
+        res.status(500).json({
+            success: false,
+            error: 'Internal Server Error'
+        });
     }
 });
 
@@ -231,8 +300,8 @@ app.get('/events/sport/:sport', async (req, res) => {
 // Fonction pour récupérer l'ID de l'utilisateur à partir de la session
 function getUserIdFromSession(req) {
     // Vérifier si l'utilisateur est connecté et si oui, renvoyez son ID
-    if (req.session && req.session.userId) 
-    {console.log(`Je suis connecté`);
+    if (req.session && req.session.userId) {
+        console.log(`Je suis connecté`);
         return req.session.userId;
     } else {
         console.log(`Je retourne null`);
@@ -249,7 +318,10 @@ app.get('/users', async (req, res) => {
         res.json(users);
     } catch (error) {
         console.error('Error fetching users:', error);
-        res.status(500).json({ success: false, error: 'Internal Server Error' });
+        res.status(500).json({
+            success: false,
+            error: 'Internal Server Error'
+        });
     }
 });
 
@@ -263,108 +335,121 @@ io.on('connection', (socket) => {
     }
 
 
-// Gestion de l'événement 'private message'
-socket.on('private message', async (msg) => {
-    try {
-        if (!socket.request || !socket.request.session) {
-            console.error('Error: Socket request or session not available');
-            return;
-        }
-        
-        const senderId = getUserIdFromSession(socket.request); // Récupérez l'ID de l'expéditeur à partir de la session
-        if (!senderId) {
-            console.error('Error: User not authenticated');
-            return;
-        }
-        
-        // Logique de traitement des messages privés ici
-        const recipientId = msg.recipientId; // L'ID du destinataire provient des données du message
-        const content = msg.content; // Le contenu du message
-        
-        // Recherchez une conversation existante entre l'expéditeur et le destinataire
-        let conversation = await Conversation.findOne({
-            participants: { $all: [senderId, recipientId] }
-        });
+    // Gestion de l'événement 'private message'
+    socket.on('private message', async (msg) => {
+        try {
+            if (!socket.request || !socket.request.session) {
+                console.error('Error: Socket request or session not available');
+                return;
+            }
 
-        // Si aucune conversation n'existe, créez une nouvelle conversation
-        if (!conversation) {
-            conversation = new Conversation({
-                participants: [senderId, recipientId]
+            const senderId = getUserIdFromSession(socket.request); // Récupérez l'ID de l'expéditeur à partir de la session
+            if (!senderId) {
+                console.error('Error: User not authenticated');
+                return;
+            }
+
+            // Logique de traitement des messages privés ici
+            const recipientId = msg.recipientId; // L'ID du destinataire provient des données du message
+            const content = msg.content; // Le contenu du message
+
+            // Recherchez une conversation existante entre l'expéditeur et le destinataire
+            let conversation = await Conversation.findOne({
+                participants: {
+                    $all: [senderId, recipientId]
+                }
             });
-            await conversation.save();
-        }
 
-        // Créez un nouveau message à enregistrer dans la base de données
-        const newMessage = new Message({
-            conversationId: conversation._id, // Associez le message à la conversation
-            senderId: senderId,
-            recipientId: recipientId,
-            content: content
-        });
+            // Si aucune conversation n'existe, créez une nouvelle conversation
+            if (!conversation) {
+                conversation = new Conversation({
+                    participants: [senderId, recipientId]
+                });
+                await conversation.save();
+            }
 
-        // Enregistrez le nouveau message dans la base de données
-        await newMessage.save(); // Assurez-vous que le message est enregistré dans la base de données
-
-        // Trouver le socket du destinataire à partir de son ID
-        const recipientSocket = userSockets.get(recipientId);
-        if (recipientSocket) {
-            // Envoyer le message au socket du destinataire
-            recipientSocket.emit('private message', {
+            // Créez un nouveau message à enregistrer dans la base de données
+            const newMessage = new Message({
+                conversationId: conversation._id, // Associez le message à la conversation
                 senderId: senderId,
+                recipientId: recipientId,
                 content: content
             });
-        } else {
-            console.error('Error: Recipient socket not found');
-        }
-    } catch (error) {
-        console.error('Error saving private message:', error);
-    }
-});
 
+            // Enregistrez le nouveau message dans la base de données
+            await newMessage.save(); // Assurez-vous que le message est enregistré dans la base de données
 
-
-
-    
-// Gestion de la déconnexion de l'utilisateur
-socket.on('disconnect', () => {
-    console.log('User disconnected:', socket.id);
-
-    // Supprimez l'entrée correspondante dans la structure de données
-    userSockets.forEach((value, key) => {
-        if (value === socket) {
-            userSockets.delete(key);
+            // Trouver le socket du destinataire à partir de son ID
+            const recipientSocket = userSockets.get(recipientId);
+            if (recipientSocket) {
+                // Envoyer le message au socket du destinataire
+                recipientSocket.emit('private message', {
+                    senderId: senderId,
+                    content: content
+                });
+            } else {
+                console.error('Error: Recipient socket not found');
+            }
+        } catch (error) {
+            console.error('Error saving private message:', error);
         }
     });
-});
+
+
+
+
+    // Gestion de la déconnexion de l'utilisateur
+    socket.on('disconnect', () => {
+        console.log('User disconnected:', socket.id);
+
+        // Supprimez l'entrée correspondante dans la structure de données
+        userSockets.forEach((value, key) => {
+            if (value === socket) {
+                userSockets.delete(key);
+            }
+        });
+    });
 });
 
 
 app.get('/messages/:userId', async (req, res) => {
     try {
-      const userId = req.params.userId;
+        const userId = req.params.userId;
 
-      // Si userId est indéfini, renvoyer un message indiquant que l'ID de l'utilisateur est indéfini
-      if (!userId) {
-        console.log('User ID is undefined. Skipping error.');
-        return res.status(200).json({ success: true, message: 'User ID is undefined' });
-      }
+        // Si userId est indéfini, renvoyer un message indiquant que l'ID de l'utilisateur est indéfini
+        if (!userId) {
+            console.log('User ID is undefined. Skipping error.');
+            return res.status(200).json({
+                success: true,
+                message: 'User ID is undefined'
+            });
+        }
 
-      // Find the conversation with the given user ID
-      const conversation = await Conversation.findOne({
-        participants: { $all: [req.session.userId, userId] }
-      });
+        // Find the conversation with the given user ID
+        const conversation = await Conversation.findOne({
+            participants: {
+                $all: [req.session.userId, userId]
+            }
+        });
 
-      // Si la conversation n'est pas trouvée, renvoyer un message indiquant que la conversation n'a pas été trouvée
-      if (!conversation) {
-        return res.status(404).json({ success: false, error: 'Conversation not found' });
-      }
-      
-      // Fetch messages for the conversation
-      const messages = await Message.find({ conversationId: conversation._id });
-      res.json(messages);
+        // Si la conversation n'est pas trouvée, renvoyer un message indiquant que la conversation n'a pas été trouvée
+        if (!conversation) {
+            return res.status(404).json({
+                success: false,
+                error: 'Conversation not found'
+            });
+        }
+
+        // Fetch messages for the conversation
+        const messages = await Message.find({
+            conversationId: conversation._id
+        });
+        res.json(messages);
     } catch (error) {
-      console.error('Error fetching messages:', error);
-      res.status(500).json({ success: false, error: 'Internal Server Error' });
+        console.error('Error fetching messages:', error);
+        res.status(500).json({
+            success: false,
+            error: 'Internal Server Error'
+        });
     }
-  });
-
+});
