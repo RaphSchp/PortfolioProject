@@ -272,7 +272,7 @@ figcaption {
 #createEventBox h2 {
 	color: #f1600d;
 	font-size: 2rem;
-	margin-bottom: 1rem;
+	margin-bottom: 0.5rem;
 }
 
 #createEventBox ul {
@@ -313,6 +313,31 @@ figcaption {
 .event-box p {
 	font-size: 0.8rem;
 }
+
+#registerEvent,
+.custom-file-upload {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: 2px 12px;
+	cursor: pointer;
+	background-color: #f1600d;
+	color: #fef6ed;
+	border-radius: 4px;
+	width: 100%;
+	height: 30px;
+	font-size: 0.8rem;
+	font-family: 'Nippo-Regular';
+	font-weight: 600;
+	border: none;
+
+  }
+  
+  #registerEvent:hover ,
+  .custom-file-upload:hover {
+	transform: scale(0.98);
+  }
+  
 
 #modalBackground,
 #modalBackground2,

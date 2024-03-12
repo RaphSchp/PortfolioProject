@@ -1,5 +1,6 @@
 const http = require('http');
 const express = require('express');
+const multer = require('multer');
 const bodyParser = require('body-parser');
 const path = require('path');
 const mongoose = require('mongoose');
@@ -139,7 +140,7 @@ app.post('/register', sessionMiddleware, async (req, res) => {
             passwordConfirmation
         } = req.body;
 
-        // Vérifier si les passwords ne sont pas identiques ou vides
+        // Check if password are matching or empty
         if (password !== passwordConfirmation || password === '') {
             return res.status(400).json({
                 success: false,
@@ -147,7 +148,7 @@ app.post('/register', sessionMiddleware, async (req, res) => {
             });
         }
 
-        // Vérifier si l'email est valide
+        // Check if email is in valid format
         if (!validateEmail(email)) {
             return res.status(400).json({
                 success: false,
@@ -155,7 +156,7 @@ app.post('/register', sessionMiddleware, async (req, res) => {
             });
         }
 
-        // Vérifier si l'email est déjà utilisé
+        // Check if email is already attribute
         const existingEmail = await User.findOne({
             email
         });
@@ -166,7 +167,7 @@ app.post('/register', sessionMiddleware, async (req, res) => {
             });
         }
 
-        // Vérifier si l'username est déjà utilisé
+        // Check if username is already attribute
         const existingUsername = await User.findOne({
             username
         });
@@ -177,21 +178,22 @@ app.post('/register', sessionMiddleware, async (req, res) => {
             });
         }
 
-        // Créer un nouvel utilisateur avec les valeurs par défaut
+        // Create a new user
         const newUser = new User({
             email,
             password,
-            username, // Utilisez la valeur de regUsername pour le nom d'utilisateur
-            userpic: 'lol.jpeg' // Définissez la valeur par défaut de l'image utilisateur
+            username,
+            userpic: 'lol.jpeg'
         });
         await newUser.save();
 
 
-        // Envoyer un message de validation
+        // Send a welcome message
         res.status(200).json({
             success: true,
             message: 'Registration successful. Welcome! Please log in.'
         });
+        // Else a error message
     } catch (error) {
         console.error('Error during registration:', error);
         res.status(500).json({
@@ -200,6 +202,145 @@ app.post('/register', sessionMiddleware, async (req, res) => {
         });
     }
 });
+
+// Define destination folder of the downloaded images
+const destinationFolder = path.join(__dirname, '../frontend/assets/user_image');
+
+// Configuration of Multer
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, destinationFolder);
+    },
+    filename: function (req, file, cb) {
+        // Check if the User is connected and his ID available
+        if (req.session.userId) {
+            // Use User's ID in filename with timestamp
+            const ext = path.extname(file.originalname);
+            const userId = req.session.userId;
+            const timestamp = Date.now();
+            const filename = `${userId}_${timestamp}${ext}`;
+            cb(null, filename);
+        } else {
+
+            cb(new Error("User not logged in"));
+        }
+    }
+});
+
+
+// Initialisation de Multer avec la configuration
+const upload = multer({ storage: storage });
+
+// Route pour gérer le téléversement d'image
+app.post('/upload', upload.single('eventImage'), (req, res) => {
+    console.log("Received POST request to /upload");
+
+    // Vérifier si un fichier a été correctement téléversé
+    if (!req.file) {
+        console.log("No file uploaded");
+        return res.status(400).json({ success: false, message: 'No file uploaded' });
+    }
+
+    // Si un fichier a été téléversé, afficher les informations sur le fichier
+    console.log("Received file:", req.file);
+
+    // Répondre avec un message de succès et le nom du fichier téléversé
+    res.status(200).json({ success: true, message: 'File uploaded successfully', filename: req.file.filename });
+});
+
+
+
+
+  
+  
+  
+
+// Route pour l'inscription d'event
+app.post('/registerevent', sessionMiddleware, async (req, res) => {
+    try {
+        // Vérifier si l'utilisateur est connecté
+        if (!req.session.userId) {
+            return res.status(401).json({ success: false, message: 'Unauthorized' });
+        }
+
+        // Récupérer l'utilisateur actuellement connecté à partir de la session
+        const currentUser = await User.findById(req.session.userId);
+        if (!currentUser) {
+            return res.status(404).json({ success: false, message: 'User not found' });
+        }
+
+        const {
+            event_name,
+            img,
+            sport,
+            doc,
+            event_hour,
+            event_date,
+            city,
+            address,
+            participants,
+            publication_date,
+            status,
+        } = req.body;
+
+        // Check if event name is already given
+        const existingEventName = await Event.findOne({ event_name });
+        if (existingEventName) {
+            return res.status(400).json({
+                success: false,
+                message: 'Event name already exists'
+            });
+        }
+
+        if (
+            event_name === '' ||
+            sport === '' ||
+            doc === '' ||
+            event_hour === '' ||
+            event_date === '' ||
+            city === '' ||
+            address === '' ||
+            participants === ''
+        ) {
+            return res.status(400).json({
+                success: false,
+                message: 'Please complete all the fields'
+            });
+        }
+        
+
+        // Create a new event
+        const newEvent = new Event({
+            event_name,
+            userpic: currentUser.userpic,
+            img,
+            sport,
+            doc,
+            event_hour,
+            event_date,
+            city,
+            address,
+            participants,
+            publication_date,
+            status,
+            createdBy: currentUser._id
+        });
+        await newEvent.save();
+
+        // Envoyer un message de validation
+        res.status(200).json({
+            success: true,
+            message: 'Event posted successfully!'
+        });
+    } catch (error) {
+        console.error('Error during posting event:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Internal Server Error'
+        });
+    }
+});
+
 
 // Route pour récupérer tous les événements depuis la base de données MongoDB
 app.get('/events', async (req, res) => {
@@ -370,19 +511,19 @@ io.on('connection', (socket) => {
 
             // Créez un nouveau message à enregistrer dans la base de données
             const newMessage = new Message({
-                conversationId: conversation._id, // Associez le message à la conversation
+                conversationId: conversation._id,
                 senderId: senderId,
                 recipientId: recipientId,
                 content: content
             });
 
-            // Enregistrez le nouveau message dans la base de données
-            await newMessage.save(); // Assurez-vous que le message est enregistré dans la base de données
+            // Save new message in data base
+            await newMessage.save();
 
-            // Trouver le socket du destinataire à partir de son ID
+            // Find recipient socket with his ID
             const recipientSocket = userSockets.get(recipientId);
             if (recipientSocket) {
-                // Envoyer le message au socket du destinataire
+                // Send a message to recipient socket
                 recipientSocket.emit('private message', {
                     senderId: senderId,
                     content: content
@@ -398,11 +539,11 @@ io.on('connection', (socket) => {
 
 
 
-    // Gestion de la déconnexion de l'utilisateur
+    // Handle disconection of the user
     socket.on('disconnect', () => {
         console.log('User disconnected:', socket.id);
 
-        // Supprimez l'entrée correspondante dans la structure de données
+        // Delete correspond enter in data structure
         userSockets.forEach((value, key) => {
             if (value === socket) {
                 userSockets.delete(key);
@@ -416,7 +557,7 @@ app.get('/messages/:userId', async (req, res) => {
     try {
         const userId = req.params.userId;
 
-        // Si userId est indéfini, renvoyer un message indiquant que l'ID de l'utilisateur est indéfini
+        // If userId isn't found send a message to tell 'User ID is undefined'
         if (!userId) {
             console.log('User ID is undefined. Skipping error.');
             return res.status(200).json({
@@ -432,7 +573,7 @@ app.get('/messages/:userId', async (req, res) => {
             }
         });
 
-        // Si la conversation n'est pas trouvée, renvoyer un message indiquant que la conversation n'a pas été trouvée
+        // If conversation isn't found send a message to tell 'Conversation not found'
         if (!conversation) {
             return res.status(404).json({
                 success: false,

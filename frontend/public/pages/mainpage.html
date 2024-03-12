@@ -113,7 +113,7 @@
                 <div id="createEventBox" class="event-box">
                     <h2>Create Event</h2>
                     <a href="#" class="close-btn" onclick="closeEventBox()">&times;</a>
-                    <form id="eventForm">
+                    <form id="eventForm" action="/upload" method="POST" enctype="multipart/form-data">
                         <ul>
                             <li>
                                 <label for="eventName">Event Name:</label>
@@ -122,7 +122,7 @@
                             <li>
                                 <label for="eventSport">Sport: </label>
                                 <p>(select a suggestion)</p>
-                                <input id="eventSport" name="eventSport" list="sportsList" required>
+                                <input id="eventSport" name="eventSport" list="sportsList" placeholder="Type here to see sports suggestions" required>
                                 <datalist id="sportsList">
                                     <!-- Options seront ajoutées dynamiquement par JavaScript -->
                                 </datalist>
@@ -132,12 +132,12 @@
                                 <textarea id="eventDescription" name="eventDescription" required></textarea>
                             </li>
                             <li>
-                                <label for="eventTime">Event Time:</label>
-                                <input type="text" id="eventTime" name="eventTime" required>
+                                <label for="eventHour">Event Hour:</label>
+                                <input type="text" id="eventHour" name="eventHour" placeholder="00:00 AM/PM" required>
                             </li>
                             <li>
                                 <label for="eventDate">Event Date:</label>
-                                <input type="date" id="eventDate" name="eventDate" required>
+                                <input type="date" id="eventDate" name="eventDate" placeholder="YYYY-MM-DD"required>
                             </li>
                             <li>
                                 <label for="eventCity">Event City:</label>
@@ -153,17 +153,22 @@
                             </li>
                             <li>
                                 <label for="eventImage">Event Image:</label>
-                                <input type="file" id="eventImage" name="eventImage" accept="image/*" required>
+                                <!-- Input de type file caché -->
+                                <input type="file" id="eventImage" name="eventImage" accept="image/*" required style="display: none;">
+                                <!-- Bouton stylisé -->
+                                <label for="eventImage" class="custom-file-upload">Choose a picture</label>
+                                <p id="fileNamePlaceholder"></p>
                             </li>
+                            
                             <li>
-                                <p>On demand / Open</p>
+                                <label>On demand / Open</label>
                                 <label class="switch">
-                                <input type="checkbox">
+                                <input type="checkbox" id="status">
                                 <span class="slider round"></span>
                                 </label>
                             </li>
                         </ul>
-                        <button type="button" onclick="submitEvent()">Create Event</button>
+                        <button type="button" id="registerEvent" onclick="submitEvent()">Create Event</button>
                     </form>
                 </div>
             </div>
