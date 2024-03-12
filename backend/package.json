@@ -16,6 +16,7 @@
     "express-session": "^1.18.0",
     "http": "^0.0.1-security",
     "mongoose": "^8.2.0",
+    "multer": "^1.4.5-lts.1",
     "socket.io": "^4.7.4",
     "ws": "^8.16.0"
   }
