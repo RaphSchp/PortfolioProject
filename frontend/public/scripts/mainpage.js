@@ -131,6 +131,7 @@ function getData() {
                     status.classList.add("status");
 
                     let participateIcon = createIconLink("../../assets/images/participate.png", "#participate-link");
+                    participateIcon.addEventListener("click", () => participateInEvent(event._id));
                     let messageIcon = createIconLink("../../assets/images/message.png", "#message-link");
                     let favoritesIcon = createIconLink("../../assets/images/favorites.png", "#favorites-link");
 
@@ -432,6 +433,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
 
 
 
@@ -827,7 +829,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 // CHAT BOX ---------------------------------------------------------------------------------------------------------------------------------------
 
-
+let selectedUserId = null;
 
 async function getUserIdFromSession() {
     try {
@@ -858,127 +860,213 @@ function scrollToBottom() {
     chatMessages.scrollTop = chatMessages.scrollHeight;
 }
 
+// Fonction pour récupérer l'ID de l'utilisateur à partir de la session
+async function getUserIdFromSession() {
+    try {
+        const response = await fetch('/getLoggedInUserInfo');
+        const data = await response.json();
+
+        if (data.success && data.userId) {
+            console.log(`User ID : ${data.userId}`);
+            return data.userId;
+        } else {
+            console.error('User ID not found in session or response is not successful.');
+            return null;
+        }
+    } catch (error) {
+        console.error('Error fetching user ID from session:', error);
+        return null;
+    }
+}
+
+// Fonction pour ajouter un message au chat
+function appendMessageToChat(message, isSentByCurrentUser) {
+    const chatMessages = document.getElementById('chatMessages');
+    const messageElement = document.createElement('div');
+
+    // Appliquer les classes CSS appropriées en fonction de qui envoie le message
+    if (isSentByCurrentUser) {
+        messageElement.classList.add('message-sent');
+        console.log('Using message-sent');
+    } else {
+        messageElement.classList.add('message-received');
+        console.log('Using message-received');
+    }
+
+    messageElement.textContent = message;
+    chatMessages.appendChild(messageElement);
+}
+
+// Fonction pour effacer les messages du chat
+function clearChatMessages() {
+    const chatMessages = document.getElementById('chatMessages');
+    chatMessages.innerHTML = '';
+}
+
+// Fonction pour récupérer les messages de la conversation avec un utilisateur spécifique
+async function fetchMessagesForUser(userId) {
+    try {
+        if (!userId) {
+            console.log('User ID is undefined. Skipping message fetching.');
+            return [];
+        }
+
+        console.log('Fetching messages for user:', userId);
+
+        const response = await fetch(`/messages/${userId}`);
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        const messages = await response.json();
+        return messages;
+    } catch (error) {
+        console.error('Error fetching messages:', error);
+        return [];
+    }
+}
+
+// Fonction pour afficher les messages dans le chat
+async function renderMessages(messages) {
+    try {
+        const userId = await getUserIdFromSession();
+        const chatMessages = document.getElementById('chatMessages');
+        console.log('Rendering messages:', messages);
+
+        if (messages.length === 0) {
+            console.log('No messages to render. Clearing chat messages.');
+            clearChatMessages();
+        }
+
+        messages.forEach(message => {
+            const isSentByCurrentUser = (message.senderId === userId);
+            console.log('Sender ID:', message.senderId);
+            console.log('Recipient ID:', message.recipientId);
+            console.log('Current User ID:', userId);
+            console.log('Is Sent By Current User:', isSentByCurrentUser);
+            appendMessageToChat(message.content, isSentByCurrentUser);
+            scrollToBottom();
+        });
+    } catch (error) {
+        console.error('Error rendering messages:', error);
+    }
+}
+
+// Fonction pour charger les messages pour l'utilisateur sélectionné
+async function loadMessagesForSelectedUser() {
+    try {
+        const userId = await getUserIdFromSession();
+
+        if (selectedUserId) {
+            console.log('Loading messages for selected user:', selectedUserId);
+            const messages = await fetchMessagesForUser(selectedUserId);
+            clearChatMessages();
+            renderMessages(messages, userId);
+        }
+    } catch (error) {
+        console.error('Error loading messages:', error);
+    }
+}
+
+// Fonction pour rendre la liste des utilisateurs
+function renderUserList(filterText = '') {
+    fetch('/users')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(users => {
+            const userListContainer = document.getElementById('userList');
+            const chatInput = document.getElementById('userSearchInput');
+            userListContainer.innerHTML = '';
+
+            let count = 0;
+
+            if (filterText.trim() === '') {
+                return;
+            }
+
+            if (selectedUserId) {
+                const selectedUser = users.find(user => user._id === selectedUserId);
+                if (selectedUser) {
+                    const userElement = document.createElement('div');
+                    userElement.textContent = selectedUser.username;
+                    userElement.classList.add('user-selected');
+                    chatInput.style.display = 'none';
+                    userElement.dataset.userId = selectedUser._id;
+                    
+
+                    userElement.addEventListener('click', async () => {
+                        selectedUserId = null;
+                        console.log("Selected User ID:", selectedUserId);
+                        userElement.classList.remove('user-selected');
+                        chatInput.style.display = 'flex';
+                        renderUserList(filterText);
+                        clearChatMessages();
+                    });
+
+                    userListContainer.appendChild(userElement);
+                }
+            } else {
+                users.forEach(user => {
+                    if (count >= 4) return;
+
+                    if (user.username.toLowerCase().includes(filterText.toLowerCase())) {
+                        const userElement = document.createElement('div');
+                        userElement.textContent = user.username;
+                        userElement.dataset.userId = user._id;
+
+                        userElement.addEventListener('click', async () => {
+                            selectedUserId = user._id;
+                            console.log("Selected User ID:", selectedUserId);
+                            userElement.classList.add('user-selected');
+                            await loadMessagesForSelectedUser();
+                            renderUserList(filterText);
+                        });
+
+                        userElement.addEventListener('mouseover', () => {
+                            if (userElement.classList.contains('user-selected')) {
+                                userElement.classList.add('user-selected-hover');
+                            }
+                        });
+
+                        userElement.addEventListener('mouseout', () => {
+                            userElement.classList.remove('user-selected-hover');
+                        });
+
+                        userListContainer.appendChild(userElement);
+                        count++;
+                    }
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching users:', error);
+        });
+}
+
+// Appeler les fonctions nécessaires lorsque le DOM est entièrement chargé
 document.addEventListener("DOMContentLoaded", () => {
+    // Mettre en place l'application de chat une fois que le DOM est chargé
     const modalBackgroundChat = document.getElementById('modalBackgroundChat');
     let socket;
-    let selectedUserId = null;
-    const userId = getUserIdFromSession();
+    
 
     // Hide modal background by default
     modalBackgroundChat.style.display = 'none';
 
-    function appendMessageToChat(message, isSentByCurrentUser) {
-        const chatMessages = document.getElementById('chatMessages');
-        const messageElement = document.createElement('div');
-
-        // Appliquer les classes CSS appropriées en fonction de qui envoie le message
-        if (isSentByCurrentUser) {
-            messageElement.classList.add('message-sent');
-            console.log('Using message-sent');
-        } else {
-            messageElement.classList.add('message-received');
-            console.log('Using message-received');
-        }
-
-        messageElement.textContent = message;
-        chatMessages.appendChild(messageElement);
-    }
-
-
-    // Function to fetch messages from the conversation with a specific user
-    async function fetchMessagesForUser(userId) {
-        try {
-            // Check if userId is defined
-            if (!userId) {
-                console.log('User ID is undefined. Skipping message fetching.');
-                return []; // Return an empty array or handle this case as needed
-            }
-
-            console.log('Fetching messages for user:', userId);
-
-            const response = await fetch(`/messages/${userId}`); // Assuming you have an endpoint to fetch messages for a specific user
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            const messages = await response.json();
-            return messages;
-        } catch (error) {
-            console.error('Error fetching messages:', error);
-            return [];
-        }
-    }
-
-
-    async function renderMessages(messages) {
-        try {
-            const userId = await getUserIdFromSession(); // Attendre l'ID de l'utilisateur
-            const chatMessages = document.getElementById('chatMessages');
-            console.log('Rendering messages:', messages);
-            // Effacer les messages existants uniquement s'il n'y a pas de messages à ajouter
-            if (messages.length === 0) {
-                console.log('No messages to render. Clearing chat messages.');
-                chatMessages.innerHTML = '';
-            }
-            messages.forEach(message => {
-                // Déterminer si le message a été envoyé par l'utilisateur actuel
-                const isSentByCurrentUser = (message.senderId === userId); // Utilisation de l'ID de l'utilisateur pour la comparaison
-                console.log('Sender ID:', message.senderId);
-                console.log('Recipient ID:', message.recipientId);
-                console.log('Current User ID:', userId);
-                console.log('Is Sent By Current User:', isSentByCurrentUser);
-                appendMessageToChat(message.content, isSentByCurrentUser);
-                scrollToBottom();
-            });
-        } catch (error) {
-            console.error('Error rendering messages:', error);
-        }
-    }
-
-
-
-
-    // Charger les messages pour l'utilisateur sélectionné
-    async function loadMessagesForSelectedUser() {
-        try {
-            // Obtenir l'ID de l'utilisateur à partir de la session
-            const userId = await getUserIdFromSession();
-
-            if (selectedUserId) {
-                console.log('Loading messages for selected user:', selectedUserId);
-                const messages = await fetchMessagesForUser(selectedUserId);
-                clearChatMessages(); // Effacer les messages existants
-                renderMessages(messages, userId); // Passer l'ID de l'utilisateur pour la comparaison
-            }
-        } catch (error) {
-            console.error('Error loading messages:', error);
-        }
-    }
-
-
-
-    // Function to clear chat messages
-    function clearChatMessages() {
-        const chatMessages = document.getElementById('chatMessages');
-        chatMessages.innerHTML = ''; // Clear the chat messages
-    }
-
-    // Show chat box when message link is clicked
+    // Gérer l'événement pour afficher la boîte de chat lors du clic sur un lien de message
     document.querySelectorAll('.message').forEach(link => {
         link.addEventListener('click', async (event) => {
             event.preventDefault();
             console.log('Clicked on message link.');
             modalBackgroundChat.style.display = 'flex';
-
-            // Set the selected user ID
             selectedUserId = link.dataset.userId;
             console.log("Selected User ID:", selectedUserId);
-
-            // Check if selectedUserId is defined before fetching messages
             if (selectedUserId) {
-                // Fetch messages for the selected user
                 const messages = await fetchMessagesForUser(selectedUserId);
                 renderMessages(messages);
-
                 await loadMessagesForSelectedUser();
             } else {
                 console.log('Selected user ID is undefined. Skipping message fetching.');
@@ -986,133 +1074,146 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-
-    // Connect to Socket.IO server
+    // Se connecter au serveur Socket.IO
     socket = io();
     const chatForm = document.getElementById('chatForm');
 
-    // Function to handle form submission for sending a message
+    // Gérer la soumission du formulaire de chat
     chatForm.addEventListener('submit', (e) => {
         e.preventDefault();
         const message = chatInput.value.trim();
         if (message !== '' && selectedUserId) {
             const recipientId = selectedUserId;
-            // Emit a private message event to the server
-            // Make sure the user is authenticated before allowing message sending
-            // Also, ensure that the server properly handles authentication and only allows authenticated users to send messages
-            socket.emit('private message', {
-                recipientId,
-                content: message
-            }); // Send only the recipient ID and message content
+            socket.emit('private message', { recipientId, content: message });
             appendMessageToChat(message, true);
             chatInput.value = '';
             scrollToBottom();
         }
     });
 
-    // Listen for 'private message' event from the server and update UI
+    // Écouter l'événement 'private message' du serveur et mettre à jour l'interface utilisateur
     socket.on('private message', (msg) => {
         console.log("Private message received:", msg);
-        // Check if the message is intended for the current user
         if (msg.recipientId === selectedUserId || msg.senderId === selectedUserId) {
-            // If yes, append the message content to the chat
             appendMessageToChat(msg.content);
         }
         loadMessagesForSelectedUser();
     });
 
-    // Gestionnaire d'événements pour la saisie dans le champ de recherche utilisateur
+    // Gérer la saisie dans le champ de recherche utilisateur
     const userSearchInput = document.getElementById('userSearchInput');
     userSearchInput.addEventListener('input', () => {
         const filterText = userSearchInput.value.trim();
         renderUserList(filterText);
     });
 
-    // Fonction pour rendre la liste des utilisateurs
-    function renderUserList(filterText = '') {
-        fetch('/users')
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(users => {
-                const userListContainer = document.getElementById('userList');
-                const chatInput = document.getElementById('userSearchInput');
-                userListContainer.innerHTML = '';
-
-                let count = 0;
-
-                if (filterText.trim() === '') {
-                    // Ne rien faire si le champ de recherche est vide
-                    return;
-                }
-
-                if (selectedUserId) {
-                    const selectedUser = users.find(user => user._id === selectedUserId);
-                    if (selectedUser) {
-                        const userElement = document.createElement('div');
-                        userElement.textContent = selectedUser.username;
-                        userElement.classList.add('user-selected');
-                        chatInput.style.display = 'none';
-                        userElement.dataset.userId = selectedUser._id;
-
-                        // Ajouter un gestionnaire d'événements de clic pour désélectionner l'utilisateur
-                        userElement.addEventListener('click', async () => {
-                            selectedUserId = null; // Désélectionner l'utilisateur
-                            console.log("Selected User ID:", selectedUserId);
-                            userElement.classList.remove('user-selected');
-                            chatInput.style.display = 'flex';
-
-                            // Re-render la liste des utilisateurs
-                            renderUserList(filterText);
-                        });
-
-                        userListContainer.appendChild(userElement);
-                    }
-                } else {
-                    users.forEach(user => {
-                        if (count >= 4) return;
-
-                        if (user.username.toLowerCase().includes(filterText.toLowerCase())) {
-                            const userElement = document.createElement('div');
-                            userElement.textContent = user.username;
-                            userElement.dataset.userId = user._id;
-
-                            // Ajouter un gestionnaire d'événements de clic pour sélectionner l'utilisateur
-                            userElement.addEventListener('click', async () => {
-                                selectedUserId = user._id;
-                                console.log("Selected User ID:", selectedUserId);
-                                userElement.classList.add('user-selected');
-
-                                // Fetch and render messages for the selected user
-                                await loadMessagesForSelectedUser();
-
-                                // Re-render la liste des utilisateurs
-                                renderUserList(filterText);
-                            });
-
-                            // Ajouter un gestionnaire d'événements pour l'effet hover
-                            userElement.addEventListener('mouseover', () => {
-                                if (userElement.classList.contains('user-selected')) {
-                                    userElement.classList.add('user-selected-hover');
-                                }
-                            });
-
-                            userElement.addEventListener('mouseout', () => {
-                                userElement.classList.remove('user-selected-hover');
-                            });
-
-
-                            userListContainer.appendChild(userElement);
-                            count++;
-                        }
-                    });
-                }
-            })
-            .catch(error => {
-                console.error('Error fetching users:', error);
-            });
-    }
+    // Initialiser la liste des utilisateurs lors du chargement initial
+    renderUserList();
 });
+
+
+// PARTICIPATE EVENT ------------------------------------------------------------------------------------------------------------------------------
+
+// Fonction pour ouvrir le chat avec le créateur de l'événement
+async function openChatWithCreator(eventId) {
+    try {
+        // Récupérer l'ID du créateur de l'événement en appelant la nouvelle route
+        const response = await fetch(`/getEventCreatorId/${eventId}`);
+        const data = await response.json();
+
+        if (data.success && data.creatorId) {
+            const creatorId = data.creatorId;
+
+            // Afficher la boîte de chat
+            modalBackgroundChat.style.display = 'flex';
+
+            // Mettre à jour le selectedUserId avec l'ID du créateur
+            selectedUserId = creatorId;
+            console.log("Selected User ID:", selectedUserId);
+
+            // Vérifier si selectedUserId est défini avant de récupérer les messages
+            if (selectedUserId) {
+                clearChatMessages();
+                // Récupérer les messages avec le créateur de l'événement
+                const messages = await fetchMessagesForUser(selectedUserId);
+                renderMessages(messages);
+
+                // Charger les messages pour l'utilisateur sélectionné
+                await loadMessagesForSelectedUser();
+
+                // Afficher le nom d'utilisateur du créateur dans la liste des utilisateurs
+                const creatorUsername = data.creatorUsername; // Assurez-vous que le serveur renvoie le nom d'utilisateur du créateur
+                const userListContainer = document.getElementById('userList');
+                userListContainer.innerHTML = ''; // Effacer la liste existante avant d'ajouter le créateur
+
+                const creatorNameElement = document.createElement('div');
+                creatorNameElement.textContent = `Ask ${creatorUsername} to participate !`;
+                creatorNameElement.classList.add('user-selected');
+                creatorNameElement.addEventListener('click', async () => {
+                    selectedUserId = null;
+                    console.log("Selected User ID:", selectedUserId);
+                    creatorNameElement.classList.remove('user-selected');
+                    chatInput.style.display = 'flex';
+                    userListContainer.innerHTML = '';
+                    clearChatMessages();
+                    renderUserList(filterText);
+                });
+                userListContainer.appendChild(creatorNameElement);
+
+                // Masquer le champ de recherche d'utilisateur
+                const chatInput = document.getElementById('userSearchInput');
+                chatInput.style.display = 'none';
+            } else {
+                console.log('L\'ID de l\'utilisateur sélectionné n\'est pas défini. Ignorer la récupération des messages.');
+            }
+        } else {
+            console.error('ID du créateur d\'événement non trouvé.');
+        }
+    } catch (error) {
+        console.error('Erreur lors de l\'ouverture du chat avec le créateur de l\'événement:', error);
+    }
+}
+
+
+
+
+// Appel de la fonction openChatWithCreator
+async function participateInEvent(eventId) {
+    console.log(`Event Id:`, eventId);
+    try {
+        // Récupérer l'ID de l'utilisateur à partir de la session
+        const userId = await getUserIdFromSession();
+
+        // Vérifier si l'ID de l'utilisateur est valide
+        if (!userId) {
+            console.error('User ID not found in session.');
+            return; // Arrêter l'exécution de la fonction si l'ID de l'utilisateur n'est pas trouvé
+        }
+
+        // Envoyer une requête POST pour participer à l'événement
+        const response = await fetch(`/participate/${eventId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ userId })
+        });
+
+        // Appel de la fonction openChatWithCreator avec l'eventId
+        if (response.ok) {
+            const responseData = await response.json();
+            if (responseData.success && responseData.message) {
+                console.log(responseData.message);
+                // Votre code pour ouvrir la boîte de chat ici
+                openChatWithCreator(eventId); // Passer l'eventId
+            } else {
+                console.error('Failed to participate in the event.');
+            }
+        } else {
+            console.error('Failed to participate in the event.');
+        }
+    } catch (error) {
+        console.error('Error participating in the event:', error);
+        // Gérer les erreurs ici
+    }
+}

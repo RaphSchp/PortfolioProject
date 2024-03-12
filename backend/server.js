@@ -11,6 +11,7 @@ const Conversation = require('./models/conversation');
 const Message = require('./models/message');
 const User = require('./models/user');
 const Event = require('./models/event');
+const Participant = require('./models/participant');
 
 const app = express();
 const PORT = 3000;
@@ -364,6 +365,119 @@ app.get('/events', async (req, res) => {
     }
 });
 
+// PARTICIPATE EVENT ------------------------------------------------------------------------------------------------------------------------------
+// Backend route for participating in an event
+app.post('/participate/:eventId', async (req, res) => {
+    const eventId = req.params.eventId;
+    const userId = req.body.userId; // Vous devez obtenir l'ID de l'utilisateur de la session
+
+    try {
+        // Recherche de l'événement dans la base de données
+        const event = await Event.findById(eventId);
+
+        if (!event) {
+            return res.status(404).send('Événement non trouvé.');
+        }
+
+        if (!event.status) {
+            console.log('La propriété status n\'est pas définie pour l\'événement:', event);
+            return res.status(400).send('État de l\'événement non valide.');
+        }
+
+        // Ajoutons un log pour afficher l'état de l'événement et son ID
+        console.log('Événement ID:', eventId);
+        console.log('État de l\'événement:', event.status);
+
+        // Vérifier si la liste de participants existe pour cet événement
+        let participant = await Participant.findOne({ eventId });
+
+        if (!participant) {
+            // Si aucun participant n'existe pour cet événement, en créer un nouveau
+            participant = new Participant({ eventId, participantIds: [userId] });
+        } else {
+            // Si un participant existe déjà, vérifier si l'utilisateur participe déjà
+            if (participant && participant.participantIds && participant.participantIds.includes(userId)) {
+
+                console.log('L\'utilisateur participe déjà à cet événement.');
+                return res.status(200).send('Vous participez déjà à cet événement.');
+            }
+            // Ajouter l'utilisateur à la liste des participants
+            participant.participantIds.push(userId);
+        }
+
+        // Enregistrer le participant dans la base de données
+        await participant.save();
+
+        if (event.status === 'Open') {
+            // Si l'événement est ouvert, ajoutez l'utilisateur à la liste des participants de l'événement
+            event.list_participants.push(userId);
+            await event.save();
+            return res.status(200).send('Participation réussie.');
+        } else if (event.status === 'Demand') {
+            // Si l'événement est en demande, renvoyer un message indiquant que la demande de participation a été envoyée
+            return res.status(200).json({
+                success: true,
+                message: 'Demande de participation envoyée. Le créateur de l\'événement souhaite discuter avec vous.'
+            });
+        } else {
+            // Ajoutons un log pour afficher l'erreur si l'état de l'événement n'est ni "open" ni "demand"
+            console.log('État de l\'événement non valide:', event.status);
+            return res.status(400).send('État de l\'événement non valide.');
+        }
+    } catch (error) {
+        console.error(error);
+        return res.status(500).send('Erreur lors de la participation à l\'événement.');
+    }
+});
+
+
+
+// Route pour récupérer l'ID du créateur de l'événement
+app.get('/getEventCreatorId/:eventId', async (req, res) => {
+    try {
+        const eventId = req.params.eventId;
+
+        // Recherche de l'événement dans la base de données
+        const event = await Event.findById(eventId);
+
+        if (!event) {
+            return res.status(404).json({
+                success: false,
+                message: 'Event not found'
+            });
+        }
+
+        // Récupérer l'ID du créateur de l'événement
+        const creatorId = event.createdBy;
+
+        // Recherche de l'utilisateur correspondant à l'ID du créateur
+        const user = await User.findById(creatorId, 'username');
+
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: 'Creator not found'
+            });
+        }
+
+        // Renvoyer l'ID et le nom d'utilisateur du créateur de l'événement
+        res.json({
+            success: true,
+            creatorId: creatorId,
+            creatorUsername: user.username
+        });
+    } catch (error) {
+        console.error('Error fetching event creator ID:', error);
+        res.status(500).json({
+            success: false,
+            error: 'Internal Server Error'
+        });
+    }
+});
+
+
+
+
 // Route pour se déconnecter
 app.get('/logout', (req, res) => {
     // Détruire la session
@@ -435,7 +549,6 @@ app.get('/events/sport/:sport', async (req, res) => {
     }
 });
 
-// server.js
 
 
 // Fonction pour récupérer l'ID de l'utilisateur à partir de la session
