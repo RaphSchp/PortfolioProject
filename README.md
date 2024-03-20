@@ -89,9 +89,13 @@ npm install $(cat requirements.txt)
 ## Screenshots
 
 ### Login / Register
-<div style="display: flex; align-items: center;">
-    <img width="50%" style="margin-right: 10px;" src="frontend/assets/screenshots/LOGIN.png" alt="Login">
-    <img width="50%" src="frontend/assets/screenshots/REGISTER.png" alt="Register">
+<div class="row">
+    <div class="col-md-6">
+        <img src="frontend/assets/screenshots/LOGIN.png" alt="Login" style="max-width: 100%;">
+    </div>
+    <div class="col-md-6">
+        <img src="frontend/assets/screenshots/REGISTER.png" alt="Register" style="max-width: 100%;">
+    </div>
 </div>
 
 ### Homepage
@@ -120,15 +124,15 @@ npm install $(cat requirements.txt)
 </div>
 
 ### Request
-<div align="center">
-    https://github.com/RaphSchp/PortfolioProject/assets/135048201/10e301b0-60c9-44b9-afb8-26943c65390d
-</div>
+
+https://github.com/RaphSchp/PortfolioProject/assets/135048201/10e301b0-60c9-44b9-afb8-26943c65390d
+
 
 
 ### Demo
-<div align="center">
-    https://github.com/RaphSchp/PortfolioProject/assets/135048201/5ab839c3-67d4-49c9-9778-37b164346afa
-</div>
+
+https://github.com/RaphSchp/PortfolioProject/assets/135048201/5ab839c3-67d4-49c9-9778-37b164346afa
+
 
 
 ---
