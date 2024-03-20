@@ -4,10 +4,14 @@
     <img src="frontend/assets/screenshots/BRAND.png" alt="Kangaroo">
 </div>
 
+## 🛠️ Techs
+
+![MongoDB](https://img.shields.io/badge/MongoDB-%234ea94b.svg?style=for-the-badge&logo=mongodb&logoColor=white)![Express.js](https://img.shields.io/badge/express.js-%23404d59.svg?style=for-the-badge&logo=express&logoColor=%2361DAFB)![HTML5](https://img.shields.io/badge/html5-%23E34F26.svg?style=for-the-badge&logo=html5&logoColor=white)![CSS3](https://img.shields.io/badge/css3-%231572B6.svg?style=for-the-badge&logo=css3&logoColor=white)![NodeJS](https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white)![Ubuntu](https://img.shields.io/badge/Ubuntu-E95420?style=for-the-badge&logo=ubuntu&logoColor=white)
+
 ---
 
 
-## Introduction
+## 👋 Introduction
 Welcome to Kangaroo ! Our platform is designed to revolutionize the way sports enthusiasts engage with their favorite events. Whether you're a seasoned athlete or a passionate spectator, Kangaroo is here to enhance your experience every step of the way.
 
 Our mission is simple: to provide a comprehensive and user-friendly platform that caters to all your sports meeting needs. With real-time event updates we're committed to ensuring that your journey with us is seamless and enjoyable.
@@ -17,7 +21,7 @@ With innovative features and a vibrant community of sports enthusiasts, Kangaroo
 ---
 
 
-## Usage
+## 🚀 Usage
 
 - **Search Functionality**: Allows users to search for specific content within the application. It listens for input events in search fields and filters the displayed content based on the search term.
 
@@ -43,7 +47,7 @@ With innovative features and a vibrant community of sports enthusiasts, Kangaroo
 
 ---
 
-## Prerequisites
+## 🔧 Prerequisites
 Before you begin, ensure you have met the following requirements:
 - Git must be installed on your operating system. [Download Git](https://git-scm.com/downloads)
 
@@ -64,7 +68,7 @@ git clone https://github.com/RaphSchp/PortfolioProject.git
 **Use ```backend``` branch !**
 ---
 
-### System Information
+### 💻 System Information
 ```
 Ubuntu 22.04.3 LTS
 ```
@@ -82,52 +86,52 @@ nvm use 16.20.1
 You can download MongoDB from <a href="https://www.mongodb.com/try/download/community">here</a>
 
 
-### Installing Dependencies
+### 🔧 Installing Dependencies
 ```bash
 npm install $(cat requirements.txt)
 ```
 ---
-## Screenshots
+## 📸 Screenshots
 
-### Login / Register
+### 🔐 Login / Register
 <div align="center">
     <img src="frontend/assets/screenshots/LOGIN.png" alt="Login">
     <img src="frontend/assets/screenshots/REGISTER.png" alt="Register">
 </div>
 
 
-### Homepage
+### 🏠 Homepage
 <div align="center">
     <img src="frontend/assets/screenshots/HOME.png" alt="Home">
 </div>
 
-### Create Event
+### 🎉 Create Event
 <div align="center">
     <img src="frontend/assets/screenshots/CREATEEVENT.png" alt="Create Event">
 </div>
 
-### Profile Box
+### 👤 Profile Box
 <div align="center">
     <img src="frontend/assets/screenshots/PROFILEBOX.png" alt="Profile Box">
 </div>
 
-### Chat Box
+### 💬 Chat Box
 <div align="center">
     <img src="frontend/assets/screenshots/CHAT.png" alt="Chat Box">
 </div>
 
-### Filters
+### 🔍 Filters
 <div align="center">
     <img src="frontend/assets/screenshots/FILTERS.png" alt="Filters">
 </div>
 
-### Request
+### 📨 Request
 
 https://github.com/RaphSchp/PortfolioProject/assets/135048201/10e301b0-60c9-44b9-afb8-26943c65390d
 
 
 
-### Demo
+### ▶️ Demo
 
 https://github.com/RaphSchp/PortfolioProject/assets/135048201/5ab839c3-67d4-49c9-9778-37b164346afa
 
@@ -135,8 +139,10 @@ https://github.com/RaphSchp/PortfolioProject/assets/135048201/5ab839c3-67d4-49c9
 
 ---
 
-# License
+# 📄 License
 This project is licensed under the <a href="https://github.com/RaphSchp/PortfolioProject/blob/backend/LICENSE"> "Read Only Software License".</a>
 
-# Contact
+# 📧 Contact
 For any inquiries or support, please contact <a href="https://github.com/RaphSchp">RaphSchp</a>.
+[![Linkedin Badge](https://img.shields.io/badge/linkedin-%230077B5.svg?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/raphaelschopfer/)
+[![Gmail Badge](https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:raphaelschopfer@gmail.com)
