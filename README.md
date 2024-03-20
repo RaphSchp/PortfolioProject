@@ -89,8 +89,8 @@ npm install $(cat requirements.txt)
 ## Screenshots
 
 ### Login / Register
-<img width="50%" align="left"src="frontend/assets/screenshots/LOGIN.png" alt="Login">
-<img width="50%" align="right"src="frontend/assets/screenshots/REGISTER.png" alt="Register">
+<img width="50%" align="left" src="frontend/assets/screenshots/LOGIN.png" alt="Login">
+<img width="50%" align="right" src="frontend/assets/screenshots/REGISTER.png" alt="Register">
 
 ### Homepage
 <img src="frontend/assets/screenshots/HOME.png" alt="Home">
@@ -108,11 +108,18 @@ npm install $(cat requirements.txt)
 <img src="frontend/assets/screenshots/FILTERS.png" alt="Filters">
 
 ### Request
-![Request](frontend/assets/screenshots/REQUEST.mp4)
+
+<video width="320" height="240" controls>
+    <source src="frontend/assets/screenshots/REQUEST.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+</video>
 
 ### Demo
 
-![Demo](frontend/assets/screenshots/DEMO.mp4)
+<video width="320" height="240" controls>
+    <source src="frontend/assets/screenshots/DEMO.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+</video>
 
 ---
 
