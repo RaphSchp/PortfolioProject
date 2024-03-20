@@ -90,25 +90,34 @@ npm install $(cat requirements.txt)
 
 ### Login / Register
 <div style="display: flex;">
-    <img width="50%" style="float: left; margin-right: 10px;" src="frontend/assets/screenshots/LOGIN.png" alt="Login">
-    <img width="50%" style="float: left;" src="frontend/assets/screenshots/REGISTER.png" alt="Register">
+    <img width="50%" style="margin-right: 10px;" src="frontend/assets/screenshots/LOGIN.png" alt="Login">
+    <img width="50%" src="frontend/assets/screenshots/REGISTER.png" alt="Register">
 </div>
 
-
 ### Homepage
-<img src="frontend/assets/screenshots/HOME.png" alt="Home">
+<div align="center">
+    <img src="frontend/assets/screenshots/HOME.png" alt="Home">
+</div>
 
 ### Create Event
-<img src="frontend/assets/screenshots/CREATEEVENT.png" alt="Create Event">
+<div align="center">
+    <img src="frontend/assets/screenshots/CREATEEVENT.png" alt="Create Event">
+</div>
 
 ### Profile Box
-<img src="frontend/assets/screenshots/PROFILEBOX.png" alt="Profile Box">
+<div align="center">
+    <img src="frontend/assets/screenshots/PROFILEBOX.png" alt="Profile Box">
+</div>
 
 ### Chat Box
-<img src="frontend/assets/screenshots/CHAT.png" alt="Chat Box">
+<div align="center">
+    <img src="frontend/assets/screenshots/CHAT.png" alt="Chat Box">
+</div>
 
 ### Filters
-<img src="frontend/assets/screenshots/FILTERS.png" alt="Filters">
+<div align="center">
+    <img src="frontend/assets/screenshots/FILTERS.png" alt="Filters">
+</div>
 
 ### Request
 
