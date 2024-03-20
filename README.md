@@ -1,7 +1,7 @@
 # Portfolio Project 
 
 <div align="center">
-    <h1>Kangaroo</h1>
+    <img src="frontend/assets/screenshots/BRAND.png" alt="Kangaroo">
 </div>
 
 ---
@@ -89,9 +89,9 @@ npm install $(cat requirements.txt)
 ## Screenshots
 
 ### Login / Register
-<div style="overflow: auto;">
-    <img src="frontend/assets/screenshots/LOGIN.png" alt="Login" style="width: 50%; float: left;">
-    <img src="frontend/assets/screenshots/REGISTER.png" alt="Register" style="width: 50%; float: left;">
+<div align="center">
+    <img src="frontend/assets/screenshots/LOGIN.png" alt="Login">
+    <img src="frontend/assets/screenshots/REGISTER.png" alt="Register">
 </div>
 
 
