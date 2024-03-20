@@ -89,8 +89,11 @@ npm install $(cat requirements.txt)
 ## Screenshots
 
 ### Login / Register
-<img width="50%" align="left" src="frontend/assets/screenshots/LOGIN.png" alt="Login">
-<img width="50%" align="right" src="frontend/assets/screenshots/REGISTER.png" alt="Register">
+<div style="display: flex;">
+    <img width="50%" style="float: left; margin-right: 10px;" src="frontend/assets/screenshots/LOGIN.png" alt="Login">
+    <img width="50%" style="float: left;" src="frontend/assets/screenshots/REGISTER.png" alt="Register">
+</div>
+
 
 ### Homepage
 <img src="frontend/assets/screenshots/HOME.png" alt="Home">
