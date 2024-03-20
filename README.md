@@ -112,17 +112,11 @@ npm install $(cat requirements.txt)
 
 ### Request
 
-<video width="320" height="240" controls>
-    <source src="frontend/assets/screenshots/REQUEST.mp4" type="video/mp4">
-    Your browser does not support the video tag.
-</video>
+https://github.com/RaphSchp/PortfolioProject/assets/135048201/10e301b0-60c9-44b9-afb8-26943c65390d
 
 ### Demo
 
-<video width="320" height="240" controls>
-    <source src="frontend/assets/screenshots/DEMO.mp4" type="video/mp4">
-    Your browser does not support the video tag.
-</video>
+https://github.com/RaphSchp/PortfolioProject/assets/135048201/5ab839c3-67d4-49c9-9778-37b164346afa
 
 ---
 
