@@ -538,7 +538,7 @@ function filterSports(sports) {
             var option = document.createElement("option");
             option.value = sports[i];
             datalist.appendChild(option);
-            // Limite à 5 options
+            // Limit at 5 options
             if (datalist.childNodes.length >= 5) {
                 break;
             }
