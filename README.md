@@ -61,6 +61,7 @@ sudo git clone https://github.com/RaphSchp/PortfolioProject.git
 ```bash
 git clone https://github.com/RaphSchp/PortfolioProject.git
 ```
+**Use ```backend``` branch !**
 ---
 
 ### System Information
