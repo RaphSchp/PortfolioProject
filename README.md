@@ -74,7 +74,6 @@ You can install NVM (Node Version Manager) from <a href="https://nodejs.org/en">
 After installing Node.js, make sure to switch to version 16.20.1 using the following command:
 
 ```bash
-Copy code
 nvm use 16.20.1
 ```
 
@@ -90,8 +89,8 @@ npm install $(cat requirements.txt)
 ## Screenshots
 
 ### Login / Register
-<img src="frontend/assets/screenshots/LOGIN.png" alt="Login">
-<img src="frontend/assets/screenshots/REGISTER.png" alt="Register">
+<img width="50%" align="left"src="frontend/assets/screenshots/LOGIN.png" alt="Login">
+<img width="50%" align="right"src="frontend/assets/screenshots/REGISTER.png" alt="Register">
 
 ### Homepage
 <img src="frontend/assets/screenshots/HOME.png" alt="Home">
@@ -109,12 +108,16 @@ npm install $(cat requirements.txt)
 <img src="frontend/assets/screenshots/FILTERS.png" alt="Filters">
 
 ### Request
-<img src="frontend/assets/screenshots/REQUEST.mp4" alt="Request">
+![Request](frontend/assets/screenshots/REQUEST.mp4)
+
+### Demo
+
+![Demo](frontend/assets/screenshots/DEMO.mp4)
 
 ---
 
 # License
-This project is licensed under the "Read Only Software License".
+This project is licensed under the <a href="https://github.com/RaphSchp/PortfolioProject/blob/backend/LICENSE"> "Read Only Software License".</a>
 
 # Contact
 For any inquiries or support, please contact <a href="https://github.com/RaphSchp">RaphSchp</a>.
