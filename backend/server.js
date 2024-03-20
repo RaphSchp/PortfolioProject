@@ -21,7 +21,7 @@ const io = socketIo(server);
 
 app.use(bodyParser.json());
 
-// Configuration de la session
+// Session configuration
 const sessionMiddleware = session({
     secret: 'mySecret',
     resave: false,
@@ -30,13 +30,13 @@ const sessionMiddleware = session({
 
 app.use(sessionMiddleware);
 
-// Associer le middleware de session à chaque connexion de socket
+// Associate session middleware with each socket connection
 io.use((socket, next) => {
     sessionMiddleware(socket.request, {}, next);
 });
 
 
-// Connexion à la base de données MongoDB
+// Connect to MongoDB database
 mongoose.connect('mongodb://localhost:27017/kangaroo');
 
 // Function to validate an email address
@@ -45,15 +45,9 @@ function validateEmail(email) {
     return re.test(email);
 }
 
-
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////
-// Définir la fonction getUserIdFromSession pour récupérer l'ID de l'utilisateur à partir de la session
-
-
 app.get('/getLoggedInUserInfo', async (req, res) => {
     try {
-        // Vérifier si l'utilisateur est connecté
+        // Check if the user is logged in
         if (!req.session.userId) {
             return res.status(401).json({
                 success: false,
@@ -61,7 +55,7 @@ app.get('/getLoggedInUserInfo', async (req, res) => {
             });
         }
 
-        // Rechercher l'utilisateur dans la base de données
+        // Find the user in the database
         const user = await User.findById(req.session.userId);
 
         if (!user) {
@@ -71,7 +65,7 @@ app.get('/getLoggedInUserInfo', async (req, res) => {
             });
         }
 
-        // Renvoyer les informations de l'utilisateur, y compris son ID
+        // Return user information including their ID
         res.json({
             success: true,
             userId: req.session.userId,
@@ -88,11 +82,6 @@ app.get('/getLoggedInUserInfo', async (req, res) => {
     }
 });
 
-
-
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////
-
 app.post('/login', sessionMiddleware, async (req, res) => {
     try {
         console.log('User session ID (login):', req.sessionID);
@@ -101,7 +90,7 @@ app.post('/login', sessionMiddleware, async (req, res) => {
             password
         } = req.body;
 
-        // Recherche de l'utilisateur dans la base de données
+        // Find the user in the database
         const user = await User.findOne({
             email,
             password
@@ -112,17 +101,17 @@ app.post('/login', sessionMiddleware, async (req, res) => {
                 success: false
             });
         } else {
-            console.log('Stocker cet id dans la session:', user._id);
-            // Stocker l'ID de l'utilisateur dans la session
+            console.log('Storing this id in session:', user._id);
+            // Store user ID in session
             req.session.userId = user._id;
 
-            // Répondre avec succès
+            // Respond successfully
             res.json({
                 success: true
             });
         }
     } catch (error) {
-        console.error('Erreur lors de la recherche de l\'utilisateur :', error);
+        console.error('Error finding user:', error);
         res.status(500).json({
             success: false,
             error: 'Internal Server Error'
@@ -131,7 +120,7 @@ app.post('/login', sessionMiddleware, async (req, res) => {
 });
 
 
-// Route pour l'inscription
+// Route for registration
 app.post('/register', sessionMiddleware, async (req, res) => {
     try {
         const {
@@ -209,10 +198,10 @@ const destinationFolder = path.join(__dirname, '../frontend/assets/user_image');
 
 // Configuration of Multer
 const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
+    destination: function(req, file, cb) {
         cb(null, destinationFolder);
     },
-    filename: function (req, file, cb) {
+    filename: function(req, file, cb) {
         // Check if the User is connected and his ID available
         if (req.session.userId) {
             // Use User's ID in filename with timestamp
@@ -229,45 +218,55 @@ const storage = multer.diskStorage({
 });
 
 
-// Initialisation de Multer avec la configuration
-const upload = multer({ storage: storage });
+// Initialize Multer with configuration
+const upload = multer({
+    storage: storage
+});
 
-// Route pour gérer le téléversement d'image
+// Route to handle image upload
 app.post('/upload', upload.single('eventImage'), (req, res) => {
     console.log("Received POST request to /upload");
 
-    // Vérifier si un fichier a été correctement téléversé
+    // Check if a file was successfully uploaded
     if (!req.file) {
         console.log("No file uploaded");
-        return res.status(400).json({ success: false, message: 'No file uploaded' });
+        return res.status(400).json({
+            success: false,
+            message: 'No file uploaded'
+        });
     }
 
-    // Si un fichier a été téléversé, afficher les informations sur le fichier
+    // If a file was uploaded, log file information
     console.log("Received file:", req.file);
 
-    // Répondre avec un message de succès et le nom du fichier téléversé
-    res.status(200).json({ success: true, message: 'File uploaded successfully', filename: req.file.filename });
+    // Respond with a success message and the uploaded file name
+    res.status(200).json({
+        success: true,
+        message: 'File uploaded successfully',
+        filename: req.file.filename
+    });
 });
 
 
 
-
-  
-  
-  
-
-// Route pour l'inscription d'event
+// Route for event registration
 app.post('/registerevent', sessionMiddleware, async (req, res) => {
     try {
-        // Vérifier si l'utilisateur est connecté
+        // Check if the user is logged in
         if (!req.session.userId) {
-            return res.status(401).json({ success: false, message: 'Unauthorized' });
+            return res.status(401).json({
+                success: false,
+                message: 'Unauthorized'
+            });
         }
 
-        // Récupérer l'utilisateur actuellement connecté à partir de la session
+        // Get the currently logged-in user from the session
         const currentUser = await User.findById(req.session.userId);
         if (!currentUser) {
-            return res.status(404).json({ success: false, message: 'User not found' });
+            return res.status(404).json({
+                success: false,
+                message: 'User not found'
+            });
         }
 
         const {
@@ -285,7 +284,9 @@ app.post('/registerevent', sessionMiddleware, async (req, res) => {
         } = req.body;
 
         // Check if event name is already given
-        const existingEventName = await Event.findOne({ event_name });
+        const existingEventName = await Event.findOne({
+            event_name
+        });
         if (existingEventName) {
             return res.status(400).json({
                 success: false,
@@ -308,7 +309,7 @@ app.post('/registerevent', sessionMiddleware, async (req, res) => {
                 message: 'Please complete all the fields'
             });
         }
-        
+
 
         // Create a new event
         const newEvent = new Event({
@@ -328,7 +329,7 @@ app.post('/registerevent', sessionMiddleware, async (req, res) => {
         });
         await newEvent.save();
 
-        // Envoyer un message de validation
+        // Send a validation message
         res.status(200).json({
             success: true,
             message: 'Event posted successfully!'
@@ -343,10 +344,10 @@ app.post('/registerevent', sessionMiddleware, async (req, res) => {
 });
 
 
-// Route pour récupérer tous les événements depuis la base de données MongoDB
+// Route to retrieve all events from MongoDB database
 app.get('/events', async (req, res) => {
     try {
-        // Vérifier si l'utilisateur est connecté
+        // Check if the user is logged in
         if (!req.session.userId) {
             return res.status(401).json({
                 success: false,
@@ -365,79 +366,75 @@ app.get('/events', async (req, res) => {
     }
 });
 
-// PARTICIPATE EVENT ------------------------------------------------------------------------------------------------------------------------------
-// Backend route for participating in an event
+
 app.post('/participate/:eventId', async (req, res) => {
     const eventId = req.params.eventId;
-    const userId = req.body.userId; // Vous devez obtenir l'ID de l'utilisateur de la session
+    const userId = getUserIdFromSession(req); // Get user ID from session
 
     try {
-        // Recherche de l'événement dans la base de données
+        // Find the event in the database
         const event = await Event.findById(eventId);
 
         if (!event) {
             return res.status(404).send('Événement non trouvé.');
         }
 
-        if (!event.status) {
-            console.log('La propriété status n\'est pas définie pour l\'événement:', event);
-            return res.status(400).send('État de l\'événement non valide.');
-        }
-
-        // Ajoutons un log pour afficher l'état de l'événement et son ID
-        console.log('Événement ID:', eventId);
-        console.log('État de l\'événement:', event.status);
-
-        // Vérifier si la liste de participants existe pour cet événement
-        let participant = await Participant.findOne({ eventId });
-
-        if (!participant) {
-            // Si aucun participant n'existe pour cet événement, en créer un nouveau
-            participant = new Participant({ eventId, participantIds: [userId] });
-        } else {
-            // Si un participant existe déjà, vérifier si l'utilisateur participe déjà
-            if (participant && participant.participantIds && participant.participantIds.includes(userId)) {
-
-                console.log('L\'utilisateur participe déjà à cet événement.');
-                return res.status(200).send('Vous participez déjà à cet événement.');
-            }
-            // Ajouter l'utilisateur à la liste des participants
-            participant.participantIds.push(userId);
-        }
-
-        // Enregistrer le participant dans la base de données
-        await participant.save();
-
+        // Check if the event is open or on request
         if (event.status === 'Open') {
-            // Si l'événement est ouvert, ajoutez l'utilisateur à la liste des participants de l'événement
-            event.list_participants.push(userId);
-            await event.save();
-            return res.status(200).send('Participation réussie.');
+            // Check if the user is already participating in this event
+            const existingParticipant = await Participant.findOne({
+                eventId,
+                participantIds: userId
+            });
+            if (existingParticipant) {
+                return res.status(200).send('You are already participating in this event.');
+            }
+
+            // Create a new participant and add it to the Participant collection
+            let participant = await Participant.findOne({
+                eventId
+            });
+            if (!participant) {
+                participant = new Participant({
+                    eventId,
+                    participantIds: [userId]
+                });
+            } else {
+                participant.participantIds.push(userId);
+            }
+            await participant.save();
+
+            return res.status(200).send('Participation successful.');
         } else if (event.status === 'Demand') {
-            // Si l'événement est en demande, renvoyer un message indiquant que la demande de participation a été envoyée
+            // Create a participation request associated with the event creator
+            const participantRequest = {
+                userId: userId,
+                message: 'Participation request',
+                status: 'Pending'
+            };
+            event.participantRequests.push(participantRequest);
+            await event.save();
             return res.status(200).json({
                 success: true,
-                message: 'Demande de participation envoyée. Le créateur de l\'événement souhaite discuter avec vous.'
+                message: 'Participation request sent.'
             });
+
         } else {
-            // Ajoutons un log pour afficher l'erreur si l'état de l'événement n'est ni "open" ni "demand"
-            console.log('État de l\'événement non valide:', event.status);
-            return res.status(400).send('État de l\'événement non valide.');
+            // If the event status is neither "open" nor "demand", return an error message
+            return res.status(400).send('Invalid event status.');
         }
     } catch (error) {
         console.error(error);
-        return res.status(500).send('Erreur lors de la participation à l\'événement.');
+        return res.status(500).send('Error participating in event.');
     }
 });
 
 
-
-// Route pour récupérer l'ID du créateur de l'événement
-app.get('/getEventCreatorId/:eventId', async (req, res) => {
+// Route to retrieve participation requests of an event
+app.get('/getParticipantRequests/:eventId', async (req, res) => {
     try {
         const eventId = req.params.eventId;
-
-        // Recherche de l'événement dans la base de données
+        // Find the event in the database
         const event = await Event.findById(eventId);
 
         if (!event) {
@@ -447,10 +444,122 @@ app.get('/getEventCreatorId/:eventId', async (req, res) => {
             });
         }
 
-        // Récupérer l'ID du créateur de l'événement
+        // Return participation requests of the event
+        res.json({
+            success: true,
+            participantRequests: event.participantRequests
+        });
+    } catch (error) {
+        console.error('Error fetching participant requests:', error);
+        res.status(500).json({
+            success: false,
+            error: 'Internal Server Error'
+        });
+    }
+});
+
+// Route to accept or reject a participation request
+app.post('/handleParticipantRequest/:eventId/:userId/:action', async (req, res) => {
+    const eventId = req.params.eventId;
+    const userId = req.params.userId;
+    const action = req.params.action;
+
+    try {
+        console.log('Route /handleParticipantRequest reached.');
+        console.log('Event ID:', eventId);
+        console.log('User ID:', userId);
+        console.log('Action:', action);
+        // Find the event in the database
+        const event = await Event.findById(eventId);
+
+        if (!event) {
+            return res.status(404).json({
+                success: false,
+                message: 'Event not found'
+            });
+        }
+
+        console.log('Event before update:', event);
+
+        // Find the participation request in the event
+        const requestIndex = event.participantRequests.findIndex(request => request.userId.equals(userId)); // Compare IDs using equals method
+        if (requestIndex === -1) {
+            return res.status(404).json({
+                success: false,
+                message: 'Participant request not found'
+            });
+        }
+
+        console.log('Participant request before update:', event.participantRequests[requestIndex]);
+
+        // Update the request status based on the action
+        if (action === 'accept') {
+            event.participantRequests[requestIndex].status = 'Accepted';
+
+            // Check if an entry for this event already exists in the participants collection
+            let participantEntry = await Participant.findOne({
+                eventId: eventId
+            });
+            if (participantEntry) {
+                // Update the participantIds list
+                participantEntry.participantIds.push(userId);
+            } else {
+                // Create a new entry for this event
+                participantEntry = new Participant({
+                    eventId: eventId,
+                    participantIds: [userId]
+                });
+            }
+            await participantEntry.save();
+        } else if (action === 'reject') {
+            event.participantRequests[requestIndex].status = 'Rejected';
+        } else {
+            return res.status(400).json({
+                success: false,
+                message: 'Invalid action'
+            });
+        }
+
+        // Save event modifications to the database
+        await event.save();
+
+        console.log('Event after update:', event);
+
+        res.json({
+            success: true,
+            message: `Participant request ${action}ed successfully`
+        });
+    } catch (error) {
+        console.error('Error handling participant request:', error);
+        res.status(500).json({
+            success: false,
+            error: 'Internal Server Error'
+        });
+    }
+});
+
+
+
+
+// Route to retrieve the ID of the event creator
+app.get('/getEventCreatorId/:eventId', async (req, res) => {
+    try {
+        const eventId = req.params.eventId;
+
+        // Find the event in the database
+        const event = await Event.findById(eventId);
+
+        if (!event) {
+            return res.status(404).json({
+                success: false,
+                message: 'Event not found'
+            });
+        }
+
+        // Get the ID of the event creator
         const creatorId = event.createdBy;
 
-        // Recherche de l'utilisateur correspondant à l'ID du créateur
+        // Find the user corresponding to the creator ID
         const user = await User.findById(creatorId, 'username');
 
         if (!user) {
@@ -460,7 +569,7 @@ app.get('/getEventCreatorId/:eventId', async (req, res) => {
             });
         }
 
-        // Renvoyer l'ID et le nom d'utilisateur du créateur de l'événement
+        // Return the ID and username of the event creator
         res.json({
             success: true,
             creatorId: creatorId,
@@ -473,63 +582,60 @@ app.get('/getEventCreatorId/:eventId', async (req, res) => {
             error: 'Internal Server Error'
         });
     }
-});
+});;
 
 
 
 
-// Route pour se déconnecter
+// Route for logout
 app.get('/logout', (req, res) => {
-    // Détruire la session
+    // Destroy the session
     req.session.destroy((err) => {
         if (err) {
-            console.error('Erreur lors de la déconnexion :', err);
+            console.error('Error logging out:', err);
             return res.status(500).json({
                 success: false,
                 message: 'Internal Server Error'
             });
         }
-        // Rediriger vers une page de confirmation de déconnexion ou une autre page appropriée
+        // Redirect to a login page
         res.redirect('/login');
     });
 });
 
 
-// Route pour servir la page loginpage.html
+// Route to serve loginpage.html
 app.get('/login', (req, res) => {
     res.sendFile(path.join(__dirname, "..", 'frontend', 'public', 'pages', 'loginpage.html'));
 });
 
-// Route pour servir la page d'inscription
+// Route to serve the registration page
 app.get('/register', (req, res) => {
     res.sendFile(path.join(__dirname, "..", 'frontend', 'public', 'pages', 'loginpage.html'));
 });
 
-// Route pour servir le fichier sports.json
+// Route to serve sports.json file
 app.get('/sports.json', (req, res) => {
     res.sendFile(path.join(__dirname, 'data', 'sports.json'));
 });
 
-// Route pour servir le fichier cities.json
+// Route to serve cities.json file
 app.get('/cities.json', (req, res) => {
     res.sendFile(path.join(__dirname, 'data', 'cities.json'));
 });
 
-// Servez les fichiers statiques depuis le dossier 'frontend'
+// Serve static files from the 'frontend' folder
 app.use(express.static(path.join(__dirname, '..', 'frontend')));
 
-// Vous n'avez besoin que de cette ligne pour servir les fichiers statiques
-// Assurez-vous que le chemin est correct
+// Route to serve other static files
 app.use(express.static(path.join(__dirname, '..', 'frontend', 'public')));
 
 
 
-// Démarrage du serveur
+// Start the server
 server.listen(PORT, () => {
     console.log(`Serveur en cours d'exécution sur le port ${PORT}`);
 });
-
-
 
 
 // Route to filter events by sport
@@ -551,14 +657,14 @@ app.get('/events/sport/:sport', async (req, res) => {
 
 
 
-// Fonction pour récupérer l'ID de l'utilisateur à partir de la session
+// Function to get user ID from session
 function getUserIdFromSession(req) {
-    // Vérifier si l'utilisateur est connecté et si oui, renvoyez son ID
+    // Check if the user is logged in and if yes, return their ID
     if (req.session && req.session.userId) {
-        console.log(`Je suis connecté`);
+        console.log(`I'm logged in`);
         return req.session.userId;
     } else {
-        console.log(`Je retourne null`);
+        console.log(`I return null`);
         return null;
     }
 }
@@ -582,14 +688,14 @@ app.get('/users', async (req, res) => {
 io.on('connection', (socket) => {
     console.log(`User connected: ${socket.id}`);
 
-    // Lorsqu'un utilisateur se connecte, associez son ID utilisateur à son socket
+    // When a user connects, associate their user ID with their socket
     const userId = getUserIdFromSession(socket.request);
     if (userId) {
         userSockets.set(userId, socket);
     }
 
 
-    // Gestion de l'événement 'private message'
+    // Handling the 'private message' event
     socket.on('private message', async (msg) => {
         try {
             if (!socket.request || !socket.request.session) {
@@ -597,24 +703,24 @@ io.on('connection', (socket) => {
                 return;
             }
 
-            const senderId = getUserIdFromSession(socket.request); // Récupérez l'ID de l'expéditeur à partir de la session
+            const senderId = getUserIdFromSession(socket.request); // Get sender ID from session
             if (!senderId) {
                 console.error('Error: User not authenticated');
                 return;
             }
 
-            // Logique de traitement des messages privés ici
-            const recipientId = msg.recipientId; // L'ID du destinataire provient des données du message
-            const content = msg.content; // Le contenu du message
+            // Handling private messages
+            const recipientId = msg.recipientId; // Recipient ID comes from message data
+            const content = msg.content; // Message content
 
-            // Recherchez une conversation existante entre l'expéditeur et le destinataire
+            // Search for an existing conversation between sender and recipient
             let conversation = await Conversation.findOne({
                 participants: {
                     $all: [senderId, recipientId]
                 }
             });
 
-            // Si aucune conversation n'existe, créez une nouvelle conversation
+            // If no conversation exists, create a new conversation
             if (!conversation) {
                 conversation = new Conversation({
                     participants: [senderId, recipientId]
@@ -622,7 +728,7 @@ io.on('connection', (socket) => {
                 await conversation.save();
             }
 
-            // Créez un nouveau message à enregistrer dans la base de données
+            // Create a new message to save in the database
             const newMessage = new Message({
                 conversationId: conversation._id,
                 senderId: senderId,

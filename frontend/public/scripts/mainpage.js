@@ -2,15 +2,15 @@
 let renderedEventIds = new Set();
 let figures = [];
 
-// FETCH DATA -------------------------------------------------------------------------------------------------------------------------------------
+// FETCH DATA -----------------------------------------------------------------------------------------------------------------------------------------------------------
 
 //
 document.addEventListener("DOMContentLoaded", async () => {
-    // Récupérer les informations de l'utilisateur connecté depuis le serveur
+    // Retrieve user information from the server
     const response = await fetch("/getLoggedInUserInfo");
     const userData = await response.json();
 
-    // Mettre à jour les champs du formulaire avec les informations de l'utilisateur
+    // Update form fields with user information
     document.getElementById("username").textContent = userData.username;
     document.getElementById("email").textContent = userData.email;
 
@@ -188,10 +188,10 @@ document.addEventListener("DOMContentLoaded", () => {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                // Sélectionner tous les éléments userpic par leur ID
+                // Select all userpic elements by their ID
                 const userpics = document.querySelectorAll('#userpic, #userpic2');
 
-                // Itérer sur chaque userpic et mettre à jour son src et son alt
+                // Iterate over each userpic and update its src and alt
                 userpics.forEach(userpic => {
                     userpic.src = `../../assets/user_image/${data.userpic}`;
                     userpic.alt = 'User Profile';
@@ -205,7 +205,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
-// SCROLL DOWN NAV BAR + UP BUTTON ----------------------------------------------------------------------------------------------------------------
+// SCROLL DOWN NAV BAR + UP BUTTON --------------------------------------------------------------------------------------------------------------------------------------
 document.addEventListener("DOMContentLoaded", () => {
     const navbar = document.getElementById("navbar");
     const topnavSection = document.getElementById("myTopnav");
@@ -259,7 +259,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 });
 
-// NAVIGATION SIDE BAR ----------------------------------------------------------------------------------------------------------------------------
+// NAVIGATION SIDE BAR --------------------------------------------------------------------------------------------------------------------------------------------------
 function openMenuNav() {
     const menuNav = document.getElementById("menuNav");
     menuNav.classList.add("show-border");
@@ -272,7 +272,7 @@ function closeMenuNav() {
     menuNav.style.width = "0";
 }
 
-// CREATE EVENT BOX -------------------------------------------------------------------------------------------------------------------------------
+// CREATE EVENT BOX -----------------------------------------------------------------------------------------------------------------------------------------------------
 
 document.addEventListener("DOMContentLoaded", () => {
     const createEventLinks = document.querySelectorAll('.create-event-link');
@@ -286,20 +286,19 @@ document.addEventListener("DOMContentLoaded", () => {
             event.preventDefault();
             modalBackground.style.display = 'flex';
         });
-        // Fonction pour vérifier la longueur du texte dans le champ eventDescription
+        // Function to check the length of text in the eventDescription field
         function checkDescriptionLength() {
             var description = document.getElementById('eventDescription').value;
             var maxLength = 140; // Limite maximale de caractères
 
-            // Vérifie si la longueur du texte dépasse la limite maximale
+            // Checks if the text length exceeds the maximum limit
             if (description.length > maxLength) {
-                // Si oui, tronquer le texte à la limite maximale
+                // If yes, truncate the text to the maximum limit
                 document.getElementById('eventDescription').value = description.substring(0, maxLength);
-                // Vous pouvez également afficher un message d'erreur ou prendre d'autres actions nécessaires
             }
         }
 
-        // Attacher la fonction checkDescriptionLength à l'événement 'input' du champ eventDescription
+        // Attach the checkDescriptionLength function to the 'input' event of the eventDescription field
         document.getElementById('eventDescription').addEventListener('input', checkDescriptionLength);
     });
     document.getElementById('eventImage').addEventListener('change', function() {
@@ -319,7 +318,7 @@ function submitEvent() {
 }
 
 
-// HANDLE REGISTRATION EVENT ----------------------------------------------------------------------------------------------------------------------
+// HANDLE REGISTRATION EVENT --------------------------------------------------------------------------------------------------------------------------------------------
 
 let fileName = "";
 
@@ -352,68 +351,65 @@ function handleRegistrationEvent() {
     const statusCheckbox = document.getElementById('status');
     const status = statusCheckbox.checked ? 'Open' : 'Demand';
 
-    // Créer un nouvel objet FormData
+    // Create a new FormData object
     const formData = new FormData();
-    // Ajouter l'image au FormData
+    // Add the image to the FormData
     const fileInput = document.getElementById('eventImage');
     const file = fileInput.files[0];
     formData.append('eventImage', file);
 
-    // Envoyer la requête pour télécharger l'image
+    // Send the request to upload the image
     fetch('/upload', {
-        method: 'POST',
-        body: formData,
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            // Récupérer le nom du fichier de l'image téléchargée
-            const img = data.filename;
+            method: 'POST',
+            body: formData,
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Retrieve the filename of the uploaded image
+                const img = data.filename;
 
-            // Envoyer les autres données du formulaire en tant que JSON
-            fetch('/registerevent', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ 
-                    event_name, 
-                    userpic, 
-                    img, 
-                    sport, 
-                    doc, 
-                    event_hour, 
-                    event_date, 
-                    city, 
-                    address, 
-                    participants, 
-                    status, 
-                }),
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    // Afficher un message de validation
-                    alert(data.message);
-                    console.log('Event registration successful:', data);
-                } else {
-                    // Afficher un message d'erreur
-                    alert(data.message);
-                }
-            })
-            .catch(error => {
-                console.error('Error during registration event:', error);
-                alert('An error occurred. Please try again later.');
-            });
-        } else {
-            // Afficher un message d'erreur si le téléchargement de l'image a échoué
-            alert('Image upload failed. Please try again.');
-        }
-    })
-    .catch(error => {
-        console.error('Error uploading image:', error);
-        alert('An error occurred while uploading the image. Please try again later.');
-    });
+                // Send other form data as JSON
+                fetch('/registerevent', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            event_name,
+                            userpic,
+                            img,
+                            sport,
+                            doc,
+                            event_hour,
+                            event_date,
+                            city,
+                            address,
+                            participants,
+                            status,
+                        }),
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert(data.message);
+                            console.log('Event registration successful:', data);
+                        } else {
+                            alert(data.message);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error during registration event:', error);
+                        alert('An error occurred. Please try again later.');
+                    });
+            } else {
+                alert('Image upload failed. Please try again.');
+            }
+        })
+        .catch(error => {
+            console.error('Error uploading image:', error);
+            alert('An error occurred while uploading the image. Please try again later.');
+        });
 }
 
 
@@ -427,7 +423,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (boxRegisterEventInput) {
         boxRegisterEventInput.addEventListener('keydown', (event) => {
-            if (event.key === 'Enter') { 
+            if (event.key === 'Enter') {
                 handleRegistrationEvent();
             }
         });
@@ -437,7 +433,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
-// PROFILE BOX ------------------------------------------------------------------------------------------------------------------------------------
+// PROFILE BOX ----------------------------------------------------------------------------------------------------------------------------------------------------------
 document.addEventListener("DOMContentLoaded", () => {
     const profileLink = document.querySelectorAll('.user-profile a');
     const modalBackground2 = document.getElementById('modalBackground2');
@@ -458,7 +454,7 @@ function closeProfileBox() {
 }
 
 function editProfile() {
-    // Add logic to handle form submission
+    // Logic to handle form submission
     // ...
 
     // After handling the submission, hide the modal
@@ -466,59 +462,59 @@ function editProfile() {
     modalBackground.style.display = 'none';
 }
 
-// Fonction pour se déconnecter côté client
+// Function to logout on the client-side
 function logout() {
     fetch('/logout', {
             method: 'GET'
         })
         .then(response => {
             if (response.ok) {
-                // Redirection vers la page de connexion une fois déconnecté
+                // Redirect to the login page once logged out
                 window.location.href = '/login';
             } else {
                 console.error('Erreur lors de la déconnexion:', response.statusText);
-                // Traiter les erreurs si nécessaire
+
             }
         })
         .catch(error => {
             console.error('Erreur lors de la déconnexion:', error);
-            // Traiter les erreurs si nécessaire
+
         });
 }
 
 
 
-// AUTO-FILL WITH SPORTS.JSON ---------------------------------------------------------------------------------------------------------------------
-// Récupérer la liste des sports dès que la page est chargée
+// AUTO-FILL WITH SPORTS.JSON -------------------------------------------------------------------------------------------------------------------------------------------
+// Fetch the list of sports as soon as the page is loaded
 document.addEventListener("DOMContentLoaded", async () => {
-    // Récupérer la liste des sports depuis le fichier JSON
+    // Fetch the list of sports from the JSON file
     const sports = await fetchSports();
 
-    // Écouter les événements sur l'input pour filtrer les sports
+    // Listen for events on the input to filter sports
     const eventSportInput = document.getElementById('eventSport');
     eventSportInput.addEventListener('input', () => filterSports(sports));
 });
 
 async function fetchSports() {
     try {
-        const response = await fetch('/sports.json'); // Utilisation d'un chemin absolu
+        const response = await fetch('/sports.json');
         const data = await response.json();
         return data.sports;
     } catch (error) {
-        console.error('Erreur lors de la récupération des sports:', error);
-        return []; // Retourne un tableau vide en cas d'erreur
+        console.error('Error fetching sports:', error);
+        return []; // Return an empty array in case of error
     }
 }
 
 
-// Fonction pour filtrer les sports et mettre à jour le datalist
+// Function to filter sports and update the datalist
 function filterSports(sports) {
     var input, filter, datalist, sportOptions, i;
     input = document.getElementById("eventSport");
     filter = input.value.toLowerCase();
     datalist = document.getElementById("sportsList");
 
-    // Si la valeur de l'input est vide, supprime le datalist
+    // If the input value is empty, remove the datalist
     if (filter === "") {
         if (datalist) {
             datalist.remove();
@@ -526,7 +522,7 @@ function filterSports(sports) {
         return;
     }
 
-    // Crée le datalist s'il n'existe pas
+    // Create the datalist if it doesn't exist
     if (!datalist) {
         datalist = document.createElement("datalist");
         datalist.id = "sportsList";
@@ -550,7 +546,7 @@ function filterSports(sports) {
     }
 }
 
-// SEARCH FUNCTION --------------------------------------------------------------------------------------------------------------------------------
+// SEARCH FUNCTION ------------------------------------------------------------------------------------------------------------------------------------------------------
 document.addEventListener("DOMContentLoaded", () => {
     const searchInputs = document.querySelectorAll("#navbar-search-input, #topnav-search-input");
     const navbarSearchButton = document.getElementById("navbar-search-button");
@@ -631,8 +627,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
-// FILTERS ----------------------------------------------------------------------------------------------------------------------------------------
-// ** SPORT ---------------------------------------------------------------------------------------------------------------------------------------
+// FILTERS --------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+// ** SPORT -------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Fetch sports list from the server
 async function fetchSportsList() {
     try {
@@ -681,32 +678,32 @@ document.addEventListener('DOMContentLoaded', () => {
     populateSportsDropdown();
 });
 
-// ** DATE ----------------------------------------------------------------------------------------------------------------------------------------
+// ** DATE --------------------------------------------------------------------------------------------------------------------------------------------------------------
 function sortEventsByDate(order) {
-    console.log('Sorting events by date:', order); // Vérifie si la fonction est appelée et avec quel ordre
+    console.log('Sorting events by date:', order); // Check if the function is called and with what order
 
-    // Fonction de comparaison pour trier les événements par date
+    // Comparison function to sort events by date
     const compareDates = function(a, b) {
         const dateA = new Date(a.querySelector('.event-date span:last-child').textContent);
         const dateB = new Date(b.querySelector('.event-date span:last-child').textContent);
         return order === 'newer' ? dateB - dateA : dateA - dateB;
     };
 
-    // Trier les figures en utilisant la fonction de comparaison
+    // Sort the figures using the comparison function
     figures.sort(compareDates);
 
-    // Détacher les figures de leur parent
+    // Detach the figures from their parent
     figures.forEach(figure => {
         figure.parentNode.removeChild(figure);
     });
 
-    // Réinsérer les figures triées dans le bon ordre
+    // Re-insert the sorted figures in the correct order
     const main = document.querySelector("main");
     figures.forEach(figure => {
         main.appendChild(figure);
     });
 }
-// Ajouter un écouteur d'événement pour détecter les changements dans la sélection de tri
+// Add an event listener to detect changes in the sorting selection
 document.addEventListener("DOMContentLoaded", function() {
     document.getElementById("dateSort").addEventListener("change", function() {
         var sortOrder = this.value;
@@ -715,7 +712,7 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 
-// ** CITY ----------------------------------------------------------------------------------------------------------------------------------------
+// ** CITY --------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Fetch cities data
 async function fetchCitiesData() {
     try {
@@ -827,7 +824,7 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 });
 
-// CHAT BOX ---------------------------------------------------------------------------------------------------------------------------------------
+// CHAT BOX -------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 let selectedUserId = null;
 
@@ -860,25 +857,6 @@ function scrollToBottom() {
     chatMessages.scrollTop = chatMessages.scrollHeight;
 }
 
-// Fonction pour récupérer l'ID de l'utilisateur à partir de la session
-async function getUserIdFromSession() {
-    try {
-        const response = await fetch('/getLoggedInUserInfo');
-        const data = await response.json();
-
-        if (data.success && data.userId) {
-            console.log(`User ID : ${data.userId}`);
-            return data.userId;
-        } else {
-            console.error('User ID not found in session or response is not successful.');
-            return null;
-        }
-    } catch (error) {
-        console.error('Error fetching user ID from session:', error);
-        return null;
-    }
-}
-
 // Fonction pour ajouter un message au chat
 function appendMessageToChat(message, isSentByCurrentUser) {
     const chatMessages = document.getElementById('chatMessages');
@@ -893,17 +871,17 @@ function appendMessageToChat(message, isSentByCurrentUser) {
         console.log('Using message-received');
     }
 
-    messageElement.textContent = message;
+    messageElement.innerHTML = message;
     chatMessages.appendChild(messageElement);
 }
 
-// Fonction pour effacer les messages du chat
+// Function to clear chat messages
 function clearChatMessages() {
     const chatMessages = document.getElementById('chatMessages');
     chatMessages.innerHTML = '';
 }
 
-// Fonction pour récupérer les messages de la conversation avec un utilisateur spécifique
+// Function to retrieve messages from the conversation with a specific user
 async function fetchMessagesForUser(userId) {
     try {
         if (!userId) {
@@ -925,7 +903,7 @@ async function fetchMessagesForUser(userId) {
     }
 }
 
-// Fonction pour afficher les messages dans le chat
+// Function to display messages in the chat
 async function renderMessages(messages) {
     try {
         const userId = await getUserIdFromSession();
@@ -951,7 +929,7 @@ async function renderMessages(messages) {
     }
 }
 
-// Fonction pour charger les messages pour l'utilisateur sélectionné
+// Function to load messages for the selected user
 async function loadMessagesForSelectedUser() {
     try {
         const userId = await getUserIdFromSession();
@@ -967,7 +945,7 @@ async function loadMessagesForSelectedUser() {
     }
 }
 
-// Fonction pour rendre la liste des utilisateurs
+// Function to render the user list
 function renderUserList(filterText = '') {
     fetch('/users')
         .then(response => {
@@ -995,7 +973,7 @@ function renderUserList(filterText = '') {
                     userElement.classList.add('user-selected');
                     chatInput.style.display = 'none';
                     userElement.dataset.userId = selectedUser._id;
-                    
+
 
                     userElement.addEventListener('click', async () => {
                         selectedUserId = null;
@@ -1046,17 +1024,17 @@ function renderUserList(filterText = '') {
         });
 }
 
-// Appeler les fonctions nécessaires lorsque le DOM est entièrement chargé
+let socket;
+
 document.addEventListener("DOMContentLoaded", () => {
-    // Mettre en place l'application de chat une fois que le DOM est chargé
     const modalBackgroundChat = document.getElementById('modalBackgroundChat');
-    let socket;
-    
+
+
 
     // Hide modal background by default
     modalBackgroundChat.style.display = 'none';
 
-    // Gérer l'événement pour afficher la boîte de chat lors du clic sur un lien de message
+    // Handle the event to display the chat box when clicking on a message link
     document.querySelectorAll('.message').forEach(link => {
         link.addEventListener('click', async (event) => {
             event.preventDefault();
@@ -1074,24 +1052,27 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // Se connecter au serveur Socket.IO
+    // Connect to the Socket.IO server
     socket = io();
     const chatForm = document.getElementById('chatForm');
 
-    // Gérer la soumission du formulaire de chat
+    // Handle the chat form submission
     chatForm.addEventListener('submit', (e) => {
         e.preventDefault();
         const message = chatInput.value.trim();
         if (message !== '' && selectedUserId) {
             const recipientId = selectedUserId;
-            socket.emit('private message', { recipientId, content: message });
+            socket.emit('private message', {
+                recipientId,
+                content: message
+            });
             appendMessageToChat(message, true);
             chatInput.value = '';
             scrollToBottom();
         }
     });
 
-    // Écouter l'événement 'private message' du serveur et mettre à jour l'interface utilisateur
+    // Listen for the 'private message' event from the server and update the user interface
     socket.on('private message', (msg) => {
         console.log("Private message received:", msg);
         if (msg.recipientId === selectedUserId || msg.senderId === selectedUserId) {
@@ -1100,58 +1081,66 @@ document.addEventListener("DOMContentLoaded", () => {
         loadMessagesForSelectedUser();
     });
 
-    // Gérer la saisie dans le champ de recherche utilisateur
+    // Handle input in the user search field
     const userSearchInput = document.getElementById('userSearchInput');
     userSearchInput.addEventListener('input', () => {
         const filterText = userSearchInput.value.trim();
         renderUserList(filterText);
     });
 
-    // Initialiser la liste des utilisateurs lors du chargement initial
+    // Initialize the user list on initial page load
     renderUserList();
 });
 
 
-// PARTICIPATE EVENT ------------------------------------------------------------------------------------------------------------------------------
+// PARTICIPATE EVENT ----------------------------------------------------------------------------------------------------------------------------------------------------
+// Connect to the Socket.IO server
+socket = io();
 
-// Fonction pour ouvrir le chat avec le créateur de l'événement
-async function openChatWithCreator(eventId) {
+async function openChatWithCreator(eventId, socket) {
+    socket = io();
     try {
-        // Récupérer l'ID du créateur de l'événement en appelant la nouvelle route
-        const response = await fetch(`/getEventCreatorId/${eventId}`);
-        const data = await response.json();
+        const [eventData, participantRequestsData] = await Promise.all([
+            fetch(`/getEventCreatorId/${eventId}`).then(res => res.json()),
+            fetch(`/getParticipantRequests/${eventId}`).then(res => res.json())
+        ]);
 
-        if (data.success && data.creatorId) {
-            const creatorId = data.creatorId;
-
-            // Afficher la boîte de chat
+        if (eventData.success && eventData.creatorId) {
+            const creatorId = eventData.creatorId;
             modalBackgroundChat.style.display = 'flex';
-
-            // Mettre à jour le selectedUserId avec l'ID du créateur
             selectedUserId = creatorId;
-            console.log("Selected User ID:", selectedUserId);
 
-            // Vérifier si selectedUserId est défini avant de récupérer les messages
             if (selectedUserId) {
                 clearChatMessages();
-                // Récupérer les messages avec le créateur de l'événement
+
+                if (participantRequestsData && participantRequestsData.success) {
+                    const requests = participantRequestsData.participantRequests;
+                    if (requests.length > 0) {
+                        requests.forEach(request => {
+                            if (request.status === 'Pending') {
+                                processParticipantRequest(eventId, request.userId, creatorId, socket);
+                            }
+                        });
+                    } else {
+                        console.log('No participant requests.');
+                    }
+                } else {
+                    console.error('Error fetching participant requests.');
+                }
+
                 const messages = await fetchMessagesForUser(selectedUserId);
                 renderMessages(messages);
-
-                // Charger les messages pour l'utilisateur sélectionné
                 await loadMessagesForSelectedUser();
 
-                // Afficher le nom d'utilisateur du créateur dans la liste des utilisateurs
-                const creatorUsername = data.creatorUsername; // Assurez-vous que le serveur renvoie le nom d'utilisateur du créateur
+                const creatorUsername = eventData.creatorUsername;
                 const userListContainer = document.getElementById('userList');
-                userListContainer.innerHTML = ''; // Effacer la liste existante avant d'ajouter le créateur
+                userListContainer.innerHTML = '';
 
                 const creatorNameElement = document.createElement('div');
-                creatorNameElement.textContent = `Ask ${creatorUsername} to participate !`;
+                creatorNameElement.textContent = `Ask ${creatorUsername} to join!`;
                 creatorNameElement.classList.add('user-selected');
                 creatorNameElement.addEventListener('click', async () => {
                     selectedUserId = null;
-                    console.log("Selected User ID:", selectedUserId);
                     creatorNameElement.classList.remove('user-selected');
                     chatInput.style.display = 'flex';
                     userListContainer.innerHTML = '';
@@ -1160,52 +1149,87 @@ async function openChatWithCreator(eventId) {
                 });
                 userListContainer.appendChild(creatorNameElement);
 
-                // Masquer le champ de recherche d'utilisateur
                 const chatInput = document.getElementById('userSearchInput');
                 chatInput.style.display = 'none';
             } else {
-                console.log('L\'ID de l\'utilisateur sélectionné n\'est pas défini. Ignorer la récupération des messages.');
+                console.log('Selected user ID is not defined. Skipping message retrieval.');
             }
         } else {
-            console.error('ID du créateur d\'événement non trouvé.');
+            console.error('Event creator ID not found.');
         }
     } catch (error) {
-        console.error('Erreur lors de l\'ouverture du chat avec le créateur de l\'événement:', error);
+        console.error('Error opening chat with event creator:', error);
     }
 }
 
 
-
-
-// Appel de la fonction openChatWithCreator
-async function participateInEvent(eventId) {
-    console.log(`Event Id:`, eventId);
+async function processParticipantRequest(eventId, userId, selectedUserId, socket) {
     try {
-        // Récupérer l'ID de l'utilisateur à partir de la session
+        // Get the username of the user requesting to participate in the event
+        const userResponse = await fetch(`/users`);
+        if (!userResponse.ok) {
+            throw new Error('Failed to fetch user data');
+        }
+        const usersData = await userResponse.json();
+        const user = usersData.find(user => user._id === userId);
+        if (!user) {
+            console.error('User not found');
+            return;
+        }
+        const userUsername = user.username;
+
+        const acceptLink = `<a href="#" class="accept-request-button" onclick="handleParticipantRequest('${eventId}', '${userId}', 'accept')">Accept</a>`;
+        const rejectLink = `<a href="#" class="reject-request-button" onclick="handleParticipantRequest('${eventId}', '${userId}', 'reject')">Reject</a>`;
+        const messageContent = `User "${userUsername}" wants to participate in your event. Do you want to accept or reject? ${acceptLink} | ${rejectLink}`;
+
+        if (socket) {
+            // Send the message to the event creator via Socket.IO
+            socket.emit('private message', {
+                senderId: userId,
+                recipientId: selectedUserId,
+                content: messageContent
+            });
+        } else {
+            console.error('Socket is not defined.');
+        }
+    } catch (error) {
+        console.error('Error processing participant request:', error);
+    }
+}
+
+
+// Function to participate in an event
+async function participateInEvent(eventId, socket) {
+    try {
         const userId = await getUserIdFromSession();
 
-        // Vérifier si l'ID de l'utilisateur est valide
         if (!userId) {
             console.error('User ID not found in session.');
-            return; // Arrêter l'exécution de la fonction si l'ID de l'utilisateur n'est pas trouvé
+            return;
         }
 
-        // Envoyer une requête POST pour participer à l'événement
+        const hasRequested = await checkParticipantRequest(eventId, userId);
+        if (hasRequested) {
+            console.log('You have already sent a participation request for this event.');
+            return;
+        }
+
         const response = await fetch(`/participate/${eventId}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ userId })
+            body: JSON.stringify({
+                userId
+            })
         });
 
-        // Appel de la fonction openChatWithCreator avec l'eventId
         if (response.ok) {
             const responseData = await response.json();
             if (responseData.success && responseData.message) {
                 console.log(responseData.message);
-                // Votre code pour ouvrir la boîte de chat ici
-                openChatWithCreator(eventId); // Passer l'eventId
+                openChatWithCreator(eventId, socket);
+
             } else {
                 console.error('Failed to participate in the event.');
             }
@@ -1214,6 +1238,148 @@ async function participateInEvent(eventId) {
         }
     } catch (error) {
         console.error('Error participating in the event:', error);
-        // Gérer les erreurs ici
+    }
+}
+
+async function handleParticipantRequest(eventId, userId, action) {
+    try {
+        console.log('Event ID:', eventId);
+        console.log('User ID:', userId);
+        console.log('Action:', action);
+
+        if (action === 'accept') {
+            alert('Woohoo! You\'ve just high-fived the participant request! Let them know they\'re in!');
+
+        } else if (action === 'reject') {
+            alert('Oops! Participant request rejected! Time to break the news gently!');
+        }
+        const response = await fetch(`/handleParticipantRequest/${eventId}/${userId}/${action}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+
+        if (!response.ok) {
+            throw new Error('Error handling participant request: ' + response.statusText);
+        }
+
+        const eventData = await response.json();
+
+        if (!eventData.success) {
+            console.error('Error handling participant request:', eventData.error);
+            return;
+        }
+
+        console.log('Participant request ' + action + 'ed successfully');
+    } catch (error) {
+        console.error('Error handling participant request:', error);
+    }
+}
+
+
+
+document.addEventListener("DOMContentLoaded", () => {
+    const modalBackgroundChat = document.getElementById('modalBackgroundChat');
+
+
+    // Hide modal background by default
+    modalBackgroundChat.style.display = 'none';
+    openChatWithCreator(eventId, socket);
+
+
+
+    // Handle the event to participate in an event
+    document.querySelectorAll('.participate-button').forEach(button => {
+        button.addEventListener('click', async (event) => {
+            event.preventDefault();
+            const eventId = button.dataset.eventId;
+            participateInEvent(eventId, socket);
+        });
+    });
+
+    // Handle the event to accept or reject a participant request
+    document.querySelectorAll('.accept-request-button, .reject-request-button').forEach(button => {
+        button.addEventListener('click', async (event) => {
+            event.preventDefault();
+            const eventId = button.dataset.eventId;
+            const userId = button.dataset.userId;
+            const action = button.classList.contains('accept-request-button') ? 'accept' : 'reject';
+            handleParticipantRequest(eventId, userId, action, socket);
+
+        });
+    });
+
+    // Handle the event to display the chat box when clicking on a message link
+    document.querySelectorAll('.message').forEach(link => {
+        link.addEventListener('click', async (event) => {
+            event.preventDefault();
+            console.log('Clicked on message link.');
+            modalBackgroundChat.style.display = 'flex';
+            selectedUserId = link.dataset.userId;
+            console.log("Selected User ID:", selectedUserId);
+            if (selectedUserId) {
+                const messages = await fetchMessagesForUser(selectedUserId);
+                renderMessages(messages);
+                await loadMessagesForSelectedUser();
+            } else {
+                console.log('Selected user ID is undefined. Skipping message fetching.');
+            }
+        });
+    });
+
+    // Handle chat form submission
+    const chatForm = document.getElementById('chatForm');
+    chatForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const message = chatInput.value.trim();
+        if (message !== '' && selectedUserId) {
+            const recipientId = selectedUserId;
+            socket.emit('private message', {
+                recipientId,
+                content: message
+            });
+            appendMessageToChat(message, true);
+            chatInput.value = '';
+            scrollToBottom();
+        }
+    });
+
+    // Listen for 'private message' event from the server and update the UI
+    socket.on('private message', (msg) => {
+        console.log("Private message received:", msg);
+        if (msg.recipientId === selectedUserId || msg.senderId === selectedUserId) {
+            appendMessageToChat(msg.content);
+        }
+        loadMessagesForSelectedUser();
+    });
+
+    // Initialize the user list on initial load
+    renderUserList();
+});
+
+
+async function checkParticipantRequest(eventId, userId) {
+    try {
+        // Send a GET request to fetch participant requests for this event
+        const response = await fetch(`/getParticipantRequests/${eventId}`);
+        if (!response.ok) {
+            console.error('Failed to fetch participant requests for the event.');
+            return false;
+        }
+
+        const requestData = await response.json();
+        if (!requestData.success || !requestData.participantRequests) {
+            console.error('No participant requests found for the event.');
+            return false;
+        }
+
+        // Check if the user has already sent a participant request
+        const existingRequest = requestData.participantRequests.find(request => request.userId === userId);
+        return existingRequest !== undefined;
+    } catch (error) {
+        console.error('Error checking participant request:', error);
+        return false;
     }
 }

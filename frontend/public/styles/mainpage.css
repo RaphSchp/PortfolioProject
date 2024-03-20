@@ -3,60 +3,50 @@ html {
 	line-height: 1.6;
 	font-family: 'Nippo-Regular';
 }
-
 * {
 	margin: 0;
 	padding: 0;
 	box-sizing: border-box;
 }
-
 body {
 	display: flex;
 	flex-direction: column;
 	min-height: 100vh;
 }
-
 header {
 	margin: 0;
 	padding-top: 1rem;
 	background-color: #1a265a;
 	text-align: center;
 }
-
 .header-content {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
 	padding: 1rem;
 }
-
 .header-text {
 	flex-grow: 1;
 }
-
 .header-text h1 {
 	font-size: 4rem;
 	color: #f1600d;
 }
-
 .header-text h2 {
 	font-size: 4rem/1.618;
 	color: #fef6ed;
 }
-
 .user-profile img {
 	width: 65px;
 	border-radius: 50%;
 	transition: background-color 0.3s, color 0.3s, transform 0.3s, opacity 0.3s;
 }
-
 .user-profile:hover img {
 	background-color: #f1600d;
 	color: black;
 	opacity: 0.8;
 	transform: scale(1.1);
 }
-
 .topnav {
 	background-color: transparent;
 	overflow: hidden;
@@ -66,7 +56,6 @@ header {
 	padding-bottom: 1rem;
 	padding-right: 1rem;
 }
-
 .topnav input[type=text] {
 	display: inline-block;
 	padding: 14px 16px;
@@ -75,7 +64,6 @@ header {
 	border-radius: 10px;
 	margin-left: 10px;
 }
-
 .topnav a {
 	display: inline-block;
 	color: #f2f2f2;
@@ -85,7 +73,6 @@ header {
 	border-radius: 10px;
 	margin-left: 10px;
 }
-
 .topnav button {
 	display: inline-block;
 	color: #f2f2f2;
@@ -98,23 +85,17 @@ header {
 	border-color: #f1600d;
 	cursor: pointer;
 }
-
-.topnav a img,
-.topnav button img {
+.topnav a img, .topnav button img {
 	width: 29px;
 }
-
-.topnav a:hover,
-.topnav button:hover {
+.topnav a:hover, .topnav button:hover {
 	background-color: #f1600d;
 	color: black;
 }
-
 .topnav a.create-event-link {
 	background-color: #f1600d;
 	color: #fef6ed;
 }
-
 #navbar {
 	background-color: #1a265a;
 	overflow: hidden;
@@ -126,26 +107,22 @@ header {
 	width: 100%;
 	transition: top 0.3s;
 }
-
 .brand {
 	display: flex;
 	align-items: center;
 }
-
 .brand-text {
 	font-size: 2rem;
 	color: #f1600d;
 	margin-right: 10px;
 	font-weight: bold;
 }
-
 .nav-links {
 	display: flex;
 	justify-content: flex-end;
 	align-items: center;
 	flex-grow: 1;
 }
-
 #navbar a {
 	display: inline-block;
 	color: #f2f2f2;
@@ -155,7 +132,6 @@ header {
 	border-radius: 10px;
 	margin-left: 10px;
 }
-
 #navbar button {
 	display: inline-block;
 	color: #f2f2f2;
@@ -168,46 +144,36 @@ header {
 	border-color: #f1600d;
 	cursor: pointer;
 }
-
-#navbar a img,
-#navbar button img {
+#navbar a img, #navbar button img {
 	width: 29px;
 	height: auto;
 }
-
-#navbar a:hover,
-#navbar button:hover {
+#navbar a:hover, #navbar button:hover {
 	background-color: #f1600d;
 	color: black;
 }
-
 #navbar a.create-event-link {
 	background-color: #f1600d;
 	color: #fef6ed;
 }
-
 #navbar input[type=text] {
 	height: 66px;
 	padding: 14px 16px;
 	font-size: 17px;
 	border-radius: 10px;
 }
-
-
 main {
 	display: grid;
 	grid-gap: 1rem;
 	max-width: 1600px;
 	margin: 2rem auto;
 }
-
 figure {
 	border: 6px solid #f1600d;
 	border-radius: 20px;
 	overflow: hidden;
 	background-color: #1a265a;
 }
-
 main img {
 	border-radius: 20px;
 	border: 6px solid #1a265a;
@@ -216,48 +182,34 @@ main img {
 	height: auto;
 	display: block;
 }
-
 figcaption {
 	font-size: 1rem;
 	padding: 0.5rem;
 	text-align: left;
 	color: #f1600d;
 }
-
 .action-icon:hover {
 	background-color: #f1600d;
 	color: black;
 	padding: 3px;
 }
-
 .doc {
 	padding: 0.5rem;
 	font-size: 0.9rem;
 	color: #fef6ed;
 }
-
-.sport,
-.event-hour,
-.event-date,
-.city,
-.address,
-.participants,
-.status {
+.sport, .event-hour, .event-date, .city, .address, .participants, .status {
 	font-size: 1rem;
 	color: #fef6ed;
 	padding: 0.5rem;
 }
-
 .action-icon {
 	display: inline-block;
 	margin-left: 20px;
 	width: 60px;
 	height: auto;
 }
-
-.modal-background,
-.modal-background2,
-.modal-background-chat {
+.modal-background, .modal-background2, .modal-background-chat {
 	display: none;
 	position: fixed;
 	top: 0;
@@ -268,18 +220,15 @@ figcaption {
 	justify-content: center;
 	align-items: center;
 }
-
 #createEventBox h2 {
 	color: #f1600d;
 	font-size: 2rem;
 	margin-bottom: 0.5rem;
 }
-
 #createEventBox ul {
 	color: #fef6ed;
 	font-size: 1rem;
 }
-
 .event-box {
 	border: 6px solid #f1600d;
 	background-color: #1a265a;
@@ -287,11 +236,15 @@ figcaption {
 	padding: 20px;
 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 	width: 400px;
+	overflow-y: auto;
+	margin: auto;
 	position: relative;
+	max-height: 100vh;
 }
-
-#eventDescription,
-#eventAddress {
+#createEventBox::-webkit-scrollbar {
+	width: 0px;
+}
+#eventDescription, #eventAddress {
 	width: 100%;
 	min-width: 100%;
 	max-width: 100%;
@@ -302,20 +255,16 @@ figcaption {
 	white-space: pre-wrap;
 	word-wrap: break-word;
 }
-
 .event-box input {
 	width: 100%;
 	min-height: 30px;
 	max-height: 100px;
 	border-radius: 5px;
 }
-
 .event-box p {
 	font-size: 0.8rem;
 }
-
-#registerEvent,
-.custom-file-upload {
+#registerEvent, .custom-file-upload {
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -330,21 +279,13 @@ figcaption {
 	font-family: 'Nippo-Regular';
 	font-weight: 600;
 	border: none;
-
-  }
-  
-  #registerEvent:hover ,
-  .custom-file-upload:hover {
+}
+#registerEvent:hover , .custom-file-upload:hover {
 	transform: scale(0.98);
-  }
-  
-
-#modalBackground,
-#modalBackground2,
-#modalBackgroundChat {
+}
+#modalBackground, #modalBackground2, #modalBackgroundChat {
 	display: flex;
 }
-
 /* SWITCH */
 /* The switch - the box around the slider */
 .switch {
@@ -353,14 +294,12 @@ figcaption {
 	width: 60px;
 	height: 34px;
 }
-
 /* Hide default HTML checkbox */
 .switch input {
 	opacity: 0;
 	width: 0;
 	height: 0;
 }
-
 /* The slider */
 .slider {
 	position: absolute;
@@ -373,7 +312,6 @@ figcaption {
 	-webkit-transition: .4s;
 	transition: .4s;
 }
-
 .slider:before {
 	position: absolute;
 	content: "";
@@ -385,46 +323,36 @@ figcaption {
 	-webkit-transition: .4s;
 	transition: .4s;
 }
-
 input:checked+.slider {
 	background-color: #f1600d;
 }
-
 input:focus+.slider {
 	box-shadow: 0 0 1px #f1600d;
 }
-
 input:checked+.slider:before {
 	-webkit-transform: translateX(26px);
 	-ms-transform: translateX(26px);
 	transform: translateX(26px);
 }
-
-/* Rounded sliders */
 .slider.round {
 	border-radius: 34px;
 }
-
 .slider.round:before {
 	border-radius: 50%;
 }
-
 /* SWITCH */
 form ul {
 	list-style: none;
 	padding: 0;
 }
-
 form li {
 	margin-bottom: 10px;
 }
-
 form label {
 	display: block;
 	font-weight: bold;
 	margin-bottom: 5px;
 }
-
 .close-btn {
 	position: absolute;
 	top: 10px;
@@ -441,38 +369,31 @@ form label {
 	align-items: center;
 	justify-content: center;
 }
-
 .close-btn:hover {
 	background-color: #f1600d;
 	color: #fef6ed;
 }
-
-
 footer {
 	background-color: #1a265a;
 	color: #fef6ed;
 	text-align: center;
 	padding: 1rem 3rem;
 }
-
 @media screen and (min-width: 600px) {
 	main {
 		grid-template-columns: repeat(2, minmax(250px, 1fr));
-	}
+   }
 }
-
 @media screen and (min-width: 900px) {
 	main {
 		grid-template-columns: repeat(3, minmax(250px, 1fr));
-	}
+   }
 }
-
 @media screen and (min-width: 1200px) {
 	main {
 		grid-template-columns: repeat(4, minmax(250px, 1fr));
-	}
+   }
 }
-
 .menuNav {
 	height: 100%;
 	width: 0;
@@ -486,22 +407,18 @@ footer {
 	padding-top: 60px;
 	border-left: 4px solid transparent;
 }
-
 .menuNav.show-border {
 	border-left-color: #f1600d;
 }
-
 .menuNav ul {
 	list-style-type: none;
 	padding: 0;
 }
-
 #citySuggestions {
 	max-height: 150px;
 	overflow-y: auto;
-  border-bottom: none;
+	border-bottom: none;
 }
-
 .menuNav li {
 	padding: 8px 8px 8px 8px;
 	text-decoration: none;
@@ -509,21 +426,18 @@ footer {
 	color: #818181;
 	display: block;
 	transition: 0.3s;
-  border-bottom: 4px solid #f1600d;
+	border-bottom: 4px solid #f1600d;
 }
-
 .menuNav #cityList li {
-  border-bottom: none;
-  font-size: 1rem;
-  margin-bottom: 0px;
-  padding: 0px;
+	border-bottom: none;
+	font-size: 1rem;
+	margin-bottom: 0px;
+	padding: 0px;
 }
-
 .menuNav li:hover {
 	background-color: #1a265a;
 	color: #f1f1f1;
 }
-
 .menuNav .closebtn {
 	position: absolute;
 	top: 0;
@@ -531,36 +445,27 @@ footer {
 	font-size: 36px;
 	margin-left: 50px;
 }
-
 .menuNav #cityInput {
-  width: 100%;
-  font-size: 3rem; /* Taille de police de 3rem */
+	width: 100%;
+	font-size: 3rem;
 }
-
-.menuNav input[type=text],
-.menuNav select,
-#citySuggestions {
-    width: 100%;
-    font-size: 1rem; /* Taille de police de 3rem */
-    border-radius: 5px;
-    padding: 8px;
+.menuNav input[type=text], .menuNav select, #citySuggestions {
+	width: 100%;
+	font-size: 1rem;
+	border-radius: 5px;
+	padding: 8px;
 }
-
-/* Ajouter les propriétés de la police de 3rem pour les options de sélection */
 .menuNav option {
-    font-size: 1rem;
+	font-size: 1rem;
 }
-
 @media screen and (max-height: 450px) {
 	.menuNav {
 		padding-top: 15px;
-	}
-
+   }
 	.menuNav a {
 		font-size: 18px;
-	}
+   }
 }
-
 #myBtn {
 	width: 60px;
 	height: 60px;
@@ -581,19 +486,13 @@ footer {
 	font-size: 18px;
 	transition: background-color 0.3s, transform 0.3s;
 }
-
 #myBtn img {
 	width: 100%;
 	height: auto;
 }
-
 #myBtn:hover {
 	transform: scale(1.1);
 }
-
-/* ////////////////////////////// */
-/* Profile Box */
-
 #profileBox {
 	border: 6px solid #f1600d;
 	background-color: #1a265a;
@@ -603,31 +502,26 @@ footer {
 	width: 400px;
 	position: relative;
 }
-
 #profileBox h2 {
 	color: #f1600d;
 	font-size: 2rem;
 	margin-bottom: 1rem;
 }
-
 #profileBox ul {
 	color: #fef6ed;
 	font-size: 1rem;
 	list-style: none;
 	padding: 0;
 }
-
 #profileBox ul li {
 	margin-bottom: 10px;
 }
-
 #profileBox label {
 	display: block;
 	font-weight: bold;
 	margin-bottom: 5px;
 	color: #f1600d;
 }
-
 #profileBox textarea {
 	width: calc(100% - 20px);
 	padding: 10px;
@@ -636,12 +530,10 @@ footer {
 	background-color: #1a265a;
 	color: #fef6ed;
 }
-
 #profileBox textarea {
 	resize: none;
 	height: 80px;
 }
-
 #profileBox button {
 	width: 100%;
 	padding: 10px;
@@ -652,11 +544,9 @@ footer {
 	cursor: pointer;
 	margin-top: 10px;
 }
-
 #profileBox button:hover {
 	background-color: #d44a0d;
 }
-
 #profileBox .close-btn {
 	position: absolute;
 	top: 10px;
@@ -665,16 +555,12 @@ footer {
 	cursor: pointer;
 	color: #fef6ed;
 }
-
 #profileBox .close-btn:hover {
 	color: #fef6ed;
 }
-
 #profileBox a {
 	color: #f1600d;
 }
-
-
 /* Style for chat box */
 .chat-box {
 	border: 6px solid #f1600d;
@@ -685,13 +571,11 @@ footer {
 	width: 600px;
 	position: relative;
 }
-
 .chat-box h2 {
 	color: #f1600d;
 	font-size: 2rem;
 	margin-bottom: 1rem;
 }
-
 /* Style for chat messages container */
 #chatMessages {
 	margin-top: 5px;
@@ -700,9 +584,8 @@ footer {
 	margin-bottom: 10px;
 	color: #fef6ed;
 	display: flex;
-	flex-direction: column
+	flex-direction: column 
 }
-
 /* Style for chat input and send button */
 #chatInput {
 	width: 100%;
@@ -710,7 +593,6 @@ footer {
 	border-radius: 5px;
 	border: 1px solid #ccc;
 }
-
 #chatForm button {
 	width: 100%;
 	padding: 10px;
@@ -721,11 +603,9 @@ footer {
 	cursor: pointer;
 	margin-top: 10px;
 }
-
 #chatForm button:hover {
 	background-color: #d44a0d;
 }
-
 .close-chat-btn {
 	position: absolute;
 	top: 10px;
@@ -733,7 +613,6 @@ footer {
 	font-size: 20px;
 	cursor: pointer;
 	text-decoration: none;
-	/* Supprimer la décoration de lien */
 	color: #fef6ed;
 	transition: color 0.3s, background-color 0.3s;
 	width: 35px;
@@ -743,19 +622,16 @@ footer {
 	align-items: center;
 	justify-content: center;
 }
-
 .close-chat-btn:hover {
 	background-color: #f1600d;
 	color: #fef6ed;
 }
-
 #userSearchInput {
 	width: 100%;
 	padding: 10px;
 	border-radius: 5px;
 	border: 1px solid #ccc;
 }
-
 /* Style for user list */
 .user-list {
 	max-height: 200px;
@@ -763,29 +639,24 @@ footer {
 	background-color: #fef6ed;
 	border-radius: 5px;
 }
-
 .user-list div {
 	cursor: pointer;
 	padding: 5px;
 	border-radius: 5px;
 }
-
 .user-list div:hover {
 	background-color: #f1600d;
 	color: #fef6ed;
 }
-
 .user-selected {
 	position: relative;
 	background-color: #f1600d;
 	color: #fef6ed;
 	border: 1.5px solid #fef6ed;
 }
-
 .user-selected:hover {
 	border-color: #f1600d;
 }
-
 .user-selected::after {
 	content: '×';
 	position: absolute;
@@ -795,9 +666,6 @@ footer {
 	color: #fef6ed;
 	cursor: pointer;
 }
-
-
-/* Style pour les messages reçus */
 #chatMessages .message-received {
 	text-align: left;
 	background-color: #fef6ed;
@@ -809,8 +677,6 @@ footer {
 	max-width: 70%;
 	word-wrap: break-word;
 }
-
-/* Style pour les messages envoyés */
 #chatMessages .message-sent {
 	text-align: right;
 	background-color: #f1600d;

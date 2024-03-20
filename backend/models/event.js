@@ -14,8 +14,12 @@ const eventSchema = new mongoose.Schema({
     participants: { type: String, required: true },
     publication_date: { type: Date, default: Date.now },
     status: { type: String, required: false },
-    list_participants: [{ type: Schema.Types.ObjectId, ref: 'Participant' }],
     createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    participantRequests: [{ 
+        userId: { type: Schema.Types.ObjectId, ref: 'User' },
+        message: String,
+        status: { type: String, enum: ['Pending', 'Accepted', 'Rejected'], default: 'Pending' }
+    }],
 });
 
 const Event = mongoose.model('Event', eventSchema);

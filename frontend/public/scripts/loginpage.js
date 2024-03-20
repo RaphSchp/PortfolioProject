@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// Fonction pour gérer la soumission du formulaire de connexion
+// Function to handle login form submission
 function handleLogin() {
     const email = document.getElementById('logEmail').value;
     const password = document.getElementById('logPassword').value;
@@ -16,25 +16,28 @@ function handleLogin() {
 
     // Send data to the server
     fetch('/login', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            // Redirect to the main page upon successful login
-            window.location.href = '/pages/mainpage.html';
-        } else {
-            alert('Incorrect email or password.');
-        }
-    })
-    .catch(error => {
-        console.error('Error submitting login form:', error);
-        alert('An error occurred while logging in. Please try again later.');
-    });
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                email,
+                password
+            }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Redirect to the main page upon successful login
+                window.location.href = '/pages/mainpage.html';
+            } else {
+                alert('Incorrect email or password.');
+            }
+        })
+        .catch(error => {
+            console.error('Error submitting login form:', error);
+            alert('An error occurred while logging in. Please try again later.');
+        });
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -46,60 +49,65 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (boxLoginInput) {
-        // Écoute l'événement keydown sur les champs de saisie
+        // Listen for the keydown event on input fields
         boxLoginInput.addEventListener('keydown', (event) => {
-            if (event.key === 'Enter') { 
+            if (event.key === 'Enter') {
                 handleLogin();
             }
         });
     }
 });
 
-// Fonction pour gérer l'inscription
+// Function to handle registration
 function handleRegistration() {
     const username = document.getElementById('regUsername').value;
     const email = document.getElementById('regEmail').value;
     const password = document.getElementById('regPassword').value;
     const passwordConfirmation = document.getElementById('regPasswordConfirmation').value;
 
-    // Vérifier si les passwords ne sont pas identiques ou vides
+    // Check if passwords don't match or are empty
     if (password !== passwordConfirmation || password === '') {
         alert('Password and Password Confirmation do not match or are empty.');
         return;
     }
 
-    // Vérifier si l'email est valide
+    // Check if email is valid
     if (!validateEmail(email)) {
         alert('Email is not valid.');
         return;
     }
 
     fetch('/register', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username, email, password, passwordConfirmation }),
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            // Afficher un message de validation
-            alert(data.message);
-            // Rediriger l'utilisateur vers la page de connexion
-            window.location.href = '/login';
-        } else {
-            // Afficher un message d'erreur
-            alert(data.message);
-        }
-    })
-    .catch(error => {
-        console.error('Error during registration:', error);
-        alert('An error occurred. Please try again later.');
-    });
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                username,
+                email,
+                password,
+                passwordConfirmation
+            }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Show validation message
+                alert(data.message);
+                // Redirect user to login page
+                window.location.href = '/login';
+            } else {
+                // Show error message
+                alert(data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error during registration:', error);
+            alert('An error occurred. Please try again later.');
+        });
 }
 
-// Fonction pour valider un email
+// Function to validate an email
 function validateEmail(email) {
     const re = /\S+@\S+\.\S+/;
     return re.test(email);
@@ -115,7 +123,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (boxRegisterInput) {
         boxRegisterInput.addEventListener('keydown', (event) => {
-            if (event.key === 'Enter') { 
+            if (event.key === 'Enter') {
                 handleRegistration();
             }
         });
@@ -123,7 +131,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
-// Fonction pour basculer entre les formulaires de connexion et d'inscription
+// Function to switch between login and registration forms
 function switchTo(section) {
     const x = document.getElementById('login');
     const y = document.getElementById('register');
@@ -148,50 +156,52 @@ function switchTo(section) {
     }
 }
 
-   // View Password codes
-   function myLogPassword(){
+// View Password codes
+function myLogPassword() {
     var a = document.getElementById("logPassword");
     var b = document.getElementById("eye");
     var c = document.getElementById("eye-slash");
-    if(a.type === "password"){
-       a.type = "text";
-       b.style.opacity = "0";
-       c.style.opacity = "1";
-    }else{
-       a.type = "password";
-       b.style.opacity = "1";
-       c.style.opacity = "0";
+    if (a.type === "password") {
+        a.type = "text";
+        b.style.opacity = "0";
+        c.style.opacity = "1";
+    } else {
+        a.type = "password";
+        b.style.opacity = "1";
+        c.style.opacity = "0";
     }
-   }
-   function myRegPassword(){
+}
+
+function myRegPassword() {
 
     var d = document.getElementById("regPassword");
     var b = document.getElementById("eye-2");
     var c = document.getElementById("eye-slash-2");
 
-    if(d.type === "password"){
-       d.type = "text";
-       b.style.opacity = "0";
-       c.style.opacity = "1";
-    }else{
-       d.type = "password";
-       b.style.opacity = "1";
-       c.style.opacity = "0";
+    if (d.type === "password") {
+        d.type = "text";
+        b.style.opacity = "0";
+        c.style.opacity = "1";
+    } else {
+        d.type = "password";
+        b.style.opacity = "1";
+        c.style.opacity = "0";
     }
-   }
-   function myRegPasswordConfirmation(){
+}
 
-      var d = document.getElementById("regPasswordConfirmation");
-      var b = document.getElementById("eye-3");
-      var c = document.getElementById("eye-slash-3");
-  
-      if(d.type === "password"){
-         d.type = "text";
-         b.style.opacity = "0";
-         c.style.opacity = "1";
-      }else{
-         d.type = "password";
-         b.style.opacity = "1";
-         c.style.opacity = "0";
-      }
-     }
+function myRegPasswordConfirmation() {
+
+    var d = document.getElementById("regPasswordConfirmation");
+    var b = document.getElementById("eye-3");
+    var c = document.getElementById("eye-slash-3");
+
+    if (d.type === "password") {
+        d.type = "text";
+        b.style.opacity = "0";
+        c.style.opacity = "1";
+    } else {
+        d.type = "password";
+        b.style.opacity = "1";
+        c.style.opacity = "0";
+    }
+}

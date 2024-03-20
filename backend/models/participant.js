@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const participantSchema = new Schema({
     eventId: { type: Schema.Types.ObjectId, ref: 'Event' },
-    participantId: { type: Schema.Types.ObjectId, ref: 'Participant' },
+    participantIds: [{ type: Schema.Types.ObjectId, ref: 'User' }],
 });
 
 const Participant = mongoose.model('Participant', participantSchema);
