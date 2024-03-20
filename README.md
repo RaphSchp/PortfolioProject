@@ -89,13 +89,9 @@ npm install $(cat requirements.txt)
 ## Screenshots
 
 ### Login / Register
-<div style="display: flex;">
-    <div style="width: 50%;">
-        <img src="frontend/assets/screenshots/LOGIN.png" alt="Login" style="max-width: 100%;">
-    </div>
-    <div style="width: 50%;">
-        <img src="frontend/assets/screenshots/REGISTER.png" alt="Register" style="max-width: 100%;">
-    </div>
+<div style="overflow: auto;">
+    <img src="frontend/assets/screenshots/LOGIN.png" alt="Login" style="width: 50%; float: left;">
+    <img src="frontend/assets/screenshots/REGISTER.png" alt="Register" style="width: 50%; float: left;">
 </div>
 
 
