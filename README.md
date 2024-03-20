@@ -139,10 +139,10 @@ https://github.com/RaphSchp/PortfolioProject/assets/135048201/5ab839c3-67d4-49c9
 
 ---
 
-# 📄 License
+## 📄 License
 This project is licensed under the <a href="https://github.com/RaphSchp/PortfolioProject/blob/backend/LICENSE"> "Read Only Software License".</a>
 
-# 📧 Contact
+## 📧 Contact
 For any inquiries or support, please contact <a href="https://github.com/RaphSchp">RaphSchp</a>.
 [![Linkedin Badge](https://img.shields.io/badge/linkedin-%230077B5.svg?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/raphaelschopfer/)
 [![Gmail Badge](https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:raphaelschopfer@gmail.com)
