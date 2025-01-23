@@ -1,6 +1,8 @@
 const http = require('http');
 const express = require('express');
 const multer = require('multer');
+const bcrypt = require('bcrypt');
+const PasswordValidator = require('password-validator');
 const bodyParser = require('body-parser');
 const path = require('path');
 const mongoose = require('mongoose');
@@ -12,6 +14,16 @@ const Message = require('./models/message');
 const User = require('./models/user');
 const Event = require('./models/event');
 const Participant = require('./models/participant');
+const schema = new PasswordValidator();
+schema
+    .is().min(8)           // Minimum length of 8 characters
+    .is().max(50)          // Maximum length of 50 characters
+    .has().uppercase()     // Must contain at least one uppercase letter
+    .has().lowercase()     // Must contain at least one lowercase letter
+    .has().digits()        // Must contain at least one digit
+    .has().symbols()       // Must contain at least one special character
+    .has().not().spaces(); // Must not contain spaces
+
 
 const app = express();
 const PORT = 3000;
@@ -85,39 +97,47 @@ app.get('/getLoggedInUserInfo', async (req, res) => {
 app.post('/login', sessionMiddleware, async (req, res) => {
     try {
         console.log('User session ID (login):', req.sessionID);
-        const {
-            email,
-            password
-        } = req.body;
+        const { email, password } = req.body;
 
-        // Find the user in the database
-        const user = await User.findOne({
-            email,
-            password
-        });
+        // Find the user in the database by email
+        const user = await User.findOne({ email });
 
         if (!user) {
-            res.json({
-                success: false
-            });
-        } else {
-            console.log('Storing this id in session:', user._id);
-            // Store user ID in session
-            req.session.userId = user._id;
-
-            // Respond successfully
-            res.json({
-                success: true
+            return res.status(401).json({
+                success: false,
+                message: 'Invalid email or password',
             });
         }
+
+        // Compare the provided password with the hashed password
+        const passwordMatch = await bcrypt.compare(password, user.password);
+
+        if (!passwordMatch) {
+            return res.status(401).json({
+                success: false,
+                message: 'Invalid email or password',
+            });
+        }
+
+        console.log('Storing this id in session:', user._id);
+
+        // Store user ID in session
+        req.session.userId = user._id;
+
+        // Respond successfully
+        res.json({
+            success: true,
+            message: 'Login successful',
+        });
     } catch (error) {
-        console.error('Error finding user:', error);
+        console.error('Error during login:', error);
         res.status(500).json({
             success: false,
-            error: 'Internal Server Error'
+            message: 'Internal Server Error',
         });
     }
 });
+
 
 
 // Route for registration
@@ -138,6 +158,14 @@ app.post('/register', sessionMiddleware, async (req, res) => {
             });
         }
 
+        // Check if the password is strong
+        if (!schema.validate(password)) {
+            return res.status(400).json({
+                success: false,
+                message: 'Password must be at least 8 characters long, contain one uppercase letter, one lowercase letter, one number, and one special character',
+            });
+        }
+   
         // Check if email is in valid format
         if (!validateEmail(email)) {
             return res.status(400).json({
@@ -168,14 +196,28 @@ app.post('/register', sessionMiddleware, async (req, res) => {
             });
         }
 
+         // Hash the password
+         const saltRounds = 10;
+         const hashedPassword = await bcrypt.hash(password, saltRounds);
+
         // Create a new user
         const newUser = new User({
             email,
-            password,
+            password: hashedPassword,
             username,
             userpic: 'lol.jpeg'
         });
-        await newUser.save();
+        try {
+            await newUser.save();
+            console.log('User saved successfully');
+        } catch (err) {
+            console.error('Error saving user:', err);
+            return res.status(500).json({
+                success: false,
+                message: 'Failed to save user',
+            });
+        }
+        
 
 
         // Send a welcome message
