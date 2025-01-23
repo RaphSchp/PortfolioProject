@@ -5,3 +5,5 @@ mongoose@^8.2.0
 multer@^1.4.5-lts.1
 socket.io@^4.7.4
 ws@^8.16.0
+bcrypt@^5.1.0
+password-validator@^5.0.3
