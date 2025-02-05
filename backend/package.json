@@ -5,19 +5,26 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "node server.js",
+    "purgecss": "purgecss --config ./purgecss.config.js --output ../frontend/public/styles"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^5.1.1",
     "body-parser": "^1.20.2",
+    "chalk": "^4.1.2",
     "express": "^4.18.2",
     "express-session": "^1.18.0",
     "http": "^0.0.1-security",
     "mongoose": "^8.2.0",
     "multer": "^1.4.5-lts.1",
+    "password-validator": "^5.3.0",
     "socket.io": "^4.7.4",
     "ws": "^8.16.0"
+  },
+  "devDependencies": {
+    "@fullhuman/postcss-purgecss": "^7.0.2"
   }
 }

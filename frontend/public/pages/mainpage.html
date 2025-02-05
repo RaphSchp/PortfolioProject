@@ -13,6 +13,11 @@
       <link rel="stylesheet" href="../styles/mainpage.css">
       <script src="/socket.io/socket.io.js"></script>
       <script src="../scripts/mainpage.js"></script>
+      <script src="../scripts/profilebox.js"></script>
+      <script src="../scripts/handleRegistrationEvent.js"></script>
+      <script src="../scripts/filter.js"></script>
+      <script src="../scripts/chatbox.js"></script>
+      
    </head>
    <body>
       <header>
@@ -86,24 +91,33 @@
             </div>
          </div>
          <div class="topnav" id="myTopnav">
-            <!-- Navigation Links -->
-            <input type="text" id="topnav-search-input" placeholder="Search..">
-            <button type="submit" id="topnav-search-button">
-            <img src="../../assets/images/search.png" alt="Search Button">
-            </button>
-            <a href="#create" class="create-event-link" id="topnavCreateEventLink">
-            <img src="../../assets/images/create.png" alt="Create Events">
+            <!-- Bouton burger visible sur mobile -->
+            <a href="javascript:void(0);" class="burger-menu" onclick="toggleMenuNav()">
+              <img src="../../assets/images/menu.png" alt="Menu">
             </a>
-            <a href="#notification" class="message" id="message">
-            <img src="../../assets/images/message.png" alt="Notifications">
-            </a>
-            <a href="#favorites" class="favorites">
-            <img src="../../assets/images/favorites.png" alt="Favorites">
-            </a>
-            <a href="#menu" onclick="openMenuNav()">
-            <img src="../../assets/images/menu.png" alt="Filters">
-            </a>
-         </div>
+            
+            <!-- Liens de navigation et recherche -->
+            <div class="menu-links">
+              <input type="text" id="topnav-search-input" placeholder="Search..">
+              <button type="submit" id="topnav-search-button">
+                <img src="../../assets/images/search.png" alt="Search Button">
+              </button>
+              <a href="#create" class="create-event-link" id="topnavCreateEventLink">
+                <img src="../../assets/images/create.png" alt="Create Events">
+              </a>
+              <a href="#notification" class="message" id="message">
+                <img src="../../assets/images/message.png" alt="Notifications">
+              </a>
+              <a href="#favorites" class="favorites">
+                <img src="../../assets/images/favorites.png" alt="Favorites">
+              </a>
+              <a href="#menu" onclick="openMenuNav()">
+               <img src="../../assets/images/menu.png" alt="Filters">
+               </a>
+            </div>
+          </div>
+          
+        
       </header>
       <main id="eventContainer_profileContainer">
          <!-- Images will be loaded here with figure and figcaption -->
@@ -153,9 +167,7 @@
                      </li>
                      <li>
                         <label for="eventImage">Event Image:</label>
-                        <!-- Hidden file input -->
                         <input type="file" id="eventImage" name="eventImage" accept="image/*" required style="display: none;">
-                        <!-- Styled button -->
                         <label for="eventImage" class="custom-file-upload">Choose a picture</label>
                         <p id="fileNamePlaceholder"></p>
                      </li>
@@ -194,10 +206,6 @@
                            <a href="#">I forgot my password</a>
                         </li>
                         <li>
-                           <label for="stars">Stars:</label>
-                           <input type="number" id="stars" name="stars" value="5" readonly>
-                        </li>
-                        <li>
                            <label for="eventsParticipated">Events Participated:</label>
                            <input type="number" id="eventsParticipated" name="eventsParticipated" value="10" readonly>
                         </li>
@@ -231,7 +239,7 @@
          </div>
       </main>
       <footer>
-         <p>&copy;Kangaroo 2024</p>
+         <p>&copy;Kangaroo 2025</p>
       </footer>
       <button onclick="topFunction()" id="myBtn" title="Go to top">
       <span style="display: none;">Go to top</span>
