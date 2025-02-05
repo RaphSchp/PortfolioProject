@@ -9,6 +9,7 @@ const mongoose = require('mongoose');
 const session = require('express-session');
 const socketIo = require('socket.io');
 const userSockets = new Map();
+const chalk = require('chalk');
 const Conversation = require('./models/conversation');
 const Message = require('./models/message');
 const User = require('./models/user');
@@ -676,8 +677,18 @@ app.use(express.static(path.join(__dirname, '..', 'frontend', 'public')));
 
 // Start the server
 server.listen(PORT, () => {
-    console.log(`Serveur en cours d'exécution sur le port ${PORT}`);
+    console.log(chalk.hex('#F77D2E')(`
+                                              
+  /\\ /\\__ _ _ __   __ _  __ _ _ __ ___   ___  
+ / //_/ _\` | '_ \\ / _\` |/ _\` | '__/ _ \\ / _ \\ 
+/ __ \\ (_| | | | | (_| | (_| | | | (_) | (_) |
+\\/  \\/\\__,_|_| |_|\\__, |\\__,_|_|  \\___/ \\___/ 
+                  |___/                       
+
+    `));
+    console.log(`Server running on port ${PORT}`);
 });
+
 
 
 // Route to filter events by sport
