@@ -243,15 +243,6 @@ document.addEventListener("DOMContentLoaded", () => {
     observer.observe(topnavSection);
 
     function handleIntersect(entries) {
-        const entry = entries[0];
-        const isTopnavVisible = entry.isIntersecting;
-        const isTopScrolled = window.scrollY > 20;
-
-        if (!isTopnavVisible && isTopScrolled) {
-            navbar.style.top = "0";
-        } else {
-            navbar.style.top = "-100px";
-        }
 
         // Update button display on intersect
         toggleButtonDisplay();
@@ -282,14 +273,18 @@ function toggleMenu() {
     menu.classList.toggle("open");
 }
 function toggleMenuNav() {
-    var topnav = document.getElementById("myTopnav");
-    if (topnav.className === "topnav") {
-      topnav.className += " responsive";
+    let menu = document.querySelector(".menu-links");
+    let topnav = document.getElementById("myTopnav");
+
+    if (menu.classList.contains("active")) {
+        menu.classList.remove("active");
+        topnav.classList.remove("responsive");
     } else {
-      topnav.className = "topnav";
+        menu.classList.add("active");
+        topnav.classList.add("responsive");
     }
-  }
-  
+}
+
 // NAVIGATION SIDE BAR --------------------------------------------------------------------------------------------------------------------------------------------------
 function openMenuNav() {
     const menuNav = document.getElementById("menuNav");

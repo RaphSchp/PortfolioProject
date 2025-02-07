@@ -130,6 +130,7 @@ header {
   /* Bouton burger : masqué sur desktop */
   .burger-menu {
 	display: none;
+
   }
   
   /* -------- Responsive -------- */
@@ -139,13 +140,24 @@ header {
 	  flex-wrap: wrap;
 	}
 	
-	/* Le container de liens se transforme en colonne et est masqué par défaut */
 	.menu-links {
-	  flex-direction: column;
-	  width: 100%;
-	  display: none; /* affiché lorsque la classe "responsive" est ajoutée */
-	  margin-top: 1rem;
+		flex-direction: column;
+		width: 100%;
+		max-height: 0; /* Caché par défaut */
+		opacity: 0;
+		overflow: hidden;
+		transform: translateY(-10px); /* Effet léger de glissement */
+		transition: max-height 0.4s ease-in-out, opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
+		padding: 0;
 	}
+	
+	/* Quand le menu est actif */
+	.menu-links.active {
+		max-height: 500px; /* Ajuste selon le contenu */
+		opacity: 1;
+		transform: translateY(0);
+	}
+	
 	
 	/* Quand le menu est actif, afficher les liens */
 	.topnav.responsive .menu-links {
@@ -155,6 +167,7 @@ header {
 	/* Afficher le bouton burger sur mobile */
 	.burger-menu {
 	  display: block;
+	  text-align: center;
 	}
 	.burger-menu img {
 		width: 50px;
