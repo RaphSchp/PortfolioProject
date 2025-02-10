@@ -1,6 +1,7 @@
 const http = require('http');
 const express = require('express');
 const multer = require('multer');
+const fs = require('fs');
 const bcrypt = require('bcrypt');
 const PasswordValidator = require('password-validator');
 const bodyParser = require('body-parser');
@@ -236,41 +237,51 @@ app.post('/register', sessionMiddleware, async (req, res) => {
     }
 });
 
-// Define destination folder of the downloaded images
+// Define the destination folder for storing images
 const destinationFolder = path.join(__dirname, '../frontend/assets/user_image');
 
-// Configuration of Multer
+// Configure Multer with file storage settings
 const storage = multer.diskStorage({
-    destination: function(req, file, cb) {
+    destination: function (req, file, cb) {
         cb(null, destinationFolder);
     },
-    filename: function(req, file, cb) {
-        // Check if the User is connected and his ID available
+    filename: function (req, file, cb) {
         if (req.session.userId) {
-            // Use User's ID in filename with timestamp
-            const ext = path.extname(file.originalname);
+            const ext = path.extname(file.originalname).toLowerCase();
             const userId = req.session.userId;
             const timestamp = Date.now();
             const filename = `${userId}_${timestamp}${ext}`;
             cb(null, filename);
         } else {
-
             cb(new Error("User not logged in"));
         }
     }
 });
 
+// File filter to allow only JPEG and PNG images
+const fileFilter = (req, file, cb) => {
+    const allowedTypes = /jpeg|jpg|png/;
+    const extName = allowedTypes.test(path.extname(file.originalname).toLowerCase());
+    const mimeType = allowedTypes.test(file.mimetype);
 
-// Initialize Multer with configuration
+    if (extName && mimeType) {
+        return cb(null, true);
+    } else {
+        return cb(new Error('Only JPEG, JPG, and PNG files are allowed!'));
+    }
+};
+
+// Set a file size limit of 5MB
 const upload = multer({
-    storage: storage
+    storage: storage,
+    limits: { fileSize: 5 * 1024 * 1024 }, // 5MB max
+    fileFilter: fileFilter
 });
 
-// Route to handle image upload
+// Route to handle event Image upload
 app.post('/upload', upload.single('eventImage'), (req, res) => {
-    console.log("Received POST request to /upload");
+    console.log("POST request received on /upload");
 
-    // Check if a file was successfully uploaded
     if (!req.file) {
         console.log("No file uploaded");
         return res.status(400).json({
@@ -279,15 +290,73 @@ app.post('/upload', upload.single('eventImage'), (req, res) => {
         });
     }
 
-    // If a file was uploaded, log file information
-    console.log("Received file:", req.file);
+    console.log("File received:", req.file.filename);
 
-    // Respond with a success message and the uploaded file name
     res.status(200).json({
         success: true,
-        message: 'File uploaded successfully',
+        message: 'Event image uploaded successfully',
         filename: req.file.filename
     });
+});
+
+// NOUVELLE ROUTE ------------------------------------------------------------------------------------------------------------------------------!
+const sharp = require('sharp');
+
+app.post('/upload-profile', upload.single('userpic'), async (req, res) => {
+    console.log("POST request received on /upload-profile");
+    console.log("Session user ID:", req.session.userId);
+
+    if (!req.session.userId) {
+        return res.status(401).json({ success: false, message: "User not logged in" });
+    }
+
+    if (!req.file) {
+        return res.status(400).json({ success: false, message: 'No image uploaded' });
+    }
+
+    console.log("File received:", req.file.filename);
+
+    try {
+        const user = await User.findById(req.session.userId);
+        if (!user) {
+            return res.status(404).json({ success: false, message: "User not found" });
+        }
+
+        const filePath = path.join(destinationFolder, req.file.filename);
+        const outputFileName = `square_${req.file.filename}`;
+        const outputPath = path.join(destinationFolder, outputFileName);
+
+        // Resize and crop image to a square (300x300 pixels)
+        await sharp(filePath)
+            .resize(300, 300, { fit: 'cover' }) // Makes the image square
+            .toFile(outputPath);
+
+        // Delete the original uploaded image
+        fs.unlinkSync(filePath);
+
+        // Remove old image if not default
+        if (user.userpic && user.userpic !== 'lol.jpeg') {
+            const oldImagePath = path.join(destinationFolder, user.userpic);
+            if (fs.existsSync(oldImagePath)) {
+                fs.unlinkSync(oldImagePath);
+                console.log(`Deleted old profile picture: ${user.userpic}`);
+            }
+        }
+
+        // Store only the new resized filename
+        user.userpic = outputFileName;
+        await user.save();
+
+        res.status(200).json({
+            success: true,
+            message: 'Profile picture updated successfully',
+            userpic: `/assets/user_image/${outputFileName}`
+        });
+
+    } catch (error) {
+        console.error("Error updating profile picture:", error);
+        res.status(500).json({ success: false, message: 'Internal server error' });
+    }
 });
 
 
