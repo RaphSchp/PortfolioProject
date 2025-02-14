@@ -92,11 +92,11 @@
             </div>
          </div>
          <div class="topnav" id="myTopnav">
-            <!-- Bouton burger visible sur mobile -->
+            <!-- Burger button for mobile view -->
             <a href="javascript:void(0);" class="burger-menu" onclick="toggleMenuNav()">
               <img src="../../assets/images/menu.png" alt="Menu">
             </a>
-            <!-- Liens de navigation et recherche -->
+            <!-- Navigation links and search -->
             <div class="menu-links">
               <input type="text" id="topnav-search-input" placeholder="Search..">
               <button type="submit" id="topnav-search-button">
@@ -190,7 +190,7 @@
                <span class="close-btn" onclick="closeProfileBox()">&times;</span>
                <div class="user-profile">
                   <a href="#" id="changeUserPic">
-                     <img src="/assets/user_image/default.jpg" alt="User Profile" id="userpic2">
+                     <img src="/assets/user_image/lol.jpeg" alt="User Profile" id="userpic2">
                  </a>
                  <input type="file" id="userpicInput" name="userpic" accept="image/jpeg, image/png" style="display: none;">                               
                   <form id="profileForm">
@@ -224,12 +224,18 @@
             </div>
          </div>
          <div id="modalBackgroundChat" class="modal-background-chat">
+            <div class="chat-wrapper">
+            <div id="chat-container">
+               <div id="conversation-list"></div>
+            </div>
             <div id="chatBox" class="chat-box">
                <h2>Chat</h2>
+               <div class="search-container">
                <input type="text" id="userSearchInput" placeholder="Search an user ...">
                <div id="userList" class="user-list">
                   <!-- User list will be rendered here -->
                </div>
+            </div>
                <a href="#" id="closeChatButton" class="close-chat-btn" onclick="closeChatBox()">&times;</a>
                <div id="chatMessages"></div>
                <form id="chatForm">
@@ -238,6 +244,7 @@
                </form>
             </div>
          </div>
+      </div>
       </main>
       <footer>
          <p>&copy;Kangaroo 2025</p>

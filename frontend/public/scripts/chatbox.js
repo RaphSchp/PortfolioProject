@@ -1,11 +1,14 @@
-// CHAT BOX -------------------------------------------------------------------------------------------------------------------------------------------------------------
+// ================================
+// CHAT SYSTEM - USER & MESSAGES HANDLING
+// ================================
 
-let selectedUserId = null;
+let selectedUserId = null; // Stores the ID of the currently selected user
 
+// Retrieves the logged-in user's ID from the session.
 async function getUserIdFromSession() {
     try {
-        const response = await fetch('/getLoggedInUserInfo');
-        const data = await response.json();
+        const response = await fetch('/getLoggedInUserInfo'); // Fetch user session data from the server
+        const data = await response.json(); // Convert response to JSON
 
         if (data.success && data.userId) {
             console.log(`User ID : ${data.userId}`);
@@ -20,23 +23,23 @@ async function getUserIdFromSession() {
     }
 }
 
-
+// Closes the chat modal by hiding its background.
 function closeChatBox() {
     document.getElementById('modalBackgroundChat').style.display = 'none';
 }
 
-// Scroll to bottom of chat messages
+// Scrolls the chat messages container to the bottom.
 function scrollToBottom() {
     const chatMessages = document.getElementById('chatMessages');
     chatMessages.scrollTop = chatMessages.scrollHeight;
 }
 
-// Fonction pour ajouter un message au chat
+// Adds a message to the chat window.
 function appendMessageToChat(message, isSentByCurrentUser) {
     const chatMessages = document.getElementById('chatMessages');
     const messageElement = document.createElement('div');
 
-    // Appliquer les classes CSS appropriées en fonction de qui envoie le message
+    // Apply appropriate CSS class based on the sender
     if (isSentByCurrentUser) {
         messageElement.classList.add('message-sent');
         console.log('Using message-sent');
@@ -49,13 +52,13 @@ function appendMessageToChat(message, isSentByCurrentUser) {
     chatMessages.appendChild(messageElement);
 }
 
-// Function to clear chat messages
+// Clears all chat messages from the chat container.
 function clearChatMessages() {
     const chatMessages = document.getElementById('chatMessages');
     chatMessages.innerHTML = '';
 }
 
-// Function to retrieve messages from the conversation with a specific user
+// Retrieves chat messages exchanged with a specific user.
 async function fetchMessagesForUser(userId) {
     try {
         if (!userId) {
@@ -64,20 +67,20 @@ async function fetchMessagesForUser(userId) {
         }
 
         console.log('Fetching messages for user:', userId);
+        const response = await fetch(`/messages/${userId}`); // Request chat history
 
-        const response = await fetch(`/messages/${userId}`);
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
-        const messages = await response.json();
-        return messages;
+
+        return await response.json(); // Convert response to JSON
     } catch (error) {
         console.error('Error fetching messages:', error);
         return [];
     }
 }
 
-// Function to display messages in the chat
+// Displays messages in the chat window.
 async function renderMessages(messages) {
     try {
         const userId = await getUserIdFromSession();
@@ -103,23 +106,21 @@ async function renderMessages(messages) {
     }
 }
 
-// Function to load messages for the selected user
+// Loads the conversation history for the currently selected user.
 async function loadMessagesForSelectedUser() {
     try {
-        const userId = await getUserIdFromSession();
-
         if (selectedUserId) {
             console.log('Loading messages for selected user:', selectedUserId);
+            clearChatMessages(); // Clear previous messages before loading new ones
             const messages = await fetchMessagesForUser(selectedUserId);
-            clearChatMessages();
-            renderMessages(messages, userId);
+            renderMessages(messages);
         }
     } catch (error) {
         console.error('Error loading messages:', error);
     }
 }
 
-// Function to render the user list
+// Displays a list of users based on the search input.
 function renderUserList(filterText = '') {
     fetch('/users')
         .then(response => {
@@ -131,84 +132,152 @@ function renderUserList(filterText = '') {
         .then(users => {
             const userListContainer = document.getElementById('userList');
             const chatInput = document.getElementById('userSearchInput');
-            userListContainer.innerHTML = '';
-
-            let count = 0;
+            userListContainer.innerHTML = ''; // Clear previous user list
 
             if (filterText.trim() === '') {
+                userListContainer.style.display = 'none'; // Hide list if no input
                 return;
             }
 
-            if (selectedUserId) {
-                const selectedUser = users.find(user => user._id === selectedUserId);
-                if (selectedUser) {
+            let count = 0; // Limit displayed users to 4
+
+            users.forEach(user => {
+                if (count >= 4) return;
+
+                if (user.username.toLowerCase().includes(filterText.toLowerCase())) {
                     const userElement = document.createElement('div');
-                    userElement.textContent = selectedUser.username;
-                    userElement.classList.add('user-selected');
-                    chatInput.style.display = 'none';
-                    userElement.dataset.userId = selectedUser._id;
+                    userElement.textContent = user.username;
+                    userElement.dataset.userId = user._id;
+                    userElement.classList.add('user-item');
 
-
+                    // Handles user selection from the search results
                     userElement.addEventListener('click', async () => {
-                        selectedUserId = null;
+                        selectedUserId = user._id;
                         console.log("Selected User ID:", selectedUserId);
-                        userElement.classList.remove('user-selected');
-                        chatInput.style.display = 'flex';
-                        renderUserList(filterText);
-                        clearChatMessages();
+
+                        // Immediately add user to the chat container
+                        addUserToChatContainer(user);
+
+                        // Refresh the chat container dynamically after a short delay
+                        setTimeout(() => {
+                            loadUserConversations().then(() => {
+                                applyHighlightToConversation(selectedUserId);
+                            });
+                        }, 300);
+
+                        // Load the conversation
+                        await loadMessagesForSelectedUser();
+
+                        // Reset search input
+                        chatInput.value = '';
+                        userListContainer.innerHTML = '';
+                        userListContainer.style.display = 'none';
                     });
 
                     userListContainer.appendChild(userElement);
+                    count++; // Increase the count limit to only display 4 users
                 }
-            } else {
-                users.forEach(user => {
-                    if (count >= 4) return;
+            });
 
-                    if (user.username.toLowerCase().includes(filterText.toLowerCase())) {
-                        const userElement = document.createElement('div');
-                        userElement.textContent = user.username;
-                        userElement.dataset.userId = user._id;
-
-                        userElement.addEventListener('click', async () => {
-                            selectedUserId = user._id;
-                            console.log("Selected User ID:", selectedUserId);
-                            userElement.classList.add('user-selected');
-                            await loadMessagesForSelectedUser();
-                            renderUserList(filterText);
-                        });
-
-                        userElement.addEventListener('mouseover', () => {
-                            if (userElement.classList.contains('user-selected')) {
-                                userElement.classList.add('user-selected-hover');
-                            }
-                        });
-
-                        userElement.addEventListener('mouseout', () => {
-                            userElement.classList.remove('user-selected-hover');
-                        });
-
-                        userListContainer.appendChild(userElement);
-                        count++;
-                    }
-                });
-            }
+            // Hide list if no users match the search
+            userListContainer.style.display = userListContainer.innerHTML ? 'block' : 'none';
         })
         .catch(error => {
             console.error('Error fetching users:', error);
         });
 }
 
+// ================================
+// CHAT SYSTEM - USER SELECTION & MESSAGE HANDLING
+// ================================
+
+// Adds a user to the chat container and highlights the selected conversation.
+function addUserToChatContainer(user) {
+    const chatContainer = document.getElementById('chat-container');
+
+    // Check if the user already exists in the chat container
+    let existingUser = document.querySelector(`[data-user-id="${user._id}"]`);
+
+    if (existingUser) {
+        // Remove highlight from all conversations
+        document.querySelectorAll('.conversation-item').forEach(item => {
+            item.classList.remove('selected-conversation');
+        });
+
+        // Apply highlight and load messages
+        existingUser.classList.add('selected-conversation');
+        selectedUserId = user._id;
+        clearChatMessages();
+        loadMessagesForSelectedUser();
+        return;
+    }
+
+    // Create a new conversation element for the user
+    const conversationElement = document.createElement('div');
+    conversationElement.classList.add('conversation-item');
+    conversationElement.dataset.userId = user._id;
+
+    // Create user profile picture
+    const userPic = document.createElement('img');
+    userPic.src = `../../assets/user_image/${user.userpic}`;
+    userPic.alt = `${user.username}'s picture`;
+    userPic.classList.add('user-pic');
+
+    // Create username label
+    const username = document.createElement('span');
+    username.textContent = user.username;
+    username.classList.add('username');
+
+    conversationElement.appendChild(userPic);
+    conversationElement.appendChild(username);
+
+    // Add the conversation to the chat container
+    chatContainer.appendChild(conversationElement);
+
+    // Apply highlight after updating the chat container
+    setTimeout(() => {
+        // Remove highlight from all conversations
+        document.querySelectorAll('.conversation-item').forEach(item => {
+            item.classList.remove('selected-conversation');
+        });
+
+        // Apply highlight to the newly added conversation
+        conversationElement.classList.add('selected-conversation');
+        selectedUserId = user._id;
+        clearChatMessages();
+        loadMessagesForSelectedUser();
+    }, 200); // Small delay to prevent instant removal of the class
+
+    // Add click event listener to select conversation
+    conversationElement.addEventListener('click', async () => {
+        // Remove highlight from all conversations
+        document.querySelectorAll('.conversation-item').forEach(item => {
+            item.classList.remove('selected-conversation');
+        });
+
+        // Apply highlight
+        conversationElement.classList.add('selected-conversation');
+
+        // Load the selected user's messages
+        selectedUserId = user._id;
+        clearChatMessages();
+        await loadMessagesForSelectedUser();
+    });
+}
+
 let socket;
 
+// Handles chat events when the document is fully loaded
 document.addEventListener("DOMContentLoaded", () => {
     const modalBackgroundChat = document.getElementById('modalBackgroundChat');
+    
+    // Load existing user conversations on page load
+    loadUserConversations();
 
-
-
-    // Hide modal background by default
+    // Hide chat modal background by default
     modalBackgroundChat.style.display = 'none';
 
-    // Handle the event to display the chat box when clicking on a message link
+    // Handle click event to open chat box when clicking a message link
     document.querySelectorAll('.message').forEach(link => {
         link.addEventListener('click', async (event) => {
             event.preventDefault();
@@ -216,6 +285,7 @@ document.addEventListener("DOMContentLoaded", () => {
             modalBackgroundChat.style.display = 'flex';
             selectedUserId = link.dataset.userId;
             console.log("Selected User ID:", selectedUserId);
+
             if (selectedUserId) {
                 const messages = await fetchMessagesForUser(selectedUserId);
                 renderMessages(messages);
@@ -230,50 +300,83 @@ document.addEventListener("DOMContentLoaded", () => {
     socket = io();
     const chatForm = document.getElementById('chatForm');
 
-    // Handle the chat form submission
-    chatForm.addEventListener('submit', (e) => {
+    // Handles sending messages via the chat form
+    chatForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         const message = chatInput.value.trim();
+
         if (message !== '' && selectedUserId) {
             const recipientId = selectedUserId;
+
+            // Send message through WebSocket
             socket.emit('private message', {
                 recipientId,
                 content: message
             });
+
+            // Append the message to the chat and reset input field
             appendMessageToChat(message, true);
             chatInput.value = '';
             scrollToBottom();
+
+            // Store the active conversation before refreshing
+            const activeConversationId = selectedUserId;
+
+            // Wait for chat container update before reapplying highlight
+            setTimeout(() => {
+                loadUserConversations().then(() => {
+                    applyHighlightToConversation(activeConversationId);
+                });
+            }, 300);
         }
     });
 
-    // Listen for the 'private message' event from the server and update the user interface
+    // Handles receiving messages from the server
     socket.on('private message', (msg) => {
         console.log("Private message received:", msg);
+
         if (msg.recipientId === selectedUserId || msg.senderId === selectedUserId) {
             appendMessageToChat(msg.content);
         }
+
+        // Store the active conversation before refreshing
+        const activeConversationId = selectedUserId;
+
         loadMessagesForSelectedUser();
+        loadUserConversations().then(() => {
+            applyHighlightToConversation(activeConversationId);
+        });
     });
 
-    // Handle input in the user search field
+    // Handles user search field input
     const userSearchInput = document.getElementById('userSearchInput');
     userSearchInput.addEventListener('input', () => {
         const filterText = userSearchInput.value.trim();
         renderUserList(filterText);
     });
 
-    // Initialize the user list on initial page load
+    // Initialize the user list on page load
     renderUserList();
 });
 
 
-// PARTICIPATE EVENT ----------------------------------------------------------------------------------------------------------------------------------------------------
-// Connect to the Socket.IO server
+
+// ================================
+// PARTICIPATE EVENT - CHAT SYSTEM
+// ================================
+
+// Establish a connection to the Socket.IO server
 socket = io();
 
+/**
+ * Opens a chat with the event creator.
+ * Retrieves the event creator's ID and participant requests, then loads the chat interface.
+ */
 async function openChatWithCreator(eventId, socket) {
-    socket = io();
+    socket = io(); // Ensure the socket connection is active
+
     try {
+        // Fetch event creator ID and participant requests in parallel
         const [eventData, participantRequestsData] = await Promise.all([
             fetch(`/getEventCreatorId/${eventId}`).then(res => res.json()),
             fetch(`/getParticipantRequests/${eventId}`).then(res => res.json())
@@ -285,8 +388,9 @@ async function openChatWithCreator(eventId, socket) {
             selectedUserId = creatorId;
 
             if (selectedUserId) {
-                clearChatMessages();
+                clearChatMessages(); // Clear previous chat messages
 
+                // Process participant requests if any exist
                 if (participantRequestsData && participantRequestsData.success) {
                     const requests = participantRequestsData.participantRequests;
                     if (requests.length > 0) {
@@ -302,14 +406,17 @@ async function openChatWithCreator(eventId, socket) {
                     console.error('Error fetching participant requests.');
                 }
 
+                // Fetch and display messages in the chat window
                 const messages = await fetchMessagesForUser(selectedUserId);
                 renderMessages(messages);
                 await loadMessagesForSelectedUser();
 
+                // Update UI to highlight the creator in the user list
                 const creatorUsername = eventData.creatorUsername;
                 const userListContainer = document.getElementById('userList');
                 userListContainer.innerHTML = '';
 
+                // Create an element representing the event creator in the user list
                 const creatorNameElement = document.createElement('div');
                 creatorNameElement.textContent = `Ask ${creatorUsername} to join!`;
                 creatorNameElement.classList.add('user-selected');
@@ -323,6 +430,7 @@ async function openChatWithCreator(eventId, socket) {
                 });
                 userListContainer.appendChild(creatorNameElement);
 
+                // Hide the search input after selecting the creator
                 const chatInput = document.getElementById('userSearchInput');
                 chatInput.style.display = 'none';
             } else {
@@ -336,14 +444,18 @@ async function openChatWithCreator(eventId, socket) {
     }
 }
 
-
+/**
+ * Processes a participant request to join an event.
+ * Retrieves user information and sends a request to the event creator.
+ */
 async function processParticipantRequest(eventId, userId, selectedUserId, socket) {
     try {
-        // Get the username of the user requesting to participate in the event
+        // Fetch user data to get the username
         const userResponse = await fetch(`/users`);
         if (!userResponse.ok) {
             throw new Error('Failed to fetch user data');
         }
+
         const usersData = await userResponse.json();
         const user = usersData.find(user => user._id === userId);
         if (!user) {
@@ -352,12 +464,13 @@ async function processParticipantRequest(eventId, userId, selectedUserId, socket
         }
         const userUsername = user.username;
 
+        // Create accept and reject action links
         const acceptLink = `<a href="#" class="accept-request-button" onclick="handleParticipantRequest('${eventId}', '${userId}', 'accept')">Accept</a>`;
         const rejectLink = `<a href="#" class="reject-request-button" onclick="handleParticipantRequest('${eventId}', '${userId}', 'reject')">Reject</a>`;
         const messageContent = `User "${userUsername}" wants to participate in your event. Do you want to accept or reject? ${acceptLink} | ${rejectLink}`;
 
         if (socket) {
-            // Send the message to the event creator via Socket.IO
+            // Send the request message to the event creator via WebSocket
             socket.emit('private message', {
                 senderId: userId,
                 recipientId: selectedUserId,
@@ -371,8 +484,10 @@ async function processParticipantRequest(eventId, userId, selectedUserId, socket
     }
 }
 
-
-// Function to participate in an event
+/**
+ * Allows a user to participate in an event.
+ * Sends a participation request to the server and opens a chat with the event creator.
+ */
 async function participateInEvent(eventId, socket) {
     try {
         const userId = await getUserIdFromSession();
@@ -382,12 +497,14 @@ async function participateInEvent(eventId, socket) {
             return;
         }
 
+        // Check if the user has already sent a participation request
         const hasRequested = await checkParticipantRequest(eventId, userId);
         if (hasRequested) {
             console.log('You have already sent a participation request for this event.');
             return;
         }
 
+        // Send participation request to the server
         const response = await fetch(`/participate/${eventId}`, {
             method: 'POST',
             headers: {
@@ -403,7 +520,6 @@ async function participateInEvent(eventId, socket) {
             if (responseData.success && responseData.message) {
                 console.log(responseData.message);
                 openChatWithCreator(eventId, socket);
-
             } else {
                 console.error('Failed to participate in the event.');
             }
@@ -415,25 +531,30 @@ async function participateInEvent(eventId, socket) {
     }
 }
 
+/**
+ * Handles a participant request (accept or reject).
+ * Logs the action and sends a request to update the status in the backend.
+ */
 async function handleParticipantRequest(eventId, userId, action) {
     try {
         console.log('Event ID:', eventId);
         console.log('User ID:', userId);
         console.log('Action:', action);
 
+        // Display an alert based on the action
         if (action === 'accept') {
-            alert('Woohoo! You\'ve just high-fived the participant request! Let them know they\'re in!');
-
+            alert("You have accepted the participant request.");
         } else if (action === 'reject') {
-            alert('Oops! Participant request rejected! Time to break the news gently!');
+            alert("You have rejected the participant request.");
         }
+
+        // Send request to update the participant's status
         const response = await fetch(`/handleParticipantRequest/${eventId}/${userId}/${action}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             }
         });
-
 
         if (!response.ok) {
             throw new Error('Error handling participant request: ' + response.statusText);
@@ -452,19 +573,19 @@ async function handleParticipantRequest(eventId, userId, action) {
     }
 }
 
-
-
+// ==============================
+// EVENT LISTENERS AND CHAT SETUP
+// ==============================
 document.addEventListener("DOMContentLoaded", () => {
     const modalBackgroundChat = document.getElementById('modalBackgroundChat');
 
-
-    // Hide modal background by default
+    // Hide chat modal by default
     modalBackgroundChat.style.display = 'none';
+
+    // Open chat with event creator when page loads
     openChatWithCreator(eventId, socket);
 
-
-
-    // Handle the event to participate in an event
+    // Handle click event on participation buttons
     document.querySelectorAll('.participate-button').forEach(button => {
         button.addEventListener('click', async (event) => {
             event.preventDefault();
@@ -473,7 +594,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // Handle the event to accept or reject a participant request
+    // Handle click event on accept/reject participant requests
     document.querySelectorAll('.accept-request-button, .reject-request-button').forEach(button => {
         button.addEventListener('click', async (event) => {
             event.preventDefault();
@@ -481,11 +602,10 @@ document.addEventListener("DOMContentLoaded", () => {
             const userId = button.dataset.userId;
             const action = button.classList.contains('accept-request-button') ? 'accept' : 'reject';
             handleParticipantRequest(eventId, userId, action, socket);
-
         });
     });
 
-    // Handle the event to display the chat box when clicking on a message link
+    // Open chat when clicking on a message
     document.querySelectorAll('.message').forEach(link => {
         link.addEventListener('click', async (event) => {
             event.preventDefault();
@@ -493,6 +613,7 @@ document.addEventListener("DOMContentLoaded", () => {
             modalBackgroundChat.style.display = 'flex';
             selectedUserId = link.dataset.userId;
             console.log("Selected User ID:", selectedUserId);
+
             if (selectedUserId) {
                 const messages = await fetchMessagesForUser(selectedUserId);
                 renderMessages(messages);
@@ -503,24 +624,45 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // Handle chat form submission
+    // Handle chat message sending
     const chatForm = document.getElementById('chatForm');
-    chatForm.addEventListener('submit', (e) => {
+    chatForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         const message = chatInput.value.trim();
+
         if (message !== '' && selectedUserId) {
             const recipientId = selectedUserId;
+
+            // Send the message via WebSocket
             socket.emit('private message', {
                 recipientId,
                 content: message
             });
+
+            // Display the message in the chat window
             appendMessageToChat(message, true);
             chatInput.value = '';
             scrollToBottom();
+
+            // Store the active conversation before refreshing
+            const activeConversationId = selectedUserId;
+
+            // Refresh chat container and reapply highlight
+            setTimeout(() => {
+                loadUserConversations().then(() => {
+                    let activeConversation = document.querySelector(`[data-user-id="${activeConversationId}"]`);
+                    if (activeConversation) {
+                        document.querySelectorAll('.conversation-item').forEach(item => {
+                            item.classList.remove('selected-conversation');
+                        });
+                        activeConversation.classList.add('selected-conversation');
+                    }
+                });
+            }, 300);
         }
     });
 
-    // Listen for 'private message' event from the server and update the UI
+    // Listen for incoming messages and update chat
     socket.on('private message', (msg) => {
         console.log("Private message received:", msg);
         if (msg.recipientId === selectedUserId || msg.senderId === selectedUserId) {
@@ -529,14 +671,16 @@ document.addEventListener("DOMContentLoaded", () => {
         loadMessagesForSelectedUser();
     });
 
-    // Initialize the user list on initial load
+    // Initialize user search list on page load
     renderUserList();
 });
 
-
+/**
+ * Checks if a user has already sent a participation request.
+ * Fetches the request data from the server.
+ */
 async function checkParticipantRequest(eventId, userId) {
     try {
-        // Send a GET request to fetch participant requests for this event
         const response = await fetch(`/getParticipantRequests/${eventId}`);
         if (!response.ok) {
             console.error('Failed to fetch participant requests for the event.');
@@ -549,11 +693,75 @@ async function checkParticipantRequest(eventId, userId) {
             return false;
         }
 
-        // Check if the user has already sent a participant request
-        const existingRequest = requestData.participantRequests.find(request => request.userId === userId);
-        return existingRequest !== undefined;
+        // Check if the user has already requested participation
+        return requestData.participantRequests.some(request => request.userId === userId);
     } catch (error) {
         console.error('Error checking participant request:', error);
         return false;
+    }
+}
+
+// Loads user conversations and updates the chat container.
+async function loadUserConversations() {
+    try {
+        const response = await fetch('/getUserConversations');
+        const data = await response.json();
+        const chatContainer = document.getElementById('chat-container');
+
+        chatContainer.innerHTML = '';
+
+        if (!data.success || data.conversations.length === 0) {
+            chatContainer.innerHTML = '<p>No conversation</p>';
+            return;
+        }
+
+        // Render each conversation in the chat container
+        data.conversations.forEach(conversation => {
+            const conversationElement = document.createElement('div');
+            conversationElement.classList.add('conversation-item');
+            conversationElement.dataset.userId = conversation.userId;
+
+            // Profile picture
+            const userPic = document.createElement('img');
+            userPic.src = `../../assets/user_image/${conversation.userpic}`;
+            userPic.alt = `${conversation.username}'s picture`;
+            userPic.classList.add('user-pic');
+
+            // Username
+            const username = document.createElement('span');
+            username.textContent = conversation.username;
+            username.classList.add('username');
+
+            conversationElement.appendChild(userPic);
+            conversationElement.appendChild(username);
+
+            // Handle conversation selection and highlight
+            conversationElement.addEventListener('click', async () => {
+                document.querySelectorAll('.conversation-item').forEach(item => {
+                    item.classList.remove('selected-conversation');
+                });
+
+                conversationElement.classList.add('selected-conversation');
+
+                selectedUserId = conversation.userId;
+                document.getElementById('modalBackgroundChat').style.display = 'flex';
+                await loadMessagesForSelectedUser();
+            });
+
+            chatContainer.appendChild(conversationElement);
+        });
+    } catch (error) {
+        console.error('Error loading conversations:', error);
+    }
+}
+
+//Applies highlighting to the currently active conversation.
+function applyHighlightToConversation(userId) {
+    let activeConversation = document.querySelector(`[data-user-id="${userId}"]`);
+    if (activeConversation) {
+        document.querySelectorAll('.conversation-item').forEach(item => {
+            item.classList.remove('selected-conversation');
+        });
+        activeConversation.classList.add('selected-conversation');
     }
 }

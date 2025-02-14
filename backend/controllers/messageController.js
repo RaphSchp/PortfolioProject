@@ -38,3 +38,32 @@ exports.getMessages = async (req, res) => {
     res.status(500).json({ success: false, error: 'Internal Server Error' });
   }
 };
+
+exports.getUserConversations = async (req, res) => {
+  try {
+    const sessionUserId = req.session.userId;
+
+    if (!sessionUserId) {
+      return res.status(401).json({ success: false, message: 'Unauthorized' });
+    }
+
+    const conversations = await Conversation.find({
+      participants: sessionUserId
+    }).populate('participants', 'username userpic');
+
+    const formattedConversations = conversations.map(conversation => {
+      const otherUser = conversation.participants.find(user => user._id.toString() !== sessionUserId);
+      return {
+        conversationId: conversation._id,
+        username: otherUser.username,
+        userpic: otherUser.userpic,
+        userId: otherUser._id
+      };
+    });
+
+    res.json({ success: true, conversations: formattedConversations });
+  } catch (error) {
+    console.error('Error fetching user conversations:', error);
+    res.status(500).json({ success: false, error: 'Internal Server Error' });
+  }
+};
