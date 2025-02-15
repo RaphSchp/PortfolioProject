@@ -712,6 +712,7 @@ async function loadUserConversations() {
 
         if (!data.success || data.conversations.length === 0) {
             chatContainer.innerHTML = '<p>No conversation</p>';
+            chatContainer.classList.add('no-conversation');
             return;
         }
 

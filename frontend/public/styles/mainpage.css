@@ -1014,3 +1014,7 @@ footer {
     position: relative;
     width: 100%;
 }
+.no-conversation{
+	text-align: center;
+	color: var(--text-light);
+}
